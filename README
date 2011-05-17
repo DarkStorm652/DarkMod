@@ -1,0 +1,5 @@
+DarkMod - Mod engine with API
+
+DarkMod is fully independent of Minecraft updates, meaning developers never have to worry about updating their mods or using obfuscated names. All hook information is stored in an xml file that is stored online. Just extract the zip, run the jar, log in, and you are good to go!
+
+Please note that the hooks are not complete, so the API is lacking at the moment. I am working hard on finishing it, so it can compare even to MCP.
