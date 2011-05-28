@@ -51,6 +51,7 @@ public class DebugMod extends Mod implements CommandListener {
 	}
 
 	@Override
+	@SuppressWarnings("unused")
 	public void onCommand(String command) {
 		try {
 			String[] parts = command.split(" ");
@@ -74,9 +75,10 @@ public class DebugMod extends Mod implements CommandListener {
 						displayText("No target");
 				} else if(parts[1].equalsIgnoreCase("spawn")) {
 					World world = minecraft.getWorld();
-					displayText("Spawn location: (" + world.getSpawnX() + ", "
-							+ world.getSpawnY() + ", " + world.getSpawnZ()
-							+ ")");
+					WorldInfo worldInfo = world.getWorldInfo();
+					displayText("Spawn location: (" + worldInfo.getSpawnX()
+							+ ", " + worldInfo.getSpawnY() + ", "
+							+ worldInfo.getSpawnZ() + ")");
 				} else if(parts[1].equalsIgnoreCase("reflection")) {
 					if(parts[2].equalsIgnoreCase("field")) {
 						String completePath = parts[3];

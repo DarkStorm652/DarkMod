@@ -1,11 +1,11 @@
 import org.darkstorm.minecraft.darkmod.events.PlayerProcessEvent;
 import org.darkstorm.minecraft.darkmod.hooks.client.*;
 import org.darkstorm.minecraft.darkmod.mod.Mod;
+import org.darkstorm.minecraft.darkmod.tools.*;
 import org.darkstorm.tools.events.*;
 import org.lwjgl.input.Keyboard;
 
 public class SingleplayerCommandsMod extends Mod implements EventListener {
-	private Class<?> chatScreenClass;
 	private boolean open = false;
 
 	@Override
@@ -35,14 +35,6 @@ public class SingleplayerCommandsMod extends Mod implements EventListener {
 
 	@Override
 	public void onStart() {
-		if(chatScreenClass == null) {
-			try {
-				ClassLoader classLoader = accessHandler.getClassLoader();
-				chatScreenClass = classLoader.loadClass("fr");
-			} catch(Throwable exception) {
-				exception.printStackTrace();
-			}
-		}
 		eventManager.addListener(PlayerProcessEvent.class, this);
 	}
 
@@ -64,8 +56,9 @@ public class SingleplayerCommandsMod extends Mod implements EventListener {
 				}
 				if(Keyboard.isKeyDown(Keyboard.KEY_T)) {
 					if(!open)
-						minecraft.displayScreen((GuiScreen) chatScreenClass
-								.newInstance());
+						minecraft.displayScreen((GuiChat) ReflectionUtil
+								.instantiate(ClassRepository
+										.getClassForInterface(GuiChat.class)));
 					open = !open;
 				}
 			}
