@@ -21,11 +21,13 @@ public class BlockLocatorUI extends JDialog {
 	private JMenuItem removeItem;
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 
+	private BlockLocatorMod mod;
 	private Class<?> blockPlaceClass;
 	private Class<?> inventoryItemClass;
 
-	public BlockLocatorUI() {
+	public BlockLocatorUI(BlockLocatorMod mod) {
 		super(DarkMod.getInstance().getUI());
+		this.mod = mod;
 		blockPlaceClass = ClassRepository
 				.getClassForInterface(BlockPlacePacket.class);
 		inventoryItemClass = ClassRepository
@@ -82,6 +84,7 @@ public class BlockLocatorUI extends JDialog {
 		int selectedRow = list.getSelectedRow();
 		if(selectedRow == -1)
 			return;
+		selectedRow = list.convertRowIndexToModel(selectedRow);
 		DefaultTableModel model = (DefaultTableModel) list.getModel();
 		int x = (Integer) model.getValueAt(selectedRow, 1);
 		int y = (Integer) model.getValueAt(selectedRow, 2);
@@ -148,6 +151,10 @@ public class BlockLocatorUI extends JDialog {
 			return 0;
 	}
 
+	private void thisWindowClosed(WindowEvent e) {
+		mod.stop();
+	}
+
 	@SuppressWarnings("unchecked")
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY
@@ -161,6 +168,12 @@ public class BlockLocatorUI extends JDialog {
 
 		// ======== this ========
 		setTitle("Block Locator");
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				thisWindowClosed(e);
+			}
+		});
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 

@@ -20,6 +20,14 @@
        <string>$sizePolicy</string>
        <int>1</int>
       </void>
+      <void method="addEvent">
+       <object class="com.jformdesigner.model.FormEvent">
+        <string>java.awt.event.WindowListener</string>
+        <string>windowClosed</string>
+        <string>thisWindowClosed</string>
+        <boolean>true</boolean>
+       </object>
+      </void>
       <void method="add">
        <object class="com.jformdesigner.model.FormContainer">
         <string>javax.swing.JScrollPane</string>

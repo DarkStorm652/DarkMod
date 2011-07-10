@@ -39,7 +39,7 @@ public class BlockLocatorMod extends Mod implements CommandListener {
 	private Object lock = new Object();
 
 	public BlockLocatorMod() {
-		ui = new BlockLocatorUI();
+		ui = new BlockLocatorUI(this);
 		System.setProperty("sun.awt.exception.handler",
 				AWTExceptionHandler.class.getName());
 	}
