@@ -160,6 +160,6 @@ public class DarkMod {
 	}
 
 	public static double getVersion() {
-		return 1.52;
+		return 1.53;
 	}
 }
