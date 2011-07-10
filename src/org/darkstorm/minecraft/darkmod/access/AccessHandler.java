@@ -1,4 +1,4 @@
-package org.darkstorm.minecraft.darkmod;
+package org.darkstorm.minecraft.darkmod.access;
 
 import org.darkstorm.minecraft.darkmod.hooks.client.Minecraft;
 import org.darkstorm.minecraft.darkmod.ui.LoginUI;
@@ -12,5 +12,7 @@ public abstract class AccessHandler {
 
 	public abstract ClassLoader getClassLoader();
 
-	public abstract long getMinecraftVersion();
+	public abstract long getMinecraftBuild();
+
+	public abstract String getMinecraftVersion();
 }

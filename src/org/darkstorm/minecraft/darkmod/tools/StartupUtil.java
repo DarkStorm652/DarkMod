@@ -12,7 +12,7 @@ import org.darkstorm.tools.io.StreamRedirectFactory;
 public class StartupUtil {
 	private String username, password, sessionID;
 
-	public boolean handleLogin(String username, String password) {
+	public boolean handleLoginWithoutUI(String username, String password) {
 		LoginUtil loginUtil = new LoginUtil();
 		if(password != null) {
 			loginUtil.login(username, password);

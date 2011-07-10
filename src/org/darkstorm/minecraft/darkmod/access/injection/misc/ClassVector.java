@@ -1,4 +1,4 @@
-package org.darkstorm.minecraft.darkmod.injection.misc;
+package org.darkstorm.minecraft.darkmod.access.injection.misc;
 
 import java.util.Vector;
 

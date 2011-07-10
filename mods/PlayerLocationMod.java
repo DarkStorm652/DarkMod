@@ -41,11 +41,6 @@ public class PlayerLocationMod extends Mod implements EventListener {
 		JTable list = ui.getList();
 		DefaultTableModel model = (DefaultTableModel) list.getModel();
 		if(world != null) {
-			Player currentPlayer = minecraft.getPlayer();
-			ui.setTitle("Player Locator ("
-					+ java.lang.Math.round(currentPlayer.getX()) + ", "
-					+ java.lang.Math.round(currentPlayer.getY()) + ", "
-					+ java.lang.Math.round(currentPlayer.getZ()) + ")");
 			List<Humanoid> worldPlayers = world.getPlayers();
 			for(int row = 0; row < model.getRowCount(); row++) {
 				boolean containsPlayerMatch = false;
@@ -82,11 +77,9 @@ public class PlayerLocationMod extends Mod implements EventListener {
 			TableRowSorter<TableModel> sorter = (TableRowSorter<TableModel>) list
 					.getRowSorter();
 			sorter.sort();
-		} else {
-			ui.setTitle("Player Locator");
+		} else
 			for(int i = 0; i < model.getRowCount(); i++)
 				model.removeRow(i);
-		}
 	}
 
 	private double getDistanceTo(double x, double y, double z, Player player) {

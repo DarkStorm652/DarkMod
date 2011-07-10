@@ -4,7 +4,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
-import org.darkstorm.minecraft.darkmod.*;
+import org.darkstorm.minecraft.darkmod.DarkMod;
+import org.darkstorm.minecraft.darkmod.access.AccessHandler;
 import org.darkstorm.minecraft.darkmod.hooks.client.*;
 import org.darkstorm.minecraft.darkmod.tools.*;
 
@@ -15,7 +16,9 @@ public class BlockLocatorUI extends JDialog {
 	private JScrollPane scrollPane;
 	private JTable list;
 	private JPopupMenu popupMenu;
-	private JMenuItem openChestItem;
+	private JMenuItem leftClickItem;
+	private JMenuItem rightClickItem;
+	private JMenuItem removeItem;
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 
 	private Class<?> blockPlaceClass;
@@ -39,7 +42,43 @@ public class BlockLocatorUI extends JDialog {
 		return list;
 	}
 
-	private void openChestItemActionPerformed(ActionEvent e) {
+	private void leftClickItemActionPerformed(ActionEvent e) {
+		int selectedRow = list.getSelectedRow();
+		if(selectedRow == -1)
+			return;
+		DefaultTableModel model = (DefaultTableModel) list.getModel();
+		int x = (Integer) model.getValueAt(selectedRow, 1);
+		int y = (Integer) model.getValueAt(selectedRow, 2);
+		int z = (Integer) model.getValueAt(selectedRow, 3);
+		DarkMod darkMod = DarkMod.getInstance();
+		AccessHandler accessHandler = darkMod.getAccessHandler();
+		Minecraft minecraft = accessHandler.getMinecraft();
+		if(minecraft.getWorld() instanceof MultiplayerWorld) {
+			BlockDigPacket digPacket = (BlockDigPacket) ReflectionUtil
+					.instantiate(ClassRepository
+							.getClassForInterface(BlockDigPacket.class),
+							new Class<?>[] { Integer.TYPE, Integer.TYPE,
+									Integer.TYPE, Integer.TYPE, Integer.TYPE },
+							0, x, y, z, getFreeFace(x, y, z));
+			MultiplayerWorld world = (MultiplayerWorld) minecraft.getWorld();
+			NetworkHandler handler = world.getNetworkHandler();
+			handler.sendPacket(digPacket);
+		}
+	}
+
+	private void listMousePressed(MouseEvent e) {
+		int selectedRow = list.getSelectedRow();
+		if(e.isPopupTrigger() && selectedRow != -1) {
+			DarkMod darkMod = DarkMod.getInstance();
+			AccessHandler accessHandler = darkMod.getAccessHandler();
+			Minecraft minecraft = accessHandler.getMinecraft();
+			if(minecraft.getPlayer() == null)
+				return;
+			popupMenu.show(e.getComponent(), e.getX(), e.getY());
+		}
+	}
+
+	private void rightClickItemActionPerformed(ActionEvent e) {
 		int selectedRow = list.getSelectedRow();
 		if(selectedRow == -1)
 			return;
@@ -54,28 +93,59 @@ public class BlockLocatorUI extends JDialog {
 			BlockPlacePacket placePacket = (BlockPlacePacket) ReflectionUtil
 					.instantiate(blockPlaceClass, new Class<?>[] {
 							Integer.TYPE, Integer.TYPE, Integer.TYPE,
-							Integer.TYPE, inventoryItemClass }, x, y, z, 1,
-							null);
+							Integer.TYPE, inventoryItemClass }, x, y, z,
+							getFreeFace(x, y, z), null);
 			MultiplayerWorld world = (MultiplayerWorld) minecraft.getWorld();
 			NetworkHandler handler = world.getNetworkHandler();
 			handler.sendPacket(placePacket);
 		}
 	}
 
-	private void listMousePressed(MouseEvent e) {
+	private void removeItemActionPerformed(ActionEvent e) {
 		int selectedRow = list.getSelectedRow();
-		if(e.isPopupTrigger() && selectedRow != -1) {
-			DarkMod darkMod = DarkMod.getInstance();
-			AccessHandler accessHandler = darkMod.getAccessHandler();
-			Minecraft minecraft = accessHandler.getMinecraft();
-			if(minecraft.getPlayer() == null)
-				return;
-			DefaultTableModel model = (DefaultTableModel) list.getModel();
-			double distance = (Double) model.getValueAt(selectedRow, 0);
-			System.out.println(distance);
-			if(distance < 7)
-				popupMenu.show(e.getComponent(), e.getX(), e.getY());
+		if(selectedRow == -1)
+			return;
+		DefaultTableModel model = (DefaultTableModel) list.getModel();
+		int x = (Integer) model.getValueAt(selectedRow, 1);
+		int y = (Integer) model.getValueAt(selectedRow, 2);
+		int z = (Integer) model.getValueAt(selectedRow, 3);
+		DarkMod darkMod = DarkMod.getInstance();
+		AccessHandler accessHandler = darkMod.getAccessHandler();
+		Minecraft minecraft = accessHandler.getMinecraft();
+		if(minecraft.getWorld() instanceof MultiplayerWorld) {
+			BlockDigPacket digPacket = (BlockDigPacket) ReflectionUtil
+					.instantiate(ClassRepository
+							.getClassForInterface(BlockDigPacket.class),
+							new Class<?>[] { Integer.TYPE, Integer.TYPE,
+									Integer.TYPE, Integer.TYPE, Integer.TYPE },
+							2, x, y, z, getFreeFace(x, y, z));
+			MultiplayerWorld world = (MultiplayerWorld) minecraft.getWorld();
+			NetworkHandler handler = world.getNetworkHandler();
+			handler.sendPacket(digPacket);
 		}
+	}
+
+	private int getFreeFace(int x, int y, int z) {
+		DarkMod darkMod = DarkMod.getInstance();
+		AccessHandler accessHandler = darkMod.getAccessHandler();
+		Minecraft minecraft = accessHandler.getMinecraft();
+		World world = minecraft.getWorld();
+		if(world == null)
+			return 0;
+		if(world.getBlockIDAt(x + 1, y, z) == 0)
+			return 5;
+		else if(world.getBlockIDAt(x - 1, y, z) == 0)
+			return 4;
+		else if(world.getBlockIDAt(x, y, z + 1) == 0)
+			return 3;
+		else if(world.getBlockIDAt(x, y, z - 1) == 0)
+			return 2;
+		else if(world.getBlockIDAt(x, y + 1, z) == 0)
+			return 1;
+		else if(world.getBlockIDAt(x, y - 1, z) == 0)
+			return 0;
+		else
+			return 0;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -85,10 +155,12 @@ public class BlockLocatorUI extends JDialog {
 		scrollPane = new JScrollPane();
 		list = new JTable();
 		popupMenu = new JPopupMenu();
-		openChestItem = new JMenuItem();
+		leftClickItem = new JMenuItem();
+		rightClickItem = new JMenuItem();
+		removeItem = new JMenuItem();
 
 		// ======== this ========
-		setTitle("Chest Locator");
+		setTitle("Block Locator");
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 
@@ -130,14 +202,32 @@ public class BlockLocatorUI extends JDialog {
 		// ======== popupMenu ========
 		{
 
-			// ---- openChestItem ----
-			openChestItem.setText("Open chest");
-			openChestItem.addActionListener(new ActionListener() {
+			// ---- leftClickItem ----
+			leftClickItem.setText("Left click");
+			leftClickItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					openChestItemActionPerformed(e);
+					leftClickItemActionPerformed(e);
 				}
 			});
-			popupMenu.add(openChestItem);
+			popupMenu.add(leftClickItem);
+
+			// ---- rightClickItem ----
+			rightClickItem.setText("Right click");
+			rightClickItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					rightClickItemActionPerformed(e);
+				}
+			});
+			popupMenu.add(rightClickItem);
+
+			// ---- removeItem ----
+			removeItem.setText("Remove");
+			removeItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					removeItemActionPerformed(e);
+				}
+			});
+			popupMenu.add(removeItem);
 		}
 		// //GEN-END:initComponents
 	}

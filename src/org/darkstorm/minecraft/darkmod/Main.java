@@ -46,9 +46,9 @@ public class Main {
 			return;
 		} else if(options.has(version)) {
 			System.out.println("DarkMod " + DarkMod.getVersion());
-			if(Tools.getMinecraftVersion() != -1)
+			if(Tools.getMinecraftBuild() != -1)
 				System.out.print("Minecraft build "
-						+ Tools.getMinecraftVersion());
+						+ Tools.getMinecraftBuild());
 			return;
 		}
 		OptionSpec<?>[] optionSpecs = { username, password, sessionID };

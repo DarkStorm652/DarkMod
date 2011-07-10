@@ -3,15 +3,13 @@ package org.darkstorm.minecraft.darkmod.ui;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
-import java.io.*;
 import java.util.Random;
 
-import javax.crypto.*;
-import javax.crypto.spec.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
 import org.darkstorm.minecraft.darkmod.tools.*;
+import org.darkstorm.tools.loopsystem.*;
 
 @SuppressWarnings("serial")
 public class LoginUI extends JPanel {
@@ -43,15 +41,18 @@ public class LoginUI extends JPanel {
 			103, 104, 105, 106, 119, 120, 121, 129 };
 
 	private LoginUtil loginUtil = new LoginUtil();
+	private LoopManager loopManager;
 	private VolatileImage image;
 	private Image backgroundImage;
-	private Thread loginThread;
+	private LoopController loginLoop;
+	private LoopController loginDisplayLoop;
 	private boolean dialogButton1Pressed, dialogButton2Pressed;
 
 	private boolean loginPerformed = false;
 	private boolean playOfflinePerformed = false;
 
 	public LoginUI() {
+		loopManager = new LoopManager(new ThreadGroup("Login"), false);
 		initComponents();
 		setPreferredSize(new Dimension(854, 480));
 		Image loaded = Tools.getIcon("terrain");
@@ -66,36 +67,66 @@ public class LoginUI extends JPanel {
 				((POSSIBLE_TERRAIN_SPOTS[i] - 1) / 16) * 16, 16, 16);
 		backgroundImage = terrain.getScaledInstance(32, 32, 16);
 		setBackground(new Color(0, 0, 0, 0));
-		loadLogin();
+		if(loginUtil.loadLogin()) {
+			usernameField.setText(loginUtil.getUsername());
+			passwordField.setText(loginUtil.getPassword());
+			rememberLoginCheckBox.setSelected(loginUtil.shouldRememberLogin());
+			checkForUpdatesCheckBox.setSelected(loginUtil
+					.shouldCheckForUpdates());
+		}
+		createLoginLoop();
+		createLoginDisplayLoop();
 	}
 
-	private void loadLogin() {
-		DataInputStream dis = null;
-		try {
-			File lastLogin = new File(Tools.getWorkingDirectory(), "lastlogin");
-			if(!lastLogin.exists())
-				return;
-			Cipher cipher = getCipher(2, "passwordfile");
-			if(cipher != null)
-				dis = new DataInputStream(new CipherInputStream(
-						new FileInputStream(lastLogin), cipher));
-			else {
-				dis = new DataInputStream(new FileInputStream(lastLogin));
+	private void createLoginLoop() {
+		Loopable loop = new Loopable() {
+			@Override
+			public int loop() throws InterruptedException {
+				showLoggingIn();
+				String result = loginUtil.login(usernameField.getText(),
+						new String(passwordField.getPassword()));
+				if(result != null)
+					showError(result);
+				dialogLabel.setText("Logged in.");
+				dialogProgressBar.setValue(dialogProgressBar.getMaximum());
+				dialogProgressBar.setIndeterminate(false);
+				return Loopable.STOP;
 			}
-			usernameField.setText(dis.readUTF());
-			passwordField.setText(dis.readUTF());
-			rememberLoginCheckBox
-					.setSelected(passwordField.getPassword().length > 0);
-			try {
-				checkForUpdatesCheckBox.setSelected(dis.readBoolean());
-			} catch(Exception e) {
-				checkForUpdatesCheckBox.setSelected(true);
+		};
+		loginLoop = loopManager.addLoopable(loop);
+	}
+
+	private void createLoginDisplayLoop() {
+		Loopable loop = new Loopable() {
+
+			@Override
+			public int loop() throws InterruptedException {
+				dialogButton1.setText("Cancel");
+				dialogButton1.setVisible(true);
+				dialogButton2.setText("Retry");
+				dialogButton2.setVisible(true);
+				dialogLabel.setText("Logging in...");
+				dialogProgressBar.setVisible(true);
+				dialogProgressBar.setValue(0);
+				dialogProgressBar.setIndeterminate(true);
+				switchCard("dialog");
+				while(!dialogButton1Pressed && !dialogButton2Pressed
+						&& !loginUtil.isLoggedIn())
+					Tools.sleep(250);
+				if(dialogButton1Pressed) {
+					dialogButton1Pressed = false;
+					if(loginLoop.isAlive())
+						loginLoop.stop();
+					switchCard("loginForm");
+				} else if(dialogButton2Pressed) {
+					dialogButton2Pressed = false;
+					loginPerformed = true;
+					authenticate();
+				}
+				return Loopable.STOP;
 			}
-		} catch(Exception e) {} finally {
-			try {
-				dis.close();
-			} catch(Exception exception) {}
-		}
+		};
+		loginDisplayLoop = loopManager.addLoopable(loop);
 	}
 
 	private void loginActionPerformed(ActionEvent e) {
@@ -106,53 +137,21 @@ public class LoginUI extends JPanel {
 		playOfflinePerformed = true;
 	}
 
-	private void saveLogin() {
-		try {
-			File lastLogin = new File(Tools.getWorkingDirectory(), "lastlogin");
-
-			Cipher cipher = getCipher(1, "passwordfile");
-			DataOutputStream dos;
-			if(cipher != null)
-				dos = new DataOutputStream(new CipherOutputStream(
-						new FileOutputStream(lastLogin), cipher));
-			else {
-				dos = new DataOutputStream(new FileOutputStream(lastLogin));
-			}
-			dos.writeUTF(usernameField.getText());
-			dos.writeUTF(new String(passwordField.getPassword()));
-			dos.writeBoolean(checkForUpdatesCheckBox.isSelected());
-			dos.close();
-		} catch(Exception e) {
-			System.err.println("Unable to save login information");
-		}
-	}
-
-	private Cipher getCipher(int mode, String password) throws Exception {
-		Random random = new Random(43287234L);
-		byte[] salt = new byte[8];
-		random.nextBytes(salt);
-		PBEParameterSpec pbeParamSpec = new PBEParameterSpec(salt, 5);
-
-		SecretKey pbeKey = SecretKeyFactory.getInstance("PBEWithMD5AndDES")
-				.generateSecret(new PBEKeySpec(password.toCharArray()));
-		Cipher cipher = Cipher.getInstance("PBEWithMD5AndDES");
-		cipher.init(mode, pbeKey, pbeParamSpec);
-		return cipher;
-	}
-
 	@Override
 	public void paint(Graphics g2) {
 		int w = getWidth() / 2;
 		int h = getHeight() / 2;
 		if((image == null) || (image.getWidth() != w)
-				|| (image.getHeight() != h)) {
+				|| (image.getHeight() != h))
 			image = createVolatileImage(w, h);
-		}
 
 		Graphics g = image.getGraphics();
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, image.getWidth(), image.getHeight());
 		for(int x = 0; x <= w / 32; x++) {
 			for(int y = 0; y <= h / 32; y++)
-				g.drawImage(backgroundImage, x * 32, y * 32, null);
+				g.drawImage(backgroundImage, (x * 32) - ((32 - (w % 32)) / 2),
+						(y * 32) - ((32 - (h % 32)) / 2), null);
 		}
 		g.setColor(Color.LIGHT_GRAY);
 
@@ -167,85 +166,40 @@ public class LoginUI extends JPanel {
 		super.paint(g2);
 	}
 
-	@SuppressWarnings("deprecation")
 	public void authenticate() {
-		if(loginThread != null && loginThread.isAlive()) {
-			while(loginThread.isAlive())
-				try {
-					Thread.sleep(250);
-				} catch(Exception exception) {}
+		if(loginLoop.isAlive()) {
+			while(loginLoop.isAlive())
+				Tools.sleep(250);
 			return;
 		}
-		while(!loginPerformed && !playOfflinePerformed) {
-			try {
-				Thread.sleep(250);
-			} catch(Exception exception) {}
-		}
-		final String username = usernameField.getText();
-		final String password = new String(passwordField.getPassword());
+		while(!loginPerformed && !playOfflinePerformed)
+			Tools.sleep(250);
+		loginUtil.setUsername(usernameField.getText());
+		loginUtil.setPassword(new String(passwordField.getPassword()));
+		loginUtil.setCheckForUpdates(checkForUpdatesCheckBox.isSelected());
 		if(rememberLoginCheckBox.isSelected())
-			saveLogin();
+			loginUtil.saveLogin();
 		if(loginPerformed) {
-			if(loginThread != null)
-				loginThread.stop();
-			loginThread = new Thread() {
-				@Override
-				public void run() {
-					showLoggingIn();
-					String result = loginUtil.login(username, password);
-					if(result != null)
-						showError(result);
-					dialogLabel.setText("Logged in.");
-					dialogProgressBar.setValue(dialogProgressBar.getMaximum());
-					dialogProgressBar.setIndeterminate(false);
-				};
-			};
-			loginThread.start();
+			if(loginLoop.isAlive())
+				loginLoop.stop();
+			loginLoop.start();
 		} else
-			loginUtil.playOffline(username);
+			loginUtil.playOffline(usernameField.getText());
 		loginPerformed = false;
 		playOfflinePerformed = false;
 	}
 
-	@SuppressWarnings("deprecation")
 	private void showLoggingIn() {
-		new Thread() {
-			@Override
-			public void run() {
-				dialogButton1.setText("Cancel");
-				dialogButton1.setVisible(true);
-				dialogButton2.setText("Retry");
-				dialogButton1.setVisible(true);
-				dialogLabel.setText("Logging in...");
-				dialogProgressBar.setVisible(true);
-				dialogProgressBar.setValue(0);
-				dialogProgressBar.setIndeterminate(true);
-				switchCard("dialog");
-				while(!dialogButton1Pressed && !dialogButton2Pressed
-						&& !loginUtil.isLoggedIn()) {
-					try {
-						Thread.sleep(250);
-					} catch(InterruptedException exception) {}
-				}
-				if(dialogButton1Pressed) {
-					dialogButton1Pressed = false;
-					if(loginThread != null && loginThread.isAlive())
-						loginThread.stop();
-					switchCard("loginForm");
-				} else if(dialogButton2Pressed) {
-					dialogButton2Pressed = false;
-					loginPerformed = true;
-					authenticate();
-				}
-			}
-		}.start();
+		if(loginDisplayLoop.isAlive())
+			loginDisplayLoop.stop();
+		loginDisplayLoop.start();
 	}
 
-	private void showError(String message) {
+	public void showError(String message) {
 		dialogButton1.setText("Cancel");
 		dialogButton1.setVisible(true);
 		dialogButton2.setText("Retry");
-		dialogButton1.setVisible(true);
+		dialogButton2.setVisible(true);
 		dialogLabel.setText(message);
 		dialogProgressBar.setVisible(false);
 		switchCard("dialog");
@@ -267,7 +221,7 @@ public class LoginUI extends JPanel {
 		dialogButton1.setText("No");
 		dialogButton1.setVisible(true);
 		dialogButton2.setText("Yes");
-		dialogButton1.setVisible(true);
+		dialogButton2.setVisible(true);
 		dialogLabel.setText(message);
 		dialogProgressBar.setVisible(false);
 		switchCard("dialog");
@@ -290,7 +244,7 @@ public class LoginUI extends JPanel {
 		dialogButton1.setText("");
 		dialogButton1.setVisible(false);
 		dialogButton2.setText("OK");
-		dialogButton1.setVisible(true);
+		dialogButton2.setVisible(true);
 		dialogLabel.setText(message);
 		dialogProgressBar.setVisible(false);
 		switchCard("dialog");
@@ -328,6 +282,7 @@ public class LoginUI extends JPanel {
 	}
 
 	public void setDialogText(String text) {
+		System.out.println("Message: " + text);
 		dialogLabel.setText(text);
 		switchCard("dialog");
 	}

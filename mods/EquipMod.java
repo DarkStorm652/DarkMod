@@ -38,7 +38,7 @@ public class EquipMod extends Mod implements EventListener {
 	@Override
 	public void onStart() {
 		if(inventoryPacketClass == null)
-			inventoryPacketClass = ClassRepository.getClassByName("nl");
+			inventoryPacketClass = ClassRepository.getClassByName("qs");
 		if(inventoryItemClass == null)
 			inventoryItemClass = ClassRepository
 					.getClassForInterface("InventoryItem");
@@ -175,7 +175,7 @@ public class EquipMod extends Mod implements EventListener {
 	}
 
 	private int calculateSendIndex(int index) {
-		if(index >= 0 || index < 9)
+		if(index >= 0 && index < 9)
 			return index + 36;
 		return index;
 	}

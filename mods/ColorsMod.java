@@ -29,7 +29,7 @@ public class ColorsMod extends Mod implements CommandListener {
 
 	@Override
 	public ModControl getControlOption() {
-		return ModControl.NONE;
+		return ModControl.TOGGLE;
 	}
 
 	@Override

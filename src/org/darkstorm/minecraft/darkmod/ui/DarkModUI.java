@@ -6,6 +6,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import org.darkstorm.minecraft.darkmod.*;
+import org.darkstorm.minecraft.darkmod.access.AccessHandler;
 import org.darkstorm.minecraft.darkmod.hooks.client.Minecraft;
 import org.darkstorm.minecraft.darkmod.mod.ModHandler;
 import org.darkstorm.minecraft.darkmod.tools.*;

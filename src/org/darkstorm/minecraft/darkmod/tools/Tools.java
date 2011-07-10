@@ -50,6 +50,12 @@ public class Tools {
 		return null;
 	}
 
+	public static void sleep(long millis) {
+		try {
+			Thread.sleep(250);
+		} catch(Exception exception) {}
+	}
+
 	public static boolean isRunningFromJar() {
 		URL jarLocation = Tools.class.getProtectionDomain().getCodeSource()
 				.getLocation();
@@ -63,7 +69,7 @@ public class Tools {
 				.getLocation().getFile());
 	}
 
-	public static long getMinecraftVersion() {
+	public static long getMinecraftBuild() {
 		return version;
 	}
 

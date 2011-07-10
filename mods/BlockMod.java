@@ -1,5 +1,7 @@
 import java.util.Vector;
 
+import org.darkstorm.minecraft.darkmod.DarkMod;
+import org.darkstorm.minecraft.darkmod.access.AccessHandler;
 import org.darkstorm.minecraft.darkmod.events.*;
 import org.darkstorm.minecraft.darkmod.hooks.client.*;
 import org.darkstorm.minecraft.darkmod.mod.Mod;
@@ -48,7 +50,6 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 	private Class<?> blockDigClass;
 	private Class<?> blockPlaceClass;
 	private Class<?> inventoryItemSelectClass;
-	private Class<?> packetClass;
 	private Class<?> inventoryItemClass;
 	private GuiScreen lastGuiScreen;
 
@@ -59,8 +60,6 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 				.getClassForInterface(BlockPlacePacket.class);
 		inventoryItemSelectClass = ClassRepository
 				.getClassForInterface(InventoryItemSelectPacket.class);
-		packetClass = ClassRepository
-				.getClassForInterface(BlockPlacePacket.class);
 		inventoryItemClass = ClassRepository
 				.getClassForInterface(InventoryItem.class);
 	}
@@ -136,6 +135,9 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 		commandManager.registerListener(new Command("location2",
 				"/location2 [set <x> <y> <z>]", "Used for selection point 2"),
 				this);
+		commandManager.registerListener(new Command("search",
+				"/search <blockID>",
+				"Search for blocks within the selected area"), this);
 	}
 
 	@Override
@@ -155,6 +157,7 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 		commandManager.unregisterListener("removalrate");
 		commandManager.unregisterListener("location1");
 		commandManager.unregisterListener("location2");
+		commandManager.unregisterListener("search");
 		allowRemoval = false;
 		synchronized(lock) {
 			queuedLocations.clear();
@@ -168,7 +171,8 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 		try {
 			if(minecraft.getWorld() != null) {
 				String[] parts = command.split(" ");
-				if(parts[0].equalsIgnoreCase("set") && areLocationsValid()) {
+				if(parts[0].equalsIgnoreCase("set") && parts.length == 2
+						&& areLocationsValid()) {
 					if(!StringTools.isInteger(parts[1]))
 						return;
 
@@ -179,6 +183,40 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 					} else {
 						addBlocks(id);
 						displayText("Added blocks!");
+					}
+				} else if(parts[0].equalsIgnoreCase("search")
+						&& parts.length == 2 && areLocationsValid()) {
+					World world = minecraft.getWorld();
+					if(!StringTools.isInteger(parts[1]) || world == null)
+						return;
+					int id = Integer.parseInt(parts[1]);
+					int lowestX = min((int) location1.getX(), (int) location2
+							.getX());
+					int highestX = max((int) location1.getX(), (int) location2
+							.getX());
+					int lowestY = min((int) location1.getY(), (int) location2
+							.getY());
+					int highestY = max((int) location1.getY(), (int) location2
+							.getY());
+					int lowestZ = min((int) location1.getZ(), (int) location2
+							.getZ());
+					int highestZ = max((int) location1.getZ(), (int) location2
+							.getZ());
+					for(int xOffset = 0; xOffset < highestX - lowestX + 1; xOffset++) {
+						for(int yOffset = 0; yOffset < highestY - lowestY + 1; yOffset++) {
+							for(int zOffset = 0; zOffset < highestZ - lowestZ
+									+ 1; zOffset++) {
+								int x = lowestX + xOffset;
+								int y = lowestY + yOffset;
+								int z = lowestZ + zOffset;
+								int blockID = world.getBlockIDAt(x, y, z);
+								if(blockID == id)
+									displayText(ChatColor.GRAY
+											+ "Block found at "
+											+ ChatColor.GOLD + "(" + x + ", "
+											+ y + ", " + z + ")");
+							}
+						}
 					}
 				} else if(parts[0].equalsIgnoreCase("tunnel")
 						&& areLocationsValid()) {
@@ -643,7 +681,22 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 		World world = minecraft.getWorld();
 		if(world != null) {
 			int blockID = world.getBlockIDAt(x, y, z);
-			if(blockID == 0 || (blockID >= 8 && blockID <= 11))
+			if((blockID == 0 || (blockID >= 8 && blockID <= 11))
+					&& hasAdjacentBlock(x, y, z))
+				return true;
+		}
+		return false;
+	}
+
+	private boolean hasAdjacentBlock(int x, int y, int z) {
+		World world = minecraft.getWorld();
+		if(world != null) {
+			if(world.getBlockIDAt(x + 1, y, z) != 0
+					|| world.getBlockIDAt(x - 1, y, z) != 0
+					|| world.getBlockIDAt(x, y + 1, z) != 0
+					|| world.getBlockIDAt(x, y - 1, z) != 0
+					|| world.getBlockIDAt(x, y, z + 1) != 0
+					|| world.getBlockIDAt(x, y, z - 1) != 0)
 				return true;
 		}
 		return false;
@@ -694,10 +747,10 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 					new Class<?>[] { Integer.TYPE, Integer.TYPE, Integer.TYPE,
 							Integer.TYPE, Integer.TYPE }, 2, x, y, z, 0);
 			networkHandler.sendPacket(packet);
-			world.setBlockAt(x, y, z, 0);
+			world.setBlockIDAt(x, y, z, 0);
 		} else {
 			World world = minecraft.getWorld();
-			world.setBlockAt(x, y, z, 0);
+			world.setBlockIDAt(x, y, z, 0);
 		}
 	}
 
@@ -772,7 +825,7 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 																target
 																		.getTargetZ()));
 											else
-												world.setBlockAt(target
+												world.setBlockIDAt(target
 														.getTargetX(), target
 														.getTargetY(), target
 														.getTargetZ(), 0);
@@ -791,7 +844,8 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 							if(selectedID == wandID) {
 								EntityTarget target = minecraft
 										.getPlayerTarget();
-								if(wandType == WAND_SELECT && buttonReleased) {
+								if(wandType == WAND_SELECT && buttonReleased
+										&& target != null) {
 									location2 = new Location(target
 											.getTargetX(), target.getTargetY(),
 											target.getTargetZ());
@@ -1076,7 +1130,7 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 							if(!queuedLocations.contains(location))
 								queuedLocations.add(location);
 						} else
-							world.setBlockAt(x, y, z, 0);
+							world.setBlockIDAt(x, y, z, 0);
 					}
 				}
 			}
@@ -1127,18 +1181,70 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 							new Class<?>[] { Integer.TYPE }, index);
 			networkHandler.sendPacket(selectPacket);
 			InventoryItem item = inventory.getItemAt(index);
+			Location adjactentBlock = getAdjactentBlock(x, y, z);
+			int adjactentBlockFace = getAdjactentBlockFace(x, y, z);
 			BlockPlacePacket placePacket = (BlockPlacePacket) ReflectionUtil
-					.instantiate(packetClass, new Class<?>[] { Integer.TYPE,
+					.instantiate(blockPlaceClass, new Class<?>[] {
 							Integer.TYPE, Integer.TYPE, Integer.TYPE,
-							inventoryItemClass }, x, y - 1, z, 1, item);
+							Integer.TYPE, inventoryItemClass },
+							(int) adjactentBlock.getX(), (int) adjactentBlock
+									.getY(), (int) adjactentBlock.getZ(),
+							adjactentBlockFace, item);
 			networkHandler.sendPacket(placePacket);
+			world.setBlockIDAt(x, y, z, id);
 			if(item.getStackCount() < 2)
 				inventory.setItemAt(index, null);
 			else
 				item.setStackCount(item.getStackCount() - 1);
 		} else {
 			World world = minecraft.getWorld();
-			world.setBlockAt(x, y, z, id);
+			world.setBlockIDAt(x, y, z, id);
 		}
+	}
+
+	private int getAdjactentBlockFace(int x, int y, int z) {
+		DarkMod darkMod = DarkMod.getInstance();
+		AccessHandler accessHandler = darkMod.getAccessHandler();
+		Minecraft minecraft = accessHandler.getMinecraft();
+		World world = minecraft.getWorld();
+		if(world == null)
+			return -1;
+		if(world.getBlockIDAt(x + 1, y, z) != 0)
+			return 4;
+		else if(world.getBlockIDAt(x - 1, y, z) != 0)
+			return 5;
+		else if(world.getBlockIDAt(x, y, z + 1) != 0)
+			return 2;
+		else if(world.getBlockIDAt(x, y, z - 1) != 0)
+			return 3;
+		else if(world.getBlockIDAt(x, y + 1, z) != 0)
+			return 0;
+		else if(world.getBlockIDAt(x, y - 1, z) != 0)
+			return 1;
+		else
+			return -1;
+	}
+
+	private Location getAdjactentBlock(int x, int y, int z) {
+		DarkMod darkMod = DarkMod.getInstance();
+		AccessHandler accessHandler = darkMod.getAccessHandler();
+		Minecraft minecraft = accessHandler.getMinecraft();
+		World world = minecraft.getWorld();
+		if(world == null)
+			return null;
+		if(world.getBlockIDAt(x + 1, y, z) != 0)
+			return new Location(x + 1, y, z);
+		else if(world.getBlockIDAt(x - 1, y, z) != 0)
+			return new Location(x - 1, y, z);
+		else if(world.getBlockIDAt(x, y, z + 1) != 0)
+			return new Location(x, y, z + 1);
+		else if(world.getBlockIDAt(x, y, z - 1) != 0)
+			return new Location(x, y, z - 1);
+		else if(world.getBlockIDAt(x, y + 1, z) != 0)
+			return new Location(x, y + 1, z);
+		else if(world.getBlockIDAt(x, y - 1, z) != 0)
+			return new Location(x, y - 1, z);
+		else
+			return null;
 	}
 }

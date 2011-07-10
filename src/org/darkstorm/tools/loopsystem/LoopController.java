@@ -3,12 +3,15 @@ package org.darkstorm.tools.loopsystem;
 import static org.darkstorm.tools.loopsystem.Loopable.*;
 
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.Vector;
 
 public class LoopController implements UncaughtExceptionHandler {
 	private LoopControllerFactory factory;
 	private Thread loopThread;
 	private String name;
 	private Loopable loopable;
+
+	private Vector<LoopStopListener> listeners;
 
 	private volatile boolean usingGCOnLoop = false;
 
@@ -30,6 +33,7 @@ public class LoopController implements UncaughtExceptionHandler {
 		this.factory = factory;
 		this.loopable = loopable;
 		this.name = name;
+		listeners = new Vector<LoopStopListener>();
 	}
 
 	private void createThread() {
@@ -99,7 +103,7 @@ public class LoopController implements UncaughtExceptionHandler {
 			int sleepTime = loopable.loop();
 			if(sleepTime < 0)
 				handleLoopReturnCode(sleepTime);
-			else
+			else if(sleepTime > 0)
 				Thread.sleep(sleepTime);
 		} catch(InterruptedException e) {}
 	}
@@ -135,6 +139,8 @@ public class LoopController implements UncaughtExceptionHandler {
 					+ "\": ");
 			e.printStackTrace();
 			System.err.println("The thread will now stop.");
+			fireStopEvent();
+			loopThread = null;
 		}
 	}
 
@@ -166,6 +172,7 @@ public class LoopController implements UncaughtExceptionHandler {
 						loopThread.stop();
 				} else
 					join();
+				fireStopEvent();
 				loopThread = null;
 			} else {
 				new Thread() {
@@ -177,6 +184,7 @@ public class LoopController implements UncaughtExceptionHandler {
 								loopThread.stop();
 						} else
 							LoopController.this.join();
+						fireStopEvent();
 						loopThread = null;
 					};
 				}.start();
@@ -240,7 +248,31 @@ public class LoopController implements UncaughtExceptionHandler {
 	}
 
 	public boolean isActive() {
-		return !paused;
+		return isAlive() && !paused;
+	}
+
+	public void addLoopStopListener(LoopStopListener listener) {
+		synchronized(listeners) {
+			if(!listeners.contains(listener))
+				listeners.add(listener);
+		}
+	}
+
+	public boolean removeLoopStopListener(LoopStopListener listener) {
+		synchronized(listeners) {
+			return listeners.remove(listener);
+		}
+	}
+
+	private void fireStopEvent() {
+		synchronized(listeners) {
+			try {
+				for(LoopStopListener listener : listeners)
+					listener.onLoopStop(loopable);
+			} catch(Throwable exception) {
+				exception.printStackTrace();
+			}
+		}
 	}
 
 	public LoopControllerFactory getFactory() {

@@ -2,14 +2,15 @@ package org.darkstorm.minecraft.darkmod.mod;
 
 import javax.swing.JOptionPane;
 
-import org.darkstorm.minecraft.darkmod.*;
+import org.darkstorm.minecraft.darkmod.DarkMod;
+import org.darkstorm.minecraft.darkmod.access.AccessHandler;
 import org.darkstorm.minecraft.darkmod.hooks.client.Minecraft;
 import org.darkstorm.minecraft.darkmod.mod.commands.CommandManager;
 import org.darkstorm.minecraft.darkmod.mod.methods.Location;
-import org.darkstorm.tools.events.EventManager;
+import org.darkstorm.tools.events.*;
 import org.darkstorm.tools.loopsystem.*;
 
-public abstract class Mod implements Loopable {
+public abstract class Mod implements Loopable, EventListener {
 	public static enum ModControl {
 		NONE, ACTION, TOGGLE
 	}
@@ -115,13 +116,29 @@ public abstract class Mod implements Loopable {
 	}
 
 	/**
+	 * Override this if you have registered yourself for a listener via the
+	 * EventManager
+	 * 
+	 * @see EventManager
+	 */
+	@Override
+	public void onEvent(Event event) {
+	}
+
+	/**
 	 * @return whether or not the mod is running
 	 */
 	public boolean isRunning() {
 		return controller.isAlive();
 	}
 
-	// Utility methods
+	protected void sleep(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch(InterruptedException exception) {}
+	}
+
+	// Temporary utility methods (I'm not sure why I put them here...)
 
 	protected double getDistanceBetween(Location location1, Location location2) {
 		double xResult = Math.pow(Math.max(location1.getX(), location2.getX())

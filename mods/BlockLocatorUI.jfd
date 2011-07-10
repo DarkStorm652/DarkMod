@@ -14,7 +14,7 @@
       </object>
       <void method="setProperty">
        <string>title</string>
-       <string>Chest Locator</string>
+       <string>Block Locator</string>
       </void>
       <void method="setProperty">
        <string>$sizePolicy</string>
@@ -165,16 +165,56 @@
         <string>javax.swing.JMenuItem</string>
         <void method="setProperty">
          <string>text</string>
-         <string>Open chest</string>
+         <string>Left click</string>
         </void>
         <void property="name">
-         <string>openChestItem</string>
+         <string>leftClickItem</string>
         </void>
         <void method="addEvent">
          <object class="com.jformdesigner.model.FormEvent">
           <string>java.awt.event.ActionListener</string>
           <string>actionPerformed</string>
-          <string>openChestItemActionPerformed</string>
+          <string>leftClickItemActionPerformed</string>
+          <boolean>true</boolean>
+         </object>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormComponent">
+        <string>javax.swing.JMenuItem</string>
+        <void method="setProperty">
+         <string>text</string>
+         <string>Right click</string>
+        </void>
+        <void property="name">
+         <string>rightClickItem</string>
+        </void>
+        <void method="addEvent">
+         <object class="com.jformdesigner.model.FormEvent">
+          <string>java.awt.event.ActionListener</string>
+          <string>actionPerformed</string>
+          <string>rightClickItemActionPerformed</string>
+          <boolean>true</boolean>
+         </object>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormComponent">
+        <string>javax.swing.JMenuItem</string>
+        <void method="setProperty">
+         <string>text</string>
+         <string>Remove</string>
+        </void>
+        <void property="name">
+         <string>removeItem</string>
+        </void>
+        <void method="addEvent">
+         <object class="com.jformdesigner.model.FormEvent">
+          <string>java.awt.event.ActionListener</string>
+          <string>actionPerformed</string>
+          <string>removeItemActionPerformed</string>
           <boolean>true</boolean>
          </object>
         </void>

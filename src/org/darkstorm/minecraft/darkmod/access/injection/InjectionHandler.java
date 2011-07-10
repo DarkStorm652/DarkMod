@@ -1,12 +1,13 @@
-package org.darkstorm.minecraft.darkmod.injection;
+package org.darkstorm.minecraft.darkmod.access.injection;
 
 import java.awt.*;
 import java.awt.event.WindowListener;
 import java.lang.reflect.Constructor;
 
-import org.darkstorm.minecraft.darkmod.*;
+import org.darkstorm.minecraft.darkmod.DarkMod;
+import org.darkstorm.minecraft.darkmod.access.AccessHandler;
+import org.darkstorm.minecraft.darkmod.access.injection.hooks.*;
 import org.darkstorm.minecraft.darkmod.hooks.client.*;
-import org.darkstorm.minecraft.darkmod.injection.hooks.*;
 import org.darkstorm.minecraft.darkmod.tools.*;
 import org.darkstorm.minecraft.darkmod.ui.*;
 import org.darkstorm.tools.misc.SysTools;
@@ -17,7 +18,9 @@ public class InjectionHandler extends AccessHandler {
 	private Thread minecraftThread;
 	private Minecraft minecraft;
 	private Hook[] hooks;
-	private long minecraftVersion;
+
+	private long minecraftBuild;
+	private String minecraftVersion;
 
 	@Override
 	public void load(LoginUI loginUI) {
@@ -26,6 +29,7 @@ public class InjectionHandler extends AccessHandler {
 		injector.run();
 		classLoader = injector.getClassLoader();
 		hooks = injector.getHooks();
+		minecraftBuild = injector.getBuild();
 		minecraftVersion = injector.getVersion();
 	}
 
@@ -120,7 +124,12 @@ public class InjectionHandler extends AccessHandler {
 	}
 
 	@Override
-	public long getMinecraftVersion() {
+	public long getMinecraftBuild() {
+		return minecraftBuild;
+	}
+
+	@Override
+	public String getMinecraftVersion() {
 		return minecraftVersion;
 	}
 

@@ -1,6 +1,6 @@
-package org.darkstorm.minecraft.darkmod.injection.hooks;
+package org.darkstorm.minecraft.darkmod.access.injection.hooks;
 
-import org.darkstorm.minecraft.darkmod.injection.Injector;
+import org.darkstorm.minecraft.darkmod.access.injection.Injector;
 import org.jdom.Element;
 
 import com.sun.org.apache.bcel.internal.Constants;
@@ -16,6 +16,26 @@ public class BytecodeHook extends Hook {
 
 	public BytecodeHook(Injector injector, Element element) {
 		super(injector, element);
+	}
+
+	public String getClassName() {
+		return className;
+	}
+
+	public String getMethodName() {
+		return methodName;
+	}
+
+	public String getMethodSignature() {
+		return methodSignature;
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public Element[] getInstructions() {
+		return instructions;
 	}
 
 	@SuppressWarnings("unchecked")

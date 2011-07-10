@@ -1,19 +1,46 @@
-package org.darkstorm.minecraft.darkmod.injection.hooks;
+package org.darkstorm.minecraft.darkmod.access.injection.hooks;
 
-import org.darkstorm.minecraft.darkmod.injection.Injector;
+import org.darkstorm.minecraft.darkmod.access.injection.Injector;
 import org.jdom.Element;
 
 import com.sun.org.apache.bcel.internal.Constants;
 import com.sun.org.apache.bcel.internal.generic.*;
 
 public class GetterHook extends Hook {
-	@SuppressWarnings("unused")
 	private String className, interfaceName, fieldName, fieldSignature,
 			returnType, getterName;
 	private boolean isStatic;
 
 	public GetterHook(Injector injector, Element element) {
 		super(injector, element);
+	}
+
+	public String getClassName() {
+		return className;
+	}
+
+	public String getInterfaceName() {
+		return interfaceName;
+	}
+
+	public String getFieldName() {
+		return fieldName;
+	}
+
+	public String getFieldSignature() {
+		return fieldSignature;
+	}
+
+	public String getReturnType() {
+		return returnType;
+	}
+
+	public String getGetterName() {
+		return getterName;
+	}
+
+	public boolean isStatic() {
+		return isStatic;
 	}
 
 	@Override

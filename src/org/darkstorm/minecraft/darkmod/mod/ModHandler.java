@@ -2,14 +2,16 @@ package org.darkstorm.minecraft.darkmod.mod;
 
 import java.util.ArrayList;
 
-import org.darkstorm.minecraft.darkmod.AccessHandler;
+import org.darkstorm.minecraft.darkmod.DarkMod;
+import org.darkstorm.minecraft.darkmod.access.AccessHandler;
+import org.darkstorm.minecraft.darkmod.events.ShutdownEvent;
 import org.darkstorm.minecraft.darkmod.mod.Mod.ModControl;
 import org.darkstorm.minecraft.darkmod.mod.commands.CommandManager;
 import org.darkstorm.minecraft.darkmod.ui.ModHandlerUI;
-import org.darkstorm.tools.events.EventManager;
+import org.darkstorm.tools.events.*;
 import org.darkstorm.tools.loopsystem.LoopManager;
 
-public class ModHandler {
+public class ModHandler implements EventListener {
 	private AccessHandler accessHandler;
 	private EventManager eventManager;
 	private LoopManager loopManager;
@@ -21,8 +23,9 @@ public class ModHandler {
 	private Object modsLock = new Object();
 
 	public ModHandler(AccessHandler accessHandler) {
+		DarkMod darkMod = DarkMod.getInstance();
 		this.accessHandler = accessHandler;
-		eventManager = new EventManager();
+		eventManager = darkMod.getEventManager();
 		loopManager = new LoopManager(new ThreadGroup("Mod Threads"));
 		loopManager.stopAll();
 		mods = new ArrayList<Mod>();
@@ -31,6 +34,7 @@ public class ModHandler {
 		commandManager = new CommandManager(this);
 		menuHandler = new ModMenuHandler(this);
 		modLoader.reloadMods();
+		eventManager.addListener(ShutdownEvent.class, this);
 	}
 
 	public void addMod(Mod mod) {
@@ -114,6 +118,17 @@ public class ModHandler {
 
 	public void showUI() {
 		ui.setVisible(true);
+	}
+
+	@Override
+	public void onEvent(Event event) {
+		if(event instanceof ShutdownEvent) {
+			synchronized(modsLock) {
+				for(Mod mod : mods)
+					if(mod.isRunning())
+						mod.stop();
+			}
+		}
 	}
 
 	public AccessHandler getAccessHandler() {

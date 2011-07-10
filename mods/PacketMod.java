@@ -65,9 +65,21 @@ public class PacketMod extends Mod implements EventListener, CommandListener {
 					return;
 			}
 			String fields = "";
-			for(Field field : packetClass.getDeclaredFields())
+			for(Field field : packetClass.getDeclaredFields()) {
+				if(!field.isAccessible())
+					field.setAccessible(true);
 				fields += " " + field.getName() + ":" + field.get(packet);
-			System.out.println(packetClass.getName() + fields);
+			}
+			String direction = " ? ";
+			switch(packetEvent.getStatus()) {
+			case PacketEvent.SENT:
+				direction = "-> ";
+				break;
+			case PacketEvent.RECEIVED:
+				direction = "<- ";
+				break;
+			}
+			System.out.println(direction + packetClass.getName() + fields);
 		} catch(Exception exception) {
 			System.out.println(exception.toString());
 		}

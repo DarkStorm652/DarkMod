@@ -1,4 +1,4 @@
-package org.darkstorm.minecraft.darkmod.injection.hooks;
+package org.darkstorm.minecraft.darkmod.access.injection.hooks;
 
 import java.io.*;
 import java.net.URL;
@@ -7,7 +7,7 @@ import java.util.*;
 import javax.swing.JProgressBar;
 
 import org.darkstorm.minecraft.darkmod.DarkMod;
-import org.darkstorm.minecraft.darkmod.injection.Injector;
+import org.darkstorm.minecraft.darkmod.access.injection.Injector;
 import org.darkstorm.minecraft.darkmod.tools.Tools;
 import org.darkstorm.minecraft.darkmod.ui.LoginUI;
 import org.darkstorm.tools.misc.SysTools;
@@ -17,7 +17,9 @@ import org.jdom.output.*;
 
 public class HookLoader {
 	private Injector injector;
-	private long version;
+
+	private long build;
+	private String version;
 
 	public HookLoader(Injector injector) {
 		this.injector = injector;
@@ -30,7 +32,7 @@ public class HookLoader {
 		}
 		Document document = loadXML();
 		if(loginUI != null)
-			loginUI.setDialogText("Caching hooks for offline...");
+			loginUI.setDialogText("Caching hooks for offline mode...");
 		outputXML(document);
 		if(loginUI != null)
 			loginUI.getDialogProgressBar().setIndeterminate(false);
@@ -43,7 +45,7 @@ public class HookLoader {
 			if(Tools.isRunningFromJar() && !darkMod.isPlayingOffline())
 				return new SAXBuilder().build(new URL(
 						"http://darkstorm652.webs.com/darkmod/Hooks ("
-								+ Tools.getMinecraftVersion() + ","
+								+ Tools.getMinecraftBuild() + ","
 								+ DarkMod.getVersion() + ").xml"));
 			return new SAXBuilder().build(new File("Hooks.xml"));
 		} catch(Exception exception) {
@@ -69,7 +71,8 @@ public class HookLoader {
 	private Hook[] parseHooks(Document document, LoginUI loginUI) {
 		List<Hook> hooks = new ArrayList<Hook>();
 		Element rootElement = document.getRootElement();
-		version = Long.valueOf(rootElement.getAttributeValue("version"));
+		build = Long.valueOf(rootElement.getAttributeValue("build"));
+		version = rootElement.getAttributeValue("version");
 		List<Element> hookElements = rootElement.getChildren("hook");
 		JProgressBar progressBar = null;
 		if(loginUI != null) {
@@ -107,7 +110,11 @@ public class HookLoader {
 		return injector;
 	}
 
-	public long getVersion() {
+	public long getBuild() {
+		return build;
+	}
+
+	public String getVersion() {
 		return version;
 	}
 }

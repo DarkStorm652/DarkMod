@@ -1,24 +1,35 @@
 package org.darkstorm.minecraft.darkmod;
 
+import org.darkstorm.minecraft.darkmod.access.AccessHandler;
+import org.darkstorm.minecraft.darkmod.access.injection.InjectionHandler;
 import org.darkstorm.minecraft.darkmod.hooks.client.*;
-import org.darkstorm.minecraft.darkmod.injection.InjectionHandler;
 import org.darkstorm.minecraft.darkmod.mod.ModHandler;
 import org.darkstorm.minecraft.darkmod.tools.StartupUtil;
 import org.darkstorm.minecraft.darkmod.ui.*;
+import org.darkstorm.tools.events.EventManager;
 import org.darkstorm.tools.exceptions.InstanceAlreadyExistsException;
+import org.darkstorm.tools.io.FileTools;
+import org.darkstorm.tools.settings.SettingsHandler;
 
 public class DarkMod {
 	private static DarkMod instance;
+
+	private SettingsHandler settingsHandler;
 	private AccessHandler accessHandler;
+	private EventManager eventManager;
 	private ModHandler modHandler;
 	private DarkModUI ui;
 
-	private long minecraftVersion;
-
 	private String username, password, sessionID;
+
+	private long minecraftBuild;
+	private String minecraftVersion;
 
 	public DarkMod() {
 		checkInstance();
+		settingsHandler = new SettingsHandler(FileTools.DEFAULT_DIR
+				+ "/.darkmod", "Settings.xml");
+		eventManager = new EventManager();
 		ui = new DarkModUI();
 		StartupUtil handler = new StartupUtil();
 		LoginUI loginUI = handler.handleLoginWithUI();
@@ -38,8 +49,9 @@ public class DarkMod {
 
 	public DarkMod(String username, String password) {
 		checkInstance();
+		eventManager = new EventManager();
 		StartupUtil handler = new StartupUtil();
-		handler.handleLogin(username, password);
+		handler.handleLoginWithoutUI(username, password);
 		this.username = handler.getUsername();
 		this.password = handler.getPassword();
 		sessionID = handler.getSessionID();
@@ -51,6 +63,7 @@ public class DarkMod {
 
 	public DarkMod(String username, String password, String sessionID) {
 		checkInstance();
+		eventManager = new EventManager();
 		this.username = username;
 		this.password = password;
 		this.sessionID = sessionID;
@@ -70,6 +83,7 @@ public class DarkMod {
 	private void handleAccess(LoginUI loginUI) {
 		accessHandler = new InjectionHandler();
 		accessHandler.load(loginUI);
+		minecraftBuild = accessHandler.getMinecraftBuild();
 		minecraftVersion = accessHandler.getMinecraftVersion();
 	}
 
@@ -77,8 +91,16 @@ public class DarkMod {
 		return instance;
 	}
 
+	public SettingsHandler getSettingsHandler() {
+		return settingsHandler;
+	}
+
 	public AccessHandler getAccessHandler() {
 		return accessHandler;
+	}
+
+	public EventManager getEventManager() {
+		return eventManager;
 	}
 
 	public DarkModUI getUI() {
@@ -129,11 +151,15 @@ public class DarkMod {
 		return modHandler;
 	}
 
-	public long getMinecraftVersion() {
+	public long getMinecraftBuild() {
+		return minecraftBuild;
+	}
+
+	public String getMinecraftVersion() {
 		return minecraftVersion;
 	}
 
 	public static double getVersion() {
-		return 1.51;
+		return 1.52;
 	}
 }

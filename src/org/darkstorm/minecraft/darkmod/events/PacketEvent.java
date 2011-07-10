@@ -8,11 +8,15 @@ public class PacketEvent extends Event {
 	public static final int RECEIVED = 1;
 
 	public PacketEvent(Packet packet, int status) {
-		super(packet);
+		super(packet, status);
 	}
 
 	public Packet getPacket() {
 		return (Packet) info[0];
+	}
+
+	public int getStatus() {
+		return (Integer) info[1];
 	}
 
 }

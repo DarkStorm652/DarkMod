@@ -1,7 +1,7 @@
-package org.darkstorm.minecraft.darkmod.injection.hooks;
+package org.darkstorm.minecraft.darkmod.access.injection.hooks;
 
-import org.darkstorm.minecraft.darkmod.injection.Injector;
-import org.darkstorm.minecraft.darkmod.injection.misc.ClassVector;
+import org.darkstorm.minecraft.darkmod.access.injection.Injector;
+import org.darkstorm.minecraft.darkmod.access.injection.misc.ClassVector;
 import org.jdom.Element;
 
 import com.sun.org.apache.bcel.internal.Constants;

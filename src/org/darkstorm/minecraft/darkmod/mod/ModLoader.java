@@ -4,7 +4,8 @@ import java.io.File;
 import java.net.URL;
 
 import org.darkstorm.minecraft.darkmod.*;
-import org.darkstorm.minecraft.darkmod.injection.misc.CustomClassLoader;
+import org.darkstorm.minecraft.darkmod.access.AccessHandler;
+import org.darkstorm.minecraft.darkmod.access.injection.misc.CustomClassLoader;
 import org.darkstorm.tools.strings.StringTools;
 
 public class ModLoader {

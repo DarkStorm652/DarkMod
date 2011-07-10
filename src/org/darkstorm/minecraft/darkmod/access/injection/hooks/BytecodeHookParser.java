@@ -1,4 +1,4 @@
-package org.darkstorm.minecraft.darkmod.injection.hooks;
+package org.darkstorm.minecraft.darkmod.access.injection.hooks;
 
 import java.lang.reflect.Constructor;
 import java.util.*;

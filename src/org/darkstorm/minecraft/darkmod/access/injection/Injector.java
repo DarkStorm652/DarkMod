@@ -1,4 +1,4 @@
-package org.darkstorm.minecraft.darkmod.injection;
+package org.darkstorm.minecraft.darkmod.access.injection;
 
 import java.io.*;
 import java.net.URL;
@@ -7,14 +7,14 @@ import java.util.jar.*;
 
 import javax.swing.*;
 
-import org.darkstorm.minecraft.darkmod.injection.hooks.*;
-import org.darkstorm.minecraft.darkmod.injection.misc.*;
+import org.darkstorm.minecraft.darkmod.access.injection.hooks.*;
+import org.darkstorm.minecraft.darkmod.access.injection.misc.*;
 import org.darkstorm.minecraft.darkmod.tools.*;
 import org.darkstorm.minecraft.darkmod.ui.LoginUI;
 import org.darkstorm.tools.misc.SysTools;
 
 import com.sun.org.apache.bcel.internal.classfile.*;
-import com.sun.org.apache.bcel.internal.generic.ClassGen;
+import com.sun.org.apache.bcel.internal.generic.*;
 
 public class Injector {
 	private LoginUI loginUI;
@@ -23,7 +23,9 @@ public class Injector {
 	private ClassVector classes;
 	private ClassLoader classLoader;
 	private Hook[] hooks;
-	private long version;
+
+	private long build;
+	private String version;
 
 	private Map<String, String> interfaceToClassNamesMap = new HashMap<String, String>();
 
@@ -114,7 +116,7 @@ public class Injector {
 	private void loadHooks() {
 		HookLoader hookLoader = new HookLoader(this);
 		hooks = hookLoader.loadHooks(loginUI);
-		version = hookLoader.getVersion();
+		build = hookLoader.getBuild();
 	}
 
 	private void injectHooks() {
@@ -128,11 +130,17 @@ public class Injector {
 			progressBar.setMaximum(classes.size() * hooks.length);
 		}
 		int progress = 0;
+		int successful = 0;
 		for(ClassGen classGen : classes) {
 			for(Hook hook : hooks) {
 				if(hook instanceof InterfaceHook) {
 					if(!hook.isInjected()) {
-						hook.attemptInjection(classGen);
+						try {
+							hook.attemptInjection(classGen);
+						} catch(Exception exception) {
+							exception.printStackTrace();
+							printFailedHook(hook);
+						}
 						if(hook.isInjected()) {
 							String interfaceName = ((InterfaceHook) hook)
 									.getInterfaceName();
@@ -157,12 +165,83 @@ public class Injector {
 				hooks.add(hook);
 		for(ClassGen classGen : classes) {
 			for(Hook hook : hooks) {
-				hook.attemptInjection(classGen);
+				try {
+					hook.attemptInjection(classGen);
+				} catch(Exception exception) {
+					System.out.println("test");
+					exception.printStackTrace();
+					printFailedHook(hook);
+				}
 				progress++;
 				if(loginUI != null)
 					progressBar.setValue(progress);
 			}
 		}
+		for(Hook hook : this.hooks)
+			if(hook.isInjected())
+				successful++;
+		if(successful < this.hooks.length) {
+			System.err.println("Failure to inject all hooks. Hooks injected: "
+					+ successful + ", hook count: " + this.hooks.length);
+			if(loginUI != null) {
+				loginUI.showError("<html><center>Failure injecting hooks.<br/>"
+						+ "Your jar may be modified to be<br/>"
+						+ "incompatible with DarkMod.</center></html>");
+			} else
+				System.exit(-1);
+		}
+	}
+
+	private void printFailedHook(Hook hook) {
+		String message = "Failed to inject ";
+		if(hook instanceof InterfaceHook) {
+			InterfaceHook interfaceHook = (InterfaceHook) hook;
+			message += "interface " + interfaceHook.getInterfaceName();
+		} else if(hook instanceof GetterHook) {
+			GetterHook getterHook = (GetterHook) hook;
+			message += "getter " + getterHook.getReturnType() + " "
+					+ getterHook.getInterfaceName() + "."
+					+ getterHook.getGetterName() + "()";
+		} else if(hook instanceof SetterHook) {
+			SetterHook setterHook = (SetterHook) hook;
+			message += "setter " + setterHook.getInterfaceName() + "."
+					+ setterHook.getSetterName() + "("
+					+ setterHook.getReturnType() + ")";
+		} else if(hook instanceof MethodHook) {
+			MethodHook methodHook = (MethodHook) hook;
+			message += "method "
+					+ Type.getReturnType(methodHook.getNewMethodSignature())
+					+ " " + methodHook.getInterfaceName() + "."
+					+ methodHook.getNewMethodName() + "(";
+			Type[] argumentTypes = Type.getArgumentTypes(methodHook
+					.getNewMethodSignature());
+			if(argumentTypes.length > 0) {
+				message += argumentTypes[0].toString();
+				for(int i = 1; i < argumentTypes.length; i++)
+					message += ", " + argumentTypes[i].toString();
+			}
+			message += ")";
+		} else if(hook instanceof CallbackHook) {
+			CallbackHook callbackHook = (CallbackHook) hook;
+			message += "callback to " + callbackHook.getInterfaceName() + "."
+					+ callbackHook.getCallbackMethod() + "()";
+		} else if(hook instanceof BytecodeHook) {
+			BytecodeHook bytecodeHook = (BytecodeHook) hook;
+			message += "bytecode to "
+					+ Type.getReturnType(bytecodeHook.getMethodSignature())
+					+ " " + bytecodeHook.getClassName() + "."
+					+ bytecodeHook.getMethodName() + "(";
+			Type[] argumentTypes = Type.getArgumentTypes(bytecodeHook
+					.getMethodSignature());
+			if(argumentTypes.length > 0) {
+				message += argumentTypes[0].toString();
+				for(int i = 1; i < argumentTypes.length; i++)
+					message += ", " + argumentTypes[i].toString();
+			}
+			message += ")";
+		} else
+			message += "an unknown hook";
+		System.err.println(message);
 	}
 
 	/**
@@ -195,9 +274,7 @@ public class Injector {
 			}
 			out.close();
 			stream.close();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		} catch(Exception e) {}
 	}
 
 	private void loadClasses() {
@@ -289,7 +366,11 @@ public class Injector {
 		return classLoader;
 	}
 
-	public long getVersion() {
+	public long getBuild() {
+		return build;
+	}
+
+	public String getVersion() {
 		return version;
 	}
 }

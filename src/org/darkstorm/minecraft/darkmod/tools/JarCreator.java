@@ -1,10 +1,11 @@
-package org.darkstorm.minecraft.darkmod;
+package org.darkstorm.minecraft.darkmod.tools;
 
 import java.io.*;
 import java.util.*;
 import java.util.jar.*;
 import java.util.zip.*;
 
+import org.darkstorm.minecraft.darkmod.DarkMod;
 import org.darkstorm.tools.io.IOTools;
 import org.darkstorm.tools.strings.StringTools;
 

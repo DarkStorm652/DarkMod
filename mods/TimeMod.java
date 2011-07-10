@@ -28,7 +28,8 @@ public class TimeMod extends Mod implements CommandListener {
 	@Override
 	public void onStart() {
 		commandManager.registerListener(new Command("time",
-				"/time [day|night|(0-24000)]", "Time control options"), this);
+				"/time [day|night|[+-*/](0-24000)]", "Time control options"),
+				this);
 	}
 
 	@Override
@@ -52,16 +53,35 @@ public class TimeMod extends Mod implements CommandListener {
 			if(parts.length == 1) {
 				displayText(ChatColor.GRAY + "Time is " + worldInfo.getTime()
 						+ ".");
-			} else if(parts[1].equalsIgnoreCase("day")) {
-				worldInfo.setTime(0);
-				displayText(ChatColor.GRAY + "It is now daytime.");
-			} else if(parts[1].equalsIgnoreCase("night")) {
-				worldInfo.setTime(14000);
-				displayText(ChatColor.GRAY + "It is now nighttime.");
-			} else if(StringTools.isLong(parts[1])) {
-				worldInfo.setTime(Long.parseLong(parts[1]));
-				displayText(ChatColor.GRAY + "It is now " + worldInfo.getTime()
-						+ ".");
+			} else if(parts.length == 2) {
+				if(parts[1].equalsIgnoreCase("day")) {
+					worldInfo.setTime(0);
+					displayText(ChatColor.GRAY + "It is now daytime.");
+				} else if(parts[1].equalsIgnoreCase("night")) {
+					worldInfo.setTime(14000);
+					displayText(ChatColor.GRAY + "It is now nighttime.");
+				} else if(!Character.isDigit(parts[1].charAt(0))
+						&& StringTools.isLong(parts[1].substring(1))) {
+					long time = Long.parseLong(parts[1].substring(1));
+					switch(parts[1].charAt(0)) {
+					case '+':
+						worldInfo.setTime(worldInfo.getTime() + time);
+						break;
+					case '-':
+						worldInfo.setTime(worldInfo.getTime() - time);
+						break;
+					case '*':
+						worldInfo.setTime(worldInfo.getTime() * time);
+						break;
+					case '/':
+						worldInfo.setTime(worldInfo.getTime() / time);
+						break;
+					}
+				} else if(StringTools.isLong(parts[1])) {
+					worldInfo.setTime(Long.parseLong(parts[1]));
+					displayText(ChatColor.GRAY + "It is now "
+							+ worldInfo.getTime() + ".");
+				}
 			}
 		}
 	}

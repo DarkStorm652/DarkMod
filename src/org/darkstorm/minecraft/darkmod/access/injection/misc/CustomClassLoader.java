@@ -1,4 +1,4 @@
-package org.darkstorm.minecraft.darkmod.injection.misc;
+package org.darkstorm.minecraft.darkmod.access.injection.misc;
 
 import java.awt.AWTPermission;
 import java.io.*;
@@ -20,8 +20,7 @@ public class CustomClassLoader extends URLClassLoader {
 		this.classes = classes;
 		this.entryNames = entryNames;
 		try {
-			URL location = new URL("file:" + minecraftJarName);
-			System.out.println(location.toURI());
+			URL location = new File(minecraftJarName).toURI().toURL();
 			CodeSource codeSource = new CodeSource(location,
 					(CodeSigner[]) null);
 			domain = new ProtectionDomain(codeSource,

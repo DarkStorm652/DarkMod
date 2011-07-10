@@ -32,7 +32,7 @@ public interface Minecraft extends Runnable {
 
 	public Map<Integer, Entity> getEntitiesByID();
 
-	public Item[] getItemCache();
+	public Item[] getItems();
 
 	public float cos(float angle);
 

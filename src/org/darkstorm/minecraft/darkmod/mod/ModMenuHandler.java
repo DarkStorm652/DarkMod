@@ -8,8 +8,9 @@ import javax.swing.*;
 import org.darkstorm.minecraft.darkmod.DarkMod;
 import org.darkstorm.minecraft.darkmod.mod.Mod.ModControl;
 import org.darkstorm.minecraft.darkmod.ui.DarkModUI;
+import org.darkstorm.tools.loopsystem.*;
 
-public class ModMenuHandler implements ActionListener {
+public class ModMenuHandler implements ActionListener, LoopStopListener {
 	private ModHandler modHandler;
 	private JMenu menu;
 	private ArrayList<JMenuItem> menuItems;
@@ -27,6 +28,9 @@ public class ModMenuHandler implements ActionListener {
 		menu.add(new JSeparator());
 		separator = (JSeparator) menu.add(new JSeparator());
 		ui.addMenu(menu);
+		LoopManager loopManager = modHandler.getLoopManager();
+		for(LoopController loopController : loopManager.getLoopControllers())
+			loopController.addLoopStopListener(this);
 	}
 
 	void updateMod(Mod mod) {
@@ -100,5 +104,11 @@ public class ModMenuHandler implements ActionListener {
 				else if(!menuItem.isSelected() && mod.isRunning())
 					mod.stop();
 		updateMod(mod);
+	}
+
+	@Override
+	public void onLoopStop(Loopable loopable) {
+		if(loopable instanceof Mod)
+			updateMod((Mod) loopable);
 	}
 }

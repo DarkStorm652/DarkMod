@@ -86,7 +86,7 @@ public class UpdateUtil {
 		} catch(NumberFormatException exception) {
 			return false;
 		}
-		if(latestVersion > Tools.getMinecraftVersion())
+		if(latestVersion > Tools.getMinecraftBuild())
 			if(!checkVersionCompatability()) {
 				showError("<html><center>An update to Minecraft is available but<br/>is not currently supported by DarkMod.<br/>Please wait patiently (but not long)<br/>for an update to DarkMod.</center></html>");
 				return false;
