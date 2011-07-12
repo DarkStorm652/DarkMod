@@ -10,11 +10,14 @@ public class TeleportationMod extends Mod implements CommandListener {
 		commandManager.registerListener(new Command("teleport",
 				"/teleport <<n|s|e|w|u|d> <distance>|<x> <y> <z>>",
 				"Teleports you"), this);
+		commandManager.registerListener(new Command("tp",
+				"/tp <<n|s|e|w|u|d> <distance>|<x> <y> <z>>", "Teleports you"),
+				this);
 	}
 
 	@Override
 	public void onStop() {
-		commandManager.unregisterListener("teleport");
+		commandManager.unregisterListeners(this);
 	}
 
 	@Override
@@ -48,36 +51,49 @@ public class TeleportationMod extends Mod implements CommandListener {
 		if(player == null)
 			return;
 		String[] parts = command.split(" ");
-		if(parts[0].equalsIgnoreCase("teleport") && parts.length > 1) {
-			if(parts.length == 4 && StringTools.isInteger(parts[1])
-					&& StringTools.isInteger(parts[2])
-					&& StringTools.isInteger(parts[3])) {
-				int x = Integer.parseInt(parts[1]), y = Integer
-						.parseInt(parts[2]), z = Integer.parseInt(parts[3]);
+		if(parts.length > 1) {
+			if(parts.length == 4 && StringTools.isDouble(parts[1])
+					&& StringTools.isDouble(parts[2])
+					&& StringTools.isDouble(parts[3])) {
+				double x = Double.parseDouble(parts[1]), y = Double
+						.parseDouble(parts[2]), z = Double
+						.parseDouble(parts[3]);
 				player.setPosition(x, y, z);
 				displayText(ChatColor.GRAY + "Teleported to " + ChatColor.GOLD
 						+ "(" + x + ", " + y + ", " + z + ")");
-			} else if(!StringTools.isInteger(parts[1]) && parts.length == 3
-					&& StringTools.isInteger(parts[2])) {
-				int amount = Integer.parseInt(parts[2]);
+			} else if(!StringTools.isDouble(parts[1]) && parts.length == 3
+					&& StringTools.isDouble(parts[2])) {
+				double amount = Double.parseDouble(parts[2]);
 				String direction;
 				if(parts[1].startsWith("n")) {
-					player.setX(player.getX() - amount);
+					player.setPositionAndAngles(player.getX() - amount, player
+							.getY(), player.getZ(), player.getRotationX(),
+							player.getRotationY());
 					direction = "north";
 				} else if(parts[1].startsWith("s")) {
-					player.setX(player.getX() + amount);
+					player.setPositionAndAngles(player.getX() + amount, player
+							.getY(), player.getZ(), player.getRotationX(),
+							player.getRotationY());
 					direction = "south";
 				} else if(parts[1].startsWith("e")) {
-					player.setZ(player.getZ() - amount);
+					player.setPositionAndAngles(player.getX(), player.getY(),
+							player.getZ() - amount, player.getRotationX(),
+							player.getRotationY());
 					direction = "east";
 				} else if(parts[1].startsWith("w")) {
-					player.setZ(player.getZ() + amount);
+					player.setPositionAndAngles(player.getX(), player.getY(),
+							player.getZ() + amount, player.getRotationX(),
+							player.getRotationY());
 					direction = "west";
 				} else if(parts[1].startsWith("u")) {
-					player.setY(player.getY() + amount);
+					player.setPositionAndAngles(player.getX(), player.getY()
+							+ amount, player.getZ(), player.getRotationX(),
+							player.getRotationY());
 					direction = "up";
 				} else if(parts[1].startsWith("d")) {
-					player.setY(player.getY() + amount);
+					player.setPositionAndAngles(player.getX(), player.getY()
+							- amount, player.getZ(), player.getRotationX(),
+							player.getRotationY());
 					direction = "down";
 				} else {
 					displayText(ChatColor.GRAY + "Invalid direction");
