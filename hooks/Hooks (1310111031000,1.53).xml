@@ -88,6 +88,8 @@
   <hook type="getter" class="ls" interface="org.darkstorm.minecraft.darkmod.hooks.client.Animable" field="ae" signature="I" static="false" return="int" getter="getAttackTimer" />
   <hook type="setter" class="ls" interface="org.darkstorm.minecraft.darkmod.hooks.client.Animable" field="ae" signature="I" static="false" argument="int" setter="setAttackTimer" />
   <hook type="interface" class="sn" interface="org.darkstorm.minecraft.darkmod.hooks.client.Entity" />
+  <hook type="method" class="sn" interface="org.darkstorm.minecraft.darkmod.hooks.client.Entity" method="b" signature="(DDDFF)V" new_method="setPositionAndRotation" new_signature="(DDDFF)V" />
+  <hook type="method" class="sn" interface="org.darkstorm.minecraft.darkmod.hooks.client.Entity" method="c" signature="(DDDFF)V" new_method="setPositionAndAngles" new_signature="(DDDFF)V" />
   <hook type="getter" class="sn" interface="org.darkstorm.minecraft.darkmod.hooks.client.Entity" field="aM" signature="D" static="false" return="double" getter="getX" />
   <hook type="setter" class="sn" interface="org.darkstorm.minecraft.darkmod.hooks.client.Entity" field="aM" signature="D" static="false" argument="double" setter="setX" />
   <hook type="getter" class="sn" interface="org.darkstorm.minecraft.darkmod.hooks.client.Entity" field="aN" signature="D" static="false" return="double" getter="getY" />

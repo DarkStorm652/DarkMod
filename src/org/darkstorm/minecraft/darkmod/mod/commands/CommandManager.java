@@ -23,7 +23,6 @@ public class CommandManager {
 			for(Command registeredCommand : commandListeners.keySet()) {
 				try {
 					if(registeredCommand.matches(text)) {
-						System.out.println(registeredCommand);
 						CommandListener commandListener = commandListeners
 								.get(registeredCommand);
 						try {
@@ -34,8 +33,7 @@ public class CommandManager {
 						}
 						return false;
 					}
-				} catch(Exception exception) {
-				}
+				} catch(Exception exception) {}
 			}
 		}
 		return true;
@@ -66,6 +64,19 @@ public class CommandManager {
 				if(registeredCommand.matches(command))
 					return commandListeners.remove(registeredCommand);
 			return null;
+		}
+	}
+
+	public void unregisterListeners(CommandListener listener) {
+		synchronized(lock) {
+			if(listener == null)
+				throw new NullPointerException();
+			for(Command command : commandListeners.keySet()) {
+				CommandListener registeredListener = commandListeners
+						.get(command);
+				if(registeredListener.equals(listener))
+					commandListeners.remove(command);
+			}
 		}
 	}
 

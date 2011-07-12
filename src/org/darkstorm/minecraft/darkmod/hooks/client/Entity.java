@@ -37,6 +37,12 @@ public interface Entity {
 
 	public void setRotationY(float rotationY);
 
+	public void setPositionAndRotation(double x, double y, double z,
+			float rotationX, float rotationY);
+
+	public void setPositionAndAngles(double x, double y, double z,
+			float rotationX, float rotationZ);
+
 	public float getFallDistance();
 
 	public void setFallDistance(float fallDistance);
