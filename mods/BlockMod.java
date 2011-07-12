@@ -15,6 +15,7 @@ import org.lwjgl.input.*;
 
 public class BlockMod extends Mod implements EventListener, CommandListener {
 	private Vector<Location> queuedLocations = new Vector<Location>();
+	private Vector<Location> queuedSuperBreaker = new Vector<Location>();
 	private Object lock = new Object();
 
 	private int wandID = 280;
@@ -138,6 +139,9 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 		commandManager.registerListener(new Command("search",
 				"/search <blockID>",
 				"Search for blocks within the selected area"), this);
+		commandManager.registerListener(
+				new Command("superbreaker", "/superbreaker",
+						"Uses McMMO super-breaker on selected blocks"), this);
 	}
 
 	@Override
@@ -145,25 +149,12 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 		eventManager.removeListener(RenderEvent.class, this);
 		eventManager.removeListener(BlockDigEvent.class, this);
 		eventManager.removeListener(PacketEvent.class, this);
-		commandManager.unregisterListener("set");
-		commandManager.unregisterListener("tunnel");
-		commandManager.unregisterListener("walls");
-		commandManager.unregisterListener("platform");
-		commandManager.unregisterListener("box");
-		commandManager.unregisterListener("expand");
-		commandManager.unregisterListener("contract");
-		commandManager.unregisterListener("move");
-		commandManager.unregisterListener("wand");
-		commandManager.unregisterListener("removalrate");
-		commandManager.unregisterListener("location1");
-		commandManager.unregisterListener("location2");
-		commandManager.unregisterListener("search");
+		commandManager.unregisterListeners(this);
 		allowRemoval = false;
 		synchronized(lock) {
 			queuedLocations.clear();
+			queuedSuperBreaker.clear();
 		}
-		System.out.println("stopped");
-
 	}
 
 	@Override
@@ -669,6 +660,40 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 						displayText("Location 2 set to " + ChatColor.YELLOW
 								+ location2.toString());
 					}
+				} else if(parts[0].equalsIgnoreCase("superbreaker")
+						&& areLocationsValid()) {
+					if(!(minecraft.getWorld() instanceof MultiplayerWorld)) {
+						displayText(ChatColor.RED + "Multiplayer only!");
+						return;
+					}
+					int lowestX = min((int) location1.getX(), (int) location2
+							.getX());
+					int highestX = max((int) location1.getX(), (int) location2
+							.getX());
+					int lowestY = min((int) location1.getY(), (int) location2
+							.getY());
+					int highestY = max((int) location1.getY(), (int) location2
+							.getY());
+					int lowestZ = min((int) location1.getZ(), (int) location2
+							.getZ());
+					int highestZ = max((int) location1.getZ(), (int) location2
+							.getZ());
+
+					synchronized(lock) {
+						for(int xOffset = 0; xOffset < highestX - lowestX + 1; xOffset++) {
+							for(int yOffset = highestY - lowestY; yOffset >= 0; yOffset--) {
+								for(int zOffset = 0; zOffset < highestZ
+										- lowestZ + 1; zOffset++) {
+									int x = lowestX + xOffset;
+									int y = lowestY + yOffset;
+									int z = lowestZ + zOffset;
+									Location location = new Location(x, y, z);
+									if(!queuedSuperBreaker.contains(location))
+										queuedSuperBreaker.add(location);
+								}
+							}
+						}
+					}
 				} else if(!areLocationsValid())
 					displayText(ChatColor.RED + "Locations not set!");
 			}
@@ -726,20 +751,22 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 		return java.lang.Math.max(a, b);
 	}
 
-	private void removeAt(int x, int y, int z) {
+	private void punchAt(int x, int y, int z) {
 		if(minecraft.getWorld() instanceof MultiplayerWorld) {
-			MultiplayerPlayerController controller = (MultiplayerPlayerController) minecraft
-					.getPlayerController();
-			MultiplayerPlayer player = (MultiplayerPlayer) minecraft
-					.getPlayer();
-			Inventory inventory = player.getInventory();
 			MultiplayerWorld world = (MultiplayerWorld) minecraft.getWorld();
 			NetworkHandler networkHandler = world.getNetworkHandler();
-			controller.setSelectedItemIndex(inventory.getSelectedIndex());
-			Packet packet = (Packet) ReflectionUtil.instantiate(
-					inventoryItemSelectClass, new Class<?>[] { Integer.TYPE },
-					inventory.getSelectedIndex());
-			packet = (Packet) ReflectionUtil.instantiate(blockDigClass,
+			Packet packet = (Packet) ReflectionUtil.instantiate(blockDigClass,
+					new Class<?>[] { Integer.TYPE, Integer.TYPE, Integer.TYPE,
+							Integer.TYPE, Integer.TYPE }, 0, x, y, z, 0);
+			networkHandler.sendPacket(packet);
+		}
+	}
+
+	private void removeAt(int x, int y, int z) {
+		if(minecraft.getWorld() instanceof MultiplayerWorld) {
+			MultiplayerWorld world = (MultiplayerWorld) minecraft.getWorld();
+			NetworkHandler networkHandler = world.getNetworkHandler();
+			Packet packet = (Packet) ReflectionUtil.instantiate(blockDigClass,
 					new Class<?>[] { Integer.TYPE, Integer.TYPE, Integer.TYPE,
 							Integer.TYPE, Integer.TYPE }, 0, x, y, z, 0);
 			networkHandler.sendPacket(packet);
@@ -863,6 +890,7 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 				if(Keyboard.isKeyDown(Keyboard.KEY_B)) {
 					synchronized(lock) {
 						queuedLocations.clear();
+						queuedSuperBreaker.clear();
 					}
 					buttonReleased = true;
 					stopRemoving = true;
@@ -1018,20 +1046,35 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 										removeAt(x, y, z);
 										if(checkRemove(x, y, z))
 											queuedLocations.remove(location);
-										else
-											queuedLocations
-													.add(queuedLocations
-															.remove(queuedLocations
-																	.indexOf(location)));
 										removeFailCounter = 0;
 										stopRemoving = false;
 										break;
-									} else
-										queuedLocations.add(queuedLocations
-												.remove(queuedLocations
-														.indexOf(location)));
+									}
 								} else
 									queuedLocations.remove(location);
+							}
+						}
+						for(int i = 0; i < removalRate
+								&& queuedSuperBreaker.size() > 0; i++) {
+							System.out.println("Queued super-breaker length: "
+									+ queuedLocations.size());
+							for(int loc = 0; loc < queuedSuperBreaker.size(); loc++) {
+								Location location = queuedSuperBreaker.get(loc);
+								final int x = (int) location.getX();
+								final int y = (int) location.getY();
+								final int z = (int) location.getZ();
+								int id = world.getBlockIDAt(x, y, z);
+								if(id != 0 && id != 7 && id != 8 && id != 9
+										&& id != 10 && id != 11) {
+									if(getDistanceBetweenOptimized(
+											new Location(x, y, z),
+											new Location(myX, myY, myZ)) < 36) {
+										punchAt(x, y, z);
+										queuedSuperBreaker.remove(location);
+										break;
+									}
+								} else
+									queuedSuperBreaker.remove(location);
 							}
 						}
 					}
