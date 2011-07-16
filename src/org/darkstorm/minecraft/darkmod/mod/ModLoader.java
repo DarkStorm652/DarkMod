@@ -3,9 +3,10 @@ package org.darkstorm.minecraft.darkmod.mod;
 import java.io.File;
 import java.net.URL;
 
-import org.darkstorm.minecraft.darkmod.*;
+import org.darkstorm.minecraft.darkmod.DarkMod;
 import org.darkstorm.minecraft.darkmod.access.AccessHandler;
 import org.darkstorm.minecraft.darkmod.access.injection.misc.CustomClassLoader;
+import org.darkstorm.minecraft.darkmod.tools.Tools;
 import org.darkstorm.tools.strings.StringTools;
 
 public class ModLoader {
@@ -17,7 +18,13 @@ public class ModLoader {
 
 	public void reloadMods() {
 		try {
-			File modsDir = new File("mods");
+			File modsDir;
+			if(Tools.isRunningFromJar()) {
+				File jar = Tools.getCurrentJar();
+				File currentDirectory = jar.getParentFile();
+				modsDir = new File(currentDirectory, "mods");
+			} else
+				modsDir = new File("./mods");
 			if(!modsDir.exists())
 				modsDir.mkdir();
 			URL modsDirURL = modsDir.toURI().toURL();

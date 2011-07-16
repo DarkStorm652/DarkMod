@@ -5,8 +5,8 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/jdom.jar"/>
 	<classpathentry kind="lib" path="lib/jopt-simple-3.2.jar"/>
-	<classpathentry kind="lib" path="lib/lwgjl2.7.1/jinput.jar"/>
 	<classpathentry kind="lib" path="lib/lwgjl2.7.1/lwjgl_util.jar"/>
 	<classpathentry kind="lib" path="lib/lwgjl2.7.1/lwjgl.jar"/>
+	<classpathentry kind="lib" path="lib/lwgjl2.7.1/jinput.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

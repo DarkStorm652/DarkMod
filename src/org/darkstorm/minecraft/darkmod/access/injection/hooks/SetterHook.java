@@ -46,12 +46,13 @@ public class SetterHook extends Hook {
 	@Override
 	protected void readElement(Element element) {
 		className = element.getAttributeValue("class");
-		interfaceName = element.getAttributeValue("interface");
 		fieldName = element.getAttributeValue("field");
 		fieldSignature = element.getAttributeValue("signature");
 		isStatic = Boolean.valueOf(element.getAttributeValue("static"));
 		argumentType = element.getAttributeValue("argument");
 		setterName = element.getAttributeValue("setter");
+		element = element.getParentElement();
+		interfaceName = element.getAttributeValue("interface");
 	}
 
 	@Override

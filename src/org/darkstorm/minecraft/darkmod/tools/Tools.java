@@ -23,7 +23,7 @@ public class Tools {
 	}
 
 	private static String readVersion() {
-		File workingDir = getWorkingDirectory();
+		File workingDir = getMinecraftDirectory();
 		File versionFile = new File(workingDir, "bin/version");
 		try {
 			DataInputStream inputStream = new DataInputStream(
@@ -73,7 +73,14 @@ public class Tools {
 		return version;
 	}
 
-	public static File getWorkingDirectory() {
+	public static File getCurrentDirectory() {
+		if(isRunningFromJar())
+			return getCurrentJar().getParentFile();
+		else
+			return new File(".");
+	}
+
+	public static File getMinecraftDirectory() {
 		String userHome = System.getProperty("user.home", ".");
 		File workingDirectory;
 		switch(getPlatform()) {

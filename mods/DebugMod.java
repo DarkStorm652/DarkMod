@@ -62,22 +62,25 @@ public class DebugMod extends Mod implements CommandListener {
 				}
 				if(parts[1].equalsIgnoreCase("user")) {
 					Session session = minecraft.getSession();
-					displayText("Name: " + session.getUsername()
-							+ " Password: " + session.getMultiplayerPassword()
-							+ " SessionID: " + session.getSessionID());
+					displayText(ChatColor.GRAY + "Name: "
+							+ session.getUsername() + " Password: "
+							+ session.getMultiplayerPassword() + " SessionID: "
+							+ session.getSessionID());
 				} else if(parts[1].equalsIgnoreCase("target")) {
 					EntityTarget mop = minecraft.getPlayerTarget();
 					if(mop != null)
-						displayText("Target: (" + mop.getTargetX() + ", "
-								+ mop.getTargetY() + ", " + mop.getTargetZ()
-								+ ") " + mop.getTargetFace());
+						displayText(ChatColor.GRAY + "Target: ("
+								+ mop.getTargetX() + ", " + mop.getTargetY()
+								+ ", " + mop.getTargetZ() + ") "
+								+ mop.getTargetFace());
 					else
-						displayText("No target");
+						displayText(ChatColor.GRAY + "No target");
 				} else if(parts[1].equalsIgnoreCase("spawn")) {
 					World world = minecraft.getWorld();
 					WorldInfo worldInfo = world.getWorldInfo();
-					displayText("Spawn location: (" + worldInfo.getSpawnX()
-							+ ", " + worldInfo.getSpawnY() + ", "
+					displayText(ChatColor.GRAY + "Spawn location: ("
+							+ worldInfo.getSpawnX() + ", "
+							+ worldInfo.getSpawnY() + ", "
 							+ worldInfo.getSpawnZ() + ")");
 				} else if(parts[1].equalsIgnoreCase("reflection")) {
 					if(parts[2].equalsIgnoreCase("field")) {
@@ -94,7 +97,8 @@ public class DebugMod extends Mod implements CommandListener {
 									.getClassLoader();
 							loadedClass = classLoader.loadClass(className);
 						} catch(ClassNotFoundException exception1) {
-							displayText("Class " + className + " not found");
+							displayText(ChatColor.GRAY + "Class " + className
+									+ " not found");
 							return;
 						}
 						Object fieldValue = null;
@@ -111,14 +115,16 @@ public class DebugMod extends Mod implements CommandListener {
 								field = fieldClass
 										.getDeclaredField(fieldParts[i]);
 							} catch(SecurityException exception) {
-								displayText("Security exception");
+								displayText(ChatColor.GRAY
+										+ "Security exception");
 								exception.printStackTrace();
 								return;
 							} catch(NoSuchFieldException exception) {
 								String path = fieldParts[0];
 								for(int i2 = 1; i2 < i + 1; i2++)
 									path += "." + fieldParts[i2];
-								displayText("Field " + path + " not found");
+								displayText(ChatColor.GRAY + "Field " + path
+										+ " not found");
 								return;
 							}
 							if(!field.isAccessible())
@@ -132,18 +138,19 @@ public class DebugMod extends Mod implements CommandListener {
 								String path = fieldParts[0];
 								for(int i2 = 1; i2 < i + 1; i2++)
 									path += "." + fieldParts[i2];
-								displayText("Unable to access " + path);
+								displayText(ChatColor.GRAY
+										+ "Unable to access " + path);
 								exception.printStackTrace();
 							} catch(IllegalAccessException exception) {
 								String path = fieldParts[0];
 								for(int i2 = 1; i2 < i + 1; i2++)
 									path += "." + fieldParts[i2];
-								displayText("Field " + path
+								displayText(ChatColor.GRAY + "Field " + path
 										+ " not accessible (shouldn\'t happen)");
 								exception.printStackTrace();
 							}
 						}
-						displayText(fieldValue.toString());
+						displayText(ChatColor.GRAY + fieldValue.toString());
 					} else if(parts[2].equalsIgnoreCase("method")) {
 						String className = parts[3];
 						String methodName = parts[4];

@@ -46,12 +46,14 @@ public class GetterHook extends Hook {
 	@Override
 	protected void readElement(Element element) {
 		className = element.getAttributeValue("class");
-		interfaceName = element.getAttributeValue("interface");
 		fieldName = element.getAttributeValue("field");
 		fieldSignature = element.getAttributeValue("signature");
 		isStatic = Boolean.valueOf(element.getAttributeValue("static"));
 		returnType = element.getAttributeValue("return");
 		getterName = element.getAttributeValue("getter");
+		element = element.getParentElement();
+		interfaceName = element.getAttributeValue("interface");
+
 	}
 
 	@Override

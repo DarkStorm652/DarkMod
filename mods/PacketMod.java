@@ -5,6 +5,7 @@ import org.darkstorm.minecraft.darkmod.events.PacketEvent;
 import org.darkstorm.minecraft.darkmod.hooks.client.Packet;
 import org.darkstorm.minecraft.darkmod.mod.Mod;
 import org.darkstorm.minecraft.darkmod.mod.commands.*;
+import org.darkstorm.minecraft.darkmod.mod.methods.constants.ChatColor;
 import org.darkstorm.tools.events.*;
 
 public class PacketMod extends Mod implements EventListener, CommandListener {
@@ -91,8 +92,15 @@ public class PacketMod extends Mod implements EventListener, CommandListener {
 		if(parts[0].equalsIgnoreCase("pf") && parts.length == 2
 				&& parts[1].length() > 0) {
 			synchronized(lock) {
-				filterList.add(parts[1]);
-				displayText("Filtering packet: " + parts[1]);
+				if(!filterList.contains(parts[1])) {
+					filterList.add(parts[1]);
+					displayText(ChatColor.GRAY + "Filtering packet: "
+							+ ChatColor.GOLD + parts[1]);
+				} else {
+					filterList.remove(parts[1]);
+					displayText(ChatColor.GRAY + "Unfiltering packet: "
+							+ ChatColor.GOLD + parts[1]);
+				}
 			}
 		}
 	}

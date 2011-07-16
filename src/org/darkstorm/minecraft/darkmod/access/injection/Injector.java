@@ -96,7 +96,7 @@ public class Injector {
 			loginUI.setDialogText("Locating minecraft directory...");
 			loginUI.getDialogProgressBar().setIndeterminate(true);
 		}
-		File workingDir = Tools.getWorkingDirectory();
+		File workingDir = Tools.getMinecraftDirectory();
 		String path = workingDir.getAbsolutePath() + "/bin/minecraft.jar";
 		minecraftJarName = path;
 		File file = new File(path);
@@ -309,7 +309,7 @@ public class Injector {
 	}
 
 	private URL[] locateExtraJars() {
-		File workingDir = Tools.getWorkingDirectory();
+		File workingDir = Tools.getMinecraftDirectory();
 		String path = workingDir.getAbsolutePath() + "/bin/";
 		File dir = new File(path);
 		try {

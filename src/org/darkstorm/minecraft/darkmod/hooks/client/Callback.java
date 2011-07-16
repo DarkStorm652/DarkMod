@@ -42,7 +42,7 @@ public class Callback {
 			manager.sendEvent(new BlockDigEvent(status));
 	}
 
-	public static boolean handleText(String text) {
+	public static String handleText(String text) {
 		DarkMod darkMod = DarkMod.getInstance();
 		ModHandler modHandler = darkMod.getModHandler();
 		CommandManager commandManager = modHandler.getCommandManager();

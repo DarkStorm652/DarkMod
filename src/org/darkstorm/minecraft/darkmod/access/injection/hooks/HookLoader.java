@@ -30,7 +30,7 @@ public class HookLoader {
 			loginUI.setDialogText("Loading hooks...");
 			loginUI.getDialogProgressBar().setIndeterminate(true);
 		}
-		Document document = loadXML();
+		Document document = loadXML(loginUI);
 		if(loginUI != null)
 			loginUI.setDialogText("Caching hooks for offline mode...");
 		outputXML(document);
@@ -39,7 +39,7 @@ public class HookLoader {
 		return parseHooks(document, loginUI);
 	}
 
-	private Document loadXML() {
+	private Document loadXML(LoginUI loginUI) {
 		try {
 			DarkMod darkMod = DarkMod.getInstance();
 			if(Tools.isRunningFromJar() && !darkMod.isPlayingOffline())
@@ -50,7 +50,10 @@ public class HookLoader {
 			return new SAXBuilder().build(new File("Hooks.xml"));
 		} catch(Exception exception) {
 			exception.printStackTrace();
-			SysTools.exit("Unable to load xml file!", -1);
+			if(loginUI != null)
+				loginUI.showError("Unable to download hooks!");
+			else
+				SysTools.exit("Unable to load xml file!", -1);
 		}
 		return null;
 	}
@@ -58,7 +61,7 @@ public class HookLoader {
 	private void outputXML(Document document) {
 		try {
 			XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
-			File hooksFile = new File("Hooks.xml");
+			File hooksFile = new File("./Hooks.xml");
 			File hooksDir = hooksFile.getParentFile();
 			if(!hooksDir.exists())
 				hooksFile.mkdirs();
@@ -73,7 +76,7 @@ public class HookLoader {
 		Element rootElement = document.getRootElement();
 		build = Long.valueOf(rootElement.getAttributeValue("build"));
 		version = rootElement.getAttributeValue("version");
-		List<Element> hookElements = rootElement.getChildren("hook");
+		List<Element> hookElements = rootElement.getChildren();
 		JProgressBar progressBar = null;
 		if(loginUI != null) {
 			loginUI.setDialogText("Parsing hook data...");
@@ -84,21 +87,27 @@ public class HookLoader {
 		}
 		int progress = 0;
 		for(Element element : hookElements) {
-			String type = element.getAttributeValue("type");
-			if(type == null)
-				SysTools.exit("Error loading hooks: unspecified type", -1);
-			else if(type.equals("interface"))
+			String type = element.getName();
+			if(type.equals("interface")) {
 				hooks.add(new InterfaceHook(injector, element));
-			else if(type.equals("getter"))
-				hooks.add(new GetterHook(injector, element));
-			else if(type.equals("setter"))
-				hooks.add(new SetterHook(injector, element));
-			else if(type.equals("method"))
-				hooks.add(new MethodHook(injector, element));
-			else if(type.equals("callback"))
+				for(Element interfaceElement : (List<Element>) element
+						.getChildren()) {
+					type = interfaceElement.getName();
+					if(type.equals("getter"))
+						hooks.add(new GetterHook(injector, interfaceElement));
+					else if(type.equals("setter"))
+						hooks.add(new SetterHook(injector, interfaceElement));
+					else if(type.equals("method"))
+						hooks.add(new MethodHook(injector, interfaceElement));
+					else
+						SysTools.exit("Error loading hooks: invalid type", -1);
+				}
+			} else if(type.equals("callback"))
 				hooks.add(new CallbackHook(injector, element));
 			else if(type.equals("bytecode"))
 				hooks.add(new BytecodeHook(injector, element));
+			else
+				SysTools.exit("Error loading hooks: invalid type", -1);
 			progress++;
 			if(loginUI != null)
 				progressBar.setValue(progress);

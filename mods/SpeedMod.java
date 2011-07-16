@@ -145,25 +145,29 @@ public class SpeedMod extends Mod implements EventListener, CommandListener {
 		if(parts[0].equalsIgnoreCase("speed") && parts.length == 2
 				&& StringTools.isDouble(parts[1])) {
 			speed = Double.parseDouble(parts[1]);
-			displayText("Set speed to " + ChatColor.YELLOW + speed);
+			displayText(ChatColor.GRAY + "Set speed to " + ChatColor.GOLD
+					+ speed);
 		} else if(parts[0].equalsIgnoreCase("speedmode")) {
 			if(parts.length == 1) {
 				String modeMessage;
 				if(mode == REGULAR)
-					modeMessage = ChatColor.LIME + "regular";
+					modeMessage = ChatColor.GOLD + "regular";
 				else if(mode == ABRUPT)
-					modeMessage = ChatColor.CYAN + "abrupt";
+					modeMessage = ChatColor.GOLD + "abrupt";
 				else
 					modeMessage = ChatColor.RED + "invalid";
-				displayText("Current speed mode is " + modeMessage);
+				displayText(ChatColor.GRAY + "Current speed mode is "
+						+ modeMessage);
 			} else if(parts[1].equalsIgnoreCase("regular")) {
 				mode = REGULAR;
-				displayText("Set speed mode to " + ChatColor.LIME + "regular");
+				displayText(ChatColor.GRAY + "Set speed mode to "
+						+ ChatColor.GOLD + "regular");
 			} else if(parts[1].equalsIgnoreCase("abrupt")) {
 				mode = ABRUPT;
-				displayText("Set speed mode to " + ChatColor.CYAN + "abrupt");
+				displayText(ChatColor.GRAY + "Set speed mode to "
+						+ ChatColor.GOLD + "abrupt");
 			} else
-				displayText("Invalid speed mode");
+				displayText(ChatColor.RED + "Invalid speed mode");
 		}
 	};
 }

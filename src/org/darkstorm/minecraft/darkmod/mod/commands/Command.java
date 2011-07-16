@@ -1,14 +1,13 @@
 package org.darkstorm.minecraft.darkmod.mod.commands;
 
 public class Command {
-	private String command, shortDescription, longDescription;
+	private String command, usage, description;
 
-	public Command(String command, String shortDescription,
-			String longDescription) {
+	public Command(String command, String usage, String description) {
 		validateCommand(command);
 		this.command = command;
-		this.shortDescription = shortDescription;
-		this.longDescription = longDescription;
+		this.usage = usage;
+		this.description = description;
 	}
 
 	private void validateCommand(String command) {
@@ -43,12 +42,12 @@ public class Command {
 		return command;
 	}
 
-	public String getShortDescription() {
-		return shortDescription;
+	public String getUsage() {
+		return usage;
 	}
 
-	public String getLongDescription() {
-		return longDescription;
+	public String getDescription() {
+		return description;
 	}
 
 	@Override

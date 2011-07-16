@@ -14,15 +14,22 @@ public class CommandManager {
 		commandListeners = new HashMap<Command, CommandListener>();
 	}
 
-	public boolean handleText(String text) {
+	public String handleText(String text) {
 		if(text == null)
-			return false;
-		if(!text.startsWith("/") || text.startsWith("//"))
-			return true;
+			return null;
+		if(!text.startsWith("/"))
+			return text;
+		boolean doubleSlash = false;
+		if(text.startsWith("//")) {
+			text = text.substring(1);
+			doubleSlash = true;
+		}
 		synchronized(lock) {
 			for(Command registeredCommand : commandListeners.keySet()) {
 				try {
 					if(registeredCommand.matches(text)) {
+						if(doubleSlash)
+							return text;
 						CommandListener commandListener = commandListeners
 								.get(registeredCommand);
 						try {
@@ -31,12 +38,14 @@ public class CommandManager {
 							exception.printStackTrace();
 							commandListeners.remove(registeredCommand);
 						}
-						return false;
+						return null;
 					}
 				} catch(Exception exception) {}
 			}
 		}
-		return true;
+		if(doubleSlash)
+			return "/" + text;
+		return text;
 	}
 
 	public void registerListener(Command command,
@@ -71,7 +80,8 @@ public class CommandManager {
 		synchronized(lock) {
 			if(listener == null)
 				throw new NullPointerException();
-			for(Command command : commandListeners.keySet()) {
+			Set<Command> keys = new HashSet<Command>(commandListeners.keySet());
+			for(Command command : keys) {
 				CommandListener registeredListener = commandListeners
 						.get(command);
 				if(registeredListener.equals(listener))

@@ -106,7 +106,7 @@ public class UpdateUtil {
 			String minecraftJarURLPath = "http://s3.amazonaws.com/MinecraftDownload/minecraft.jar?user="
 					+ username + "&ticket=" + downloadTicket;
 			URL minecraftJarURL = new URL(minecraftJarURLPath);
-			File minecraftJar = new File(Tools.getWorkingDirectory(),
+			File minecraftJar = new File(Tools.getMinecraftDirectory(),
 					"bin/minecraft.jar");
 			IOTools.download(minecraftJarURL, minecraftJar);
 			showMessage("Minecraft successfully updated!");

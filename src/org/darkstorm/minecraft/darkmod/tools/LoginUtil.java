@@ -62,7 +62,7 @@ public class LoginUtil {
 	public boolean loadLogin() {
 		DataInputStream inputStream = null;
 		try {
-			File lastLogin = new File(Tools.getWorkingDirectory(), "lastlogin");
+			File lastLogin = new File(Tools.getMinecraftDirectory(), "lastlogin");
 			if(!lastLogin.exists())
 				return false;
 			Cipher cipher = getCipher(2, "passwordfile");
@@ -92,7 +92,7 @@ public class LoginUtil {
 
 	public void saveLogin() {
 		try {
-			File lastLogin = new File(Tools.getWorkingDirectory(), "lastlogin");
+			File lastLogin = new File(Tools.getMinecraftDirectory(), "lastlogin");
 
 			Cipher cipher = getCipher(1, "passwordfile");
 			DataOutputStream dos;

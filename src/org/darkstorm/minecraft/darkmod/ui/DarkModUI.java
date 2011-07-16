@@ -87,7 +87,7 @@ public class DarkModUI extends JFrame {
 		DarkMod darkMod = DarkMod.getInstance();
 		AccessHandler accessHandler = darkMod.getAccessHandler();
 		Minecraft minecraft = accessHandler.getMinecraft();
-		minecraft.takeScreenshot(Tools.getWorkingDirectory(),
+		minecraft.takeScreenshot(Tools.getMinecraftDirectory(),
 				canvas.getWidth(), canvas.getHeight());
 	}
 

@@ -14,45 +14,45 @@ import org.darkstorm.tools.strings.StringTools;
 import org.lwjgl.input.*;
 
 public class BlockMod extends Mod implements EventListener, CommandListener {
-	private Vector<Location> queuedLocations = new Vector<Location>();
-	private Vector<Location> queuedSuperBreaker = new Vector<Location>();
-	private Object lock = new Object();
+	public Vector<Location> queuedLocations = new Vector<Location>();
+	public Vector<Location> queuedSuperBreaker = new Vector<Location>();
+	public Object lock = new Object();
 
-	private int wandID = 280;
-	private int wandType = -1;
-	private static final int WAND_NONE = -1;
-	private static final int WAND_SELECT = 0;
-	private static final int WAND_SUPER = 1;
-	private int superWandHitType = 0;
-	private static final int SUPER_WAND_PER_CLICK = 0;
-	private static final int SUPER_WAND_ON_HOLD = 1;
+	public int wandID = 280;
+	public int wandType = -1;
+	public static final int WAND_NONE = -1;
+	public static final int WAND_SELECT = 0;
+	public static final int WAND_SUPER = 1;
+	public int superWandHitType = 0;
+	public static final int SUPER_WAND_PER_CLICK = 0;
+	public static final int SUPER_WAND_ON_HOLD = 1;
 
-	private boolean allowRemoval = false;
-	private boolean stopRemoving = false;
-	private boolean buttonReleased = true;
-	private Location location1;
-	private Location location2;
+	public boolean allowRemoval = false;
+	public boolean stopRemoving = false;
+	public boolean buttonReleased = true;
+	public Location location1;
+	public Location location2;
 
-	private int lastRemoveX = 0;
-	private int lastRemoveY = 0;
-	private int lastRemoveZ = 0;
-	private int removeFailCounter = 0;
+	public int lastRemoveX = 0;
+	public int lastRemoveY = 0;
+	public int lastRemoveZ = 0;
+	public int removeFailCounter = 0;
 
-	private boolean tunnel;
-	private int tunnelWidth;
-	private int tunnelHeight;
-	private int direction = -1;
-	private static final int NORTH_SOUTH = 0;
-	private static final int EAST_WEST = 1;
-	private static final int UP_DOWN = 2;
+	public boolean tunnel;
+	public int tunnelWidth;
+	public int tunnelHeight;
+	public int direction = -1;
+	public static final int NORTH_SOUTH = 0;
+	public static final int EAST_WEST = 1;
+	public static final int UP_DOWN = 2;
 
-	private int removalRate = 1;
+	public int removalRate = 1;
 
-	private Class<?> blockDigClass;
-	private Class<?> blockPlaceClass;
-	private Class<?> inventoryItemSelectClass;
-	private Class<?> inventoryItemClass;
-	private GuiScreen lastGuiScreen;
+	public Class<?> blockDigClass;
+	public Class<?> blockPlaceClass;
+	public Class<?> inventoryItemSelectClass;
+	public Class<?> inventoryItemClass;
+	public GuiScreen lastGuiScreen;
 
 	public BlockMod() {
 		blockDigClass = ClassRepository
@@ -170,10 +170,10 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 					int id = Integer.parseInt(parts[1]);
 					if(id == 0) {
 						removeBlocks();
-						displayText("Removed blocks!");
+						displayText(ChatColor.GRAY + "Removed blocks.");
 					} else {
 						addBlocks(id);
-						displayText("Added blocks!");
+						displayText(ChatColor.GRAY + "Added blocks.");
 					}
 				} else if(parts[0].equalsIgnoreCase("search")
 						&& parts.length == 2 && areLocationsValid()) {
@@ -226,7 +226,8 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 							location2 = new Location(myX, location2.getY(),
 									location2.getZ());
 							direction = NORTH_SOUTH;
-							displayText("Tunneling §bnorth/south");
+							displayText(ChatColor.GRAY + "Tunneling "
+									+ ChatColor.GOLD + "north/south");
 						} else if(directionString.equalsIgnoreCase("ew")
 								|| directionString.equalsIgnoreCase("we")) {
 							tunnelWidth = getMaxX() - getMinX();
@@ -236,7 +237,8 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 							location2 = new Location(location2.getX(),
 									location2.getY(), myZ);
 							direction = EAST_WEST;
-							displayText("Tunneling §beast/west");
+							displayText(ChatColor.GRAY + "Tunneling "
+									+ ChatColor.GOLD + "east/west");
 						} else if(directionString.equalsIgnoreCase("ud")
 								|| directionString.equalsIgnoreCase("du")) {
 							tunnelWidth = getMaxX() - getMinX();
@@ -246,7 +248,8 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 							location2 = new Location(location2.getX(), myY,
 									location2.getZ());
 							direction = UP_DOWN;
-							displayText("Tunneling §bup/down");
+							displayText(ChatColor.GRAY + "Tunneling "
+									+ ChatColor.GOLD + "up/down");
 						} else
 							return;
 						tunnel = true;
@@ -263,37 +266,43 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 						location = location1.getX() == getMinX() ? location1
 								: location2;
 						location.setX(location.getX() - value);
-						displayText("Expanded §b" + value + " §anorth");
+						displayText(ChatColor.GRAY + "Expanded "
+								+ ChatColor.GOLD + value + " north");
 						break;
 					case 's':
 						location = location1.getX() == getMaxX() ? location1
 								: location2;
 						location.setX(location.getX() + value);
-						displayText("Expanded §b" + value + " §asouth");
+						displayText(ChatColor.GRAY + "Expanded "
+								+ ChatColor.GOLD + value + " south");
 						break;
 					case 'e':
 						location = location1.getZ() == getMinZ() ? location1
 								: location2;
 						location.setZ(location.getZ() - value);
-						displayText("Expanded §b" + value + " §aeast");
+						displayText(ChatColor.GRAY + "Expanded "
+								+ ChatColor.GOLD + value + " east");
 						break;
 					case 'w':
 						location = location1.getZ() == getMaxZ() ? location1
 								: location2;
 						location.setZ(location.getZ() + value);
-						displayText("Expanded §b" + value + " §awest");
+						displayText(ChatColor.GRAY + "Expanded "
+								+ ChatColor.GOLD + value + " west");
 						break;
 					case 'u':
 						location = location1.getY() == getMaxY() ? location1
 								: location2;
 						location.setY(location.getY() + value);
-						displayText("Expanded §b" + value + " §aup");
+						displayText(ChatColor.GRAY + "Expanded "
+								+ ChatColor.GOLD + value + " up");
 						break;
 					case 'd':
 						location = location1.getY() == getMinY() ? location1
 								: location2;
 						location.setY(location.getY() - value);
-						displayText("Expanded §b" + value + " §adown");
+						displayText(ChatColor.GRAY + "Expanded "
+								+ ChatColor.GOLD + value + " down");
 						break;
 					}
 				} else if(parts[0].equalsIgnoreCase("contract")
@@ -308,37 +317,43 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 						location = location1.getX() == getMaxX() ? location1
 								: location2;
 						location.setX(location.getX() - value);
-						displayText("Contracted §b" + value + " §anorth");
+						displayText(ChatColor.GRAY + "Contracted "
+								+ ChatColor.GOLD + value + " north");
 						break;
 					case 's':
 						location = location1.getX() == getMinX() ? location1
 								: location2;
 						location.setX(location.getX() + value);
-						displayText("Contracted §b" + value + " §asouth");
+						displayText(ChatColor.GRAY + "Contracted "
+								+ ChatColor.GOLD + value + " south");
 						break;
 					case 'e':
 						location = location1.getZ() == getMaxZ() ? location1
 								: location2;
 						location.setZ(location.getZ() - value);
-						displayText("Contracted §b" + value + " §aeast");
+						displayText(ChatColor.GRAY + "Contracted "
+								+ ChatColor.GOLD + value + " east");
 						break;
 					case 'w':
 						location = location1.getZ() == getMinZ() ? location1
 								: location2;
 						location.setZ(location.getZ() + value);
-						displayText("Contracted §b" + value + " §awest");
+						displayText(ChatColor.GRAY + "Contracted "
+								+ ChatColor.GOLD + value + " west");
 						break;
 					case 'u':
 						location = location1.getY() == getMinY() ? location1
 								: location2;
 						location.setY(location.getY() + value);
-						displayText("Contracted §b" + value + " §aup");
+						displayText(ChatColor.GRAY + "Contracted "
+								+ ChatColor.GOLD + value + " up");
 						break;
 					case 'd':
 						location = location1.getY() == getMaxY() ? location1
 								: location2;
 						location.setY(location.getY() - value);
-						displayText("Contracted §b" + value + " §adown");
+						displayText(ChatColor.GRAY + "Contracted "
+								+ ChatColor.GOLD + value + " down");
 						break;
 					}
 				} else if(parts[0].equalsIgnoreCase("move")
@@ -355,7 +370,8 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 						location = location1.getX() == getMaxX() ? location1
 								: location2;
 						location.setX(location.getX() - value);
-						displayText("Moved §b" + value + " §anorth");
+						displayText(ChatColor.GRAY + "Moved " + ChatColor.GOLD
+								+ value + " north");
 						break;
 					case 's':
 						location = location1.getX() == getMaxX() ? location1
@@ -364,7 +380,8 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 						location = location1.getX() == getMinX() ? location1
 								: location2;
 						location.setX(location.getX() + value);
-						displayText("Moved §b" + value + " §asouth");
+						displayText(ChatColor.GRAY + "Moved " + ChatColor.GOLD
+								+ value + " south");
 						break;
 					case 'e':
 						location = location1.getZ() == getMinZ() ? location1
@@ -373,7 +390,8 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 						location = location1.getZ() == getMaxZ() ? location1
 								: location2;
 						location.setZ(location.getZ() - value);
-						displayText("Moved §b" + value + " §aeast");
+						displayText(ChatColor.GRAY + "Moved " + ChatColor.GOLD
+								+ value + " east");
 						break;
 					case 'w':
 						location = location1.getZ() == getMaxZ() ? location1
@@ -382,7 +400,8 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 						location = location1.getZ() == getMinZ() ? location1
 								: location2;
 						location.setZ(location.getZ() + value);
-						displayText("Moved §b" + value + " §awest");
+						displayText(ChatColor.GRAY + "Moved " + ChatColor.GOLD
+								+ value + " west");
 						break;
 					case 'u':
 						location = location1.getY() == getMaxY() ? location1
@@ -391,7 +410,8 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 						location = location1.getY() == getMinY() ? location1
 								: location2;
 						location.setY(location.getY() + value);
-						displayText("Moved §b" + value + " §aup");
+						displayText(ChatColor.GRAY + "Moved " + ChatColor.GOLD
+								+ value + " up");
 						break;
 					case 'd':
 						location = location1.getY() == getMinY() ? location1
@@ -400,55 +420,72 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 						location = location1.getY() == getMaxY() ? location1
 								: location2;
 						location.setY(location.getY() - value);
-						displayText("Moved §b" + value + " §adown");
+						displayText(ChatColor.GRAY + "Moved " + ChatColor.GOLD
+								+ value + " down");
 						break;
 					}
 				} else if(parts[0].equalsIgnoreCase("wand")) {
 					if(parts.length == 1) {
-						displayText("/wand <set <id>|select|super [click|hold]>");
-						displayText("   /wand set <id>");
-						displayText("      Sets the wand ID. Used to change wand tool.");
-						displayText("   /wand select");
-						displayText("      Sets the wand type to selection.");
-						displayText("      Left click for location 1, right for 2");
-						displayText("   /wand super [click|hold]");
-						displayText("      Sets the wand type to super.");
-						displayText("      Click for removal per click, hold to hold and remove");
+						displayText(ChatColor.GRAY
+								+ "/wand <set <id>|select|super [click|hold]>");
+						displayText(ChatColor.GRAY + "   /wand set <id>");
+						displayText(ChatColor.GRAY
+								+ "      Sets the wand ID. Used to change wand tool.");
+						displayText(ChatColor.GRAY + "   /wand select");
+						displayText(ChatColor.GRAY
+								+ "      Sets the wand type to selection.");
+						displayText(ChatColor.GRAY
+								+ "      Left click for location 1, right for 2");
+						displayText(ChatColor.GRAY
+								+ "   /wand super [click|hold]");
+						displayText(ChatColor.GRAY
+								+ "      Sets the wand type to super.");
+						displayText(ChatColor.GRAY
+								+ "      Click for removal per click, hold to hold and remove");
 					} else if(parts.length == 2) {
 						if(parts[1].equalsIgnoreCase("select")) {
 							wandType = WAND_SELECT;
-							displayText("Wand type is now §eselection");
+							displayText(ChatColor.GRAY + "Wand type is now "
+									+ ChatColor.GOLD + "selection");
 						} else if(parts[1].equalsIgnoreCase("super")) {
 							wandType = WAND_SUPER;
-							displayText("Wand type is now §esuper "
-									+ (superWandHitType == SUPER_WAND_PER_CLICK ? "§aon click"
-											: "§aper frame on hold"));
+							displayText(ChatColor.GRAY
+									+ "Wand type is now "
+									+ ChatColor.GOLD
+									+ "super "
+									+ (superWandHitType == SUPER_WAND_PER_CLICK ? "on click"
+											: "per frame on hold"));
 						} else if(parts[1].equalsIgnoreCase("off")) {
 							wandType = WAND_NONE;
-							displayText("Wand type is now §coff");
+							displayText(ChatColor.GRAY + "Wand type is now "
+									+ ChatColor.GOLD + "off");
 						} else if(parts[1].equalsIgnoreCase("set")) {
 							Player player = minecraft.getPlayer();
 							Inventory inventory = player.getInventory();
 							InventoryItem item = inventory.getSelectedItem();
 							wandID = item.getID();
-							displayText("Wand id is now §b" + wandID);
+							displayText(ChatColor.GRAY + "Wand id is now "
+									+ ChatColor.GOLD + wandID);
 						}
 					} else if(parts.length == 3) {
 						if(parts[1].equalsIgnoreCase("super")) {
 							wandType = WAND_SUPER;
 							if(parts[2].equalsIgnoreCase("click")) {
 								superWandHitType = SUPER_WAND_PER_CLICK;
-								displayText("Wand type is now §esuper "
-										+ "§aon click");
+								displayText(ChatColor.GRAY
+										+ "Wand type is now " + ChatColor.GOLD
+										+ "super on click");
 							} else if(parts[2].equalsIgnoreCase("hold")) {
 								superWandHitType = SUPER_WAND_ON_HOLD;
-								displayText("Wand type is now §esuper "
-										+ "§aper frame on hold");
+								displayText(ChatColor.GRAY
+										+ "Wand type is now " + ChatColor.GOLD
+										+ "super while held");
 							}
 						} else if(parts[1].equalsIgnoreCase("set")
 								&& StringTools.isInteger(parts[1])) {
 							wandID = Integer.parseInt(parts[1]);
-							displayText("Wand id is now §b" + wandID);
+							displayText(ChatColor.GRAY + "Wand id is now "
+									+ ChatColor.GOLD + wandID);
 						}
 					}
 				} else if(parts[0].equalsIgnoreCase("removalrate")
@@ -457,7 +494,9 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 					if(value < 1)
 						return;
 					removalRate = value;
-					displayText("Wand removal rate per frame is now §b" + value);
+					displayText(ChatColor.GRAY
+							+ "Wand removal rate per recurse is now "
+							+ ChatColor.GOLD + value);
 				} else if(parts[0].equalsIgnoreCase("walls")
 						&& parts.length == 2 && StringTools.isInteger(parts[1])) {
 					int id = Integer.parseInt(parts[1]);
@@ -465,8 +504,9 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 					Inventory inventory = player.getInventory();
 					boolean multiplayer = player instanceof MultiplayerPlayer;
 					if(multiplayer && inventory.getIndexOf(id) == -1) {
-						displayText(ChatColor.RED
-								+ "Inventory does not contain any " + id);
+						displayText(ChatColor.GRAY
+								+ "Inventory does not contain any "
+								+ ChatColor.GOLD + +id);
 						return;
 					}
 					int minX = getMinX();
@@ -493,11 +533,11 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 						}
 					}
 					if(missing == 0)
-						displayText("Walls created!");
+						displayText(ChatColor.GRAY + "Walls created.");
 					else
-						displayText(ChatColor.RED.toString() + missing
-								+ " more block" + (missing == 1 ? "" : "s")
-								+ " required");
+						displayText(ChatColor.GOLD.toString() + missing
+								+ ChatColor.GRAY + " more block"
+								+ (missing == 1 ? "" : "s") + " required");
 				} else if(parts[0].equalsIgnoreCase("platform")
 						&& parts.length == 3 && StringTools.isInteger(parts[2])) {
 					char direction = parts[1].charAt(0);
@@ -506,8 +546,9 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 					Inventory inventory = player.getInventory();
 					boolean multiplayer = player instanceof MultiplayerPlayer;
 					if(multiplayer && inventory.getIndexOf(id) == -1) {
-						displayText(ChatColor.RED
-								+ "Inventory does not contain any " + id);
+						displayText(ChatColor.GRAY
+								+ "Inventory does not contain any "
+								+ ChatColor.GOLD + id);
 						return;
 					}
 					int minX = getMinX();
@@ -562,19 +603,20 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 						return;
 					}
 					if(missing == 0)
-						displayText("Platform created!");
+						displayText(ChatColor.GRAY + "Platform created.");
 					else
-						displayText(ChatColor.RED.toString() + missing
-								+ " more block" + (missing == 1 ? "" : "s")
-								+ " required");
+						displayText(ChatColor.GOLD.toString() + missing
+								+ ChatColor.GRAY + " more block"
+								+ (missing == 1 ? "" : "s") + " required");
 				} else if(parts[0].equalsIgnoreCase("box")) {
 					int id = Integer.parseInt(parts[1]);
 					Player player = minecraft.getPlayer();
 					Inventory inventory = player.getInventory();
 					boolean multiplayer = player instanceof MultiplayerPlayer;
 					if(multiplayer && inventory.getIndexOf(id) == -1) {
-						displayText(ChatColor.RED
-								+ "Inventory does not contain any " + id);
+						displayText(ChatColor.GRAY
+								+ "Inventory does not contain any "
+								+ ChatColor.GOLD + id);
 						return;
 					}
 					int minX = getMinX();
@@ -601,11 +643,11 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 						}
 					}
 					if(missing == 0)
-						displayText("Box created!");
+						displayText(ChatColor.GRAY + "Box created.");
 					else
-						displayText(ChatColor.RED.toString() + missing
-								+ " more block" + (missing == 1 ? "" : "s")
-								+ " required");
+						displayText(ChatColor.GOLD.toString() + missing
+								+ ChatColor.GRAY + " more block"
+								+ (missing == 1 ? "" : "s") + " required");
 				} else if(parts[0].equalsIgnoreCase("location1")) {
 					if(parts.length == 1 && location1 != null) {
 						int x = (int) location1.getX();
@@ -615,23 +657,23 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 						if(world == null)
 							return;
 						int id = world.getBlockIDAt(x, y, z);
-						displayText("Location 1: " + ChatColor.YELLOW
-								+ location1.toString() + ChatColor.PINK
+						displayText(ChatColor.GRAY + "Location 1: "
+								+ ChatColor.GOLD + location1.toString()
 								+ " (ID: " + id + ")");
 					} else if(parts.length == 5
 							&& parts[1].equalsIgnoreCase("set")) {
 						if(!StringTools.isInteger(parts[2])
 								|| !StringTools.isInteger(parts[3])
 								|| !StringTools.isInteger(parts[4])) {
-							displayText(ChatColor.RED + "Invalid coordinates!");
+							displayText(ChatColor.GRAY + "Invalid coordinates.");
 							return;
 						}
 						int x = Integer.valueOf(parts[2]);
 						int y = Integer.valueOf(parts[3]);
 						int z = Integer.valueOf(parts[4]);
 						location1 = new Location(x, y, z);
-						displayText("Location 1 set to " + ChatColor.YELLOW
-								+ location1.toString());
+						displayText(ChatColor.GRAY + "Location 1 set to "
+								+ ChatColor.GOLD + location1.toString());
 					}
 				} else if(parts[0].equalsIgnoreCase("location2")) {
 					if(parts.length == 1 && location2 != null) {
@@ -642,23 +684,23 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 						if(world == null)
 							return;
 						int id = world.getBlockIDAt(x, y, z);
-						displayText("Location 2: " + ChatColor.YELLOW
-								+ location2.toString() + ChatColor.PINK
+						displayText(ChatColor.GRAY + "Location 2: "
+								+ ChatColor.GOLD + location2.toString()
 								+ " (ID: " + id + ")");
 					} else if(parts.length == 5
 							&& parts[1].equalsIgnoreCase("set")) {
 						if(!StringTools.isInteger(parts[2])
 								|| !StringTools.isInteger(parts[3])
 								|| !StringTools.isInteger(parts[4])) {
-							displayText(ChatColor.RED + "Invalid coordinates!");
+							displayText(ChatColor.GRAY + "Invalid coordinates.");
 							return;
 						}
 						int x = Integer.valueOf(parts[2]);
 						int y = Integer.valueOf(parts[3]);
 						int z = Integer.valueOf(parts[4]);
 						location2 = new Location(x, y, z);
-						displayText("Location 2 set to " + ChatColor.YELLOW
-								+ location2.toString());
+						displayText(ChatColor.GRAY + "Location 2 set to "
+								+ ChatColor.GOLD + location2.toString());
 					}
 				} else if(parts[0].equalsIgnoreCase("superbreaker")
 						&& areLocationsValid()) {
@@ -695,14 +737,14 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 						}
 					}
 				} else if(!areLocationsValid())
-					displayText(ChatColor.RED + "Locations not set!");
+					displayText(ChatColor.GRAY + "Locations not set.");
 			}
 		} catch(Exception exception) {
 			exception.printStackTrace();
 		}
 	}
 
-	private boolean canPlaceAt(int x, int y, int z) {
+	public boolean canPlaceAt(int x, int y, int z) {
 		World world = minecraft.getWorld();
 		if(world != null) {
 			int blockID = world.getBlockIDAt(x, y, z);
@@ -713,7 +755,7 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 		return false;
 	}
 
-	private boolean hasAdjacentBlock(int x, int y, int z) {
+	public boolean hasAdjacentBlock(int x, int y, int z) {
 		World world = minecraft.getWorld();
 		if(world != null) {
 			if(world.getBlockIDAt(x + 1, y, z) != 0
@@ -743,15 +785,15 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 		return x * x + y * y + z * z;
 	}
 
-	private int min(int a, int b) {
+	public int min(int a, int b) {
 		return java.lang.Math.min(a, b);
 	}
 
-	private int max(int a, int b) {
+	public int max(int a, int b) {
 		return java.lang.Math.max(a, b);
 	}
 
-	private void punchAt(int x, int y, int z) {
+	public void punchAt(int x, int y, int z) {
 		if(minecraft.getWorld() instanceof MultiplayerWorld) {
 			MultiplayerWorld world = (MultiplayerWorld) minecraft.getWorld();
 			NetworkHandler networkHandler = world.getNetworkHandler();
@@ -762,7 +804,7 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 		}
 	}
 
-	private void removeAt(int x, int y, int z) {
+	public void removeAt(int x, int y, int z) {
 		if(minecraft.getWorld() instanceof MultiplayerWorld) {
 			MultiplayerWorld world = (MultiplayerWorld) minecraft.getWorld();
 			NetworkHandler networkHandler = world.getNetworkHandler();
@@ -781,7 +823,7 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 		}
 	}
 
-	private boolean checkRemove(int x, int y, int z) {
+	public boolean checkRemove(int x, int y, int z) {
 		if(x != lastRemoveX || y != lastRemoveY || z != lastRemoveZ) {
 			lastRemoveX = x;
 			lastRemoveY = y;
@@ -811,14 +853,6 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 		if(event instanceof RenderEvent) {
 			try {
 				Player player = minecraft.getPlayer();
-
-				if(lastGuiScreen != null
-						&& !lastGuiScreen.equals(minecraft.getCurrentScreen())) {
-					lastGuiScreen = minecraft.getCurrentScreen();
-					System.out.println("Screen: " + lastGuiScreen.getWidth()
-							+ "x" + lastGuiScreen.getHeight() + " ("
-							+ lastGuiScreen.getButtons().size() + " buttons)");
-				}
 				if(Mouse.isButtonDown(0)) {
 					if(player != null) {
 						Inventory inventory = player.getInventory();
@@ -836,22 +870,31 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 												.getTargetX(), target
 												.getTargetY(), target
 												.getTargetZ());
-										displayText("Location 1 set to §e"
-												+ location1);
+										displayText(ChatColor.GRAY
+												+ "Location 1 set to "
+												+ ChatColor.GOLD + location1);
 									} else if(wandType == WAND_SUPER
 											&& (superWandHitType == SUPER_WAND_ON_HOLD || (superWandHitType == SUPER_WAND_PER_CLICK && buttonReleased)))
 										synchronized(lock) {
 											World world = minecraft.getWorld();
-											if(world instanceof MultiplayerWorld)
-												queuedLocations
-														.add(new Location(
-																target
-																		.getTargetX(),
-																target
-																		.getTargetY(),
-																target
-																		.getTargetZ()));
-											else
+											if(world instanceof MultiplayerWorld) {
+												MultiplayerPlayerController controller = (MultiplayerPlayerController) minecraft
+														.getPlayerController();
+												controller.setRemoving(false);
+												controller.digBlockAt(target
+														.getTargetX(), target
+														.getTargetY(), target
+														.getTargetZ(), target
+														.getTargetFace());
+												controller
+														.setPercentComplete(1.0F);
+												controller.setRemoving(true);
+												controller.digBlockAt(target
+														.getTargetX(), target
+														.getTargetY(), target
+														.getTargetZ(), target
+														.getTargetFace());
+											} else
 												world.setBlockIDAt(target
 														.getTargetX(), target
 														.getTargetY(), target
@@ -876,8 +919,9 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 									location2 = new Location(target
 											.getTargetX(), target.getTargetY(),
 											target.getTargetZ());
-									displayText("Location 2 set to §e"
-											+ location2);
+									displayText(ChatColor.GRAY
+											+ "Location 2 set to "
+											+ ChatColor.GOLD + location2);
 								}
 							}
 						}
@@ -1124,35 +1168,35 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 		}
 	}
 
-	private int getMinX() {
+	public int getMinX() {
 		return (int) Math.min(location1.getX(), location2.getX());
 	}
 
-	private int getMinY() {
+	public int getMinY() {
 		return (int) Math.min(location1.getY(), location2.getY());
 	}
 
-	private int getMinZ() {
+	public int getMinZ() {
 		return (int) Math.min(location1.getZ(), location2.getZ());
 	}
 
-	private int getMaxX() {
+	public int getMaxX() {
 		return (int) Math.max(location1.getX(), location2.getX());
 	}
 
-	private int getMaxY() {
+	public int getMaxY() {
 		return (int) Math.max(location1.getY(), location2.getY());
 	}
 
-	private int getMaxZ() {
+	public int getMaxZ() {
 		return (int) Math.max(location1.getZ(), location2.getZ());
 	}
 
-	private boolean areLocationsValid() {
+	public boolean areLocationsValid() {
 		return location1 != null && location2 != null;
 	}
 
-	private void removeBlocks() {
+	public void removeBlocks() {
 		int lowestX = min((int) location1.getX(), (int) location2.getX());
 		int highestX = max((int) location1.getX(), (int) location2.getX());
 		int lowestY = min((int) location1.getY(), (int) location2.getY());
@@ -1180,7 +1224,7 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 		}
 	}
 
-	private void addBlocks(int id) {
+	public void addBlocks(int id) {
 		int lowestX = min((int) location1.getX(), (int) location2.getX());
 		int highestX = max((int) location1.getX(), (int) location2.getX());
 		int lowestY = min((int) location1.getY(), (int) location2.getY());
@@ -1210,7 +1254,7 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 		}
 	}
 
-	private void addBlock(int x, int y, int z, int id) {
+	public void addBlock(int x, int y, int z, int id) {
 		if(minecraft.getWorld() instanceof MultiplayerWorld) {
 			Player player = minecraft.getPlayer();
 			Inventory inventory = player.getInventory();
@@ -1245,7 +1289,7 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 		}
 	}
 
-	private int getAdjactentBlockFace(int x, int y, int z) {
+	public int getAdjactentBlockFace(int x, int y, int z) {
 		DarkMod darkMod = DarkMod.getInstance();
 		AccessHandler accessHandler = darkMod.getAccessHandler();
 		Minecraft minecraft = accessHandler.getMinecraft();
@@ -1268,7 +1312,7 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 			return -1;
 	}
 
-	private Location getAdjactentBlock(int x, int y, int z) {
+	public Location getAdjactentBlock(int x, int y, int z) {
 		DarkMod darkMod = DarkMod.getInstance();
 		AccessHandler accessHandler = darkMod.getAccessHandler();
 		Minecraft minecraft = accessHandler.getMinecraft();
@@ -1289,5 +1333,11 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 			return new Location(x, y - 1, z);
 		else
 			return null;
+	}
+
+	public boolean regionContains(Location location) {
+		double x = location.getX(), y = location.getY(), z = location.getZ();
+		return x >= getMinX() && x <= getMaxX() && y >= getMinY()
+				&& y <= getMaxY() && z >= getMinZ() && z <= getMaxZ();
 	}
 }

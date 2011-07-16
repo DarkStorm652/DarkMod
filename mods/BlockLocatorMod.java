@@ -206,15 +206,16 @@ public class BlockLocatorMod extends Mod implements CommandListener {
 				Vector<?> dataVector = model.getDataVector();
 				dataVector.clear();
 				model.fireTableDataChanged();
-				displayText("Block ID for searching is now " + ChatColor.LIME
-						+ blockID);
+				displayText(ChatColor.GRAY + "Block ID for searching is now "
+						+ ChatColor.GOLD + blockID);
 			}
 		} else if(parts[0].equalsIgnoreCase("blockradius") && parts.length == 2
 				&& StringTools.isInteger(parts[1])) {
 			synchronized(lock) {
 				radius = Integer.parseInt(parts[1]);
-				displayText("Block radius for searching is now "
-						+ ChatColor.LIME + radius);
+				displayText(ChatColor.GRAY
+						+ "Block radius for searching is now " + ChatColor.GOLD
+						+ radius);
 			}
 		}
 	}

@@ -19,11 +19,12 @@ public class MethodHook extends Hook {
 	@Override
 	protected void readElement(Element element) {
 		className = element.getAttributeValue("class");
-		interfaceName = element.getAttributeValue("interface");
 		methodName = element.getAttributeValue("method");
 		methodSignature = element.getAttributeValue("signature");
 		newMethodName = element.getAttributeValue("new_method");
 		newMethodSignature = element.getAttributeValue("new_signature");
+		element = element.getParentElement();
+		interfaceName = element.getAttributeValue("interface");
 	}
 
 	@Override
