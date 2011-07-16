@@ -394,4 +394,3 @@
     <hook type="setter" class="yk" interface="org.darkstorm.minecraft.darkmod.hooks.client.Sign" field="b" signature="I" static="false" argument="int" setter="setLineBeingEdited" />
   </hook>
 </hooks>
-
