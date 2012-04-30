@@ -169,9 +169,9 @@ public class AutoAttackMod extends Mod implements CommandListener {
 					break;
 				}
 				if(hurtSelf) {
-					Packet19EntityAction actionPacket = (Packet19EntityAction) ReflectionUtil
+					Packet18Animation actionPacket = (Packet18Animation) ReflectionUtil
 							.instantiate(ClassRepository
-									.getClassForInterface(Packet19EntityAction.class));
+									.getClassForInterface(Packet18Animation.class));
 					actionPacket.setEntityID(playerID);
 					actionPacket.setState(1);
 					networkHandler.sendPacket(actionPacket);
@@ -194,9 +194,9 @@ public class AutoAttackMod extends Mod implements CommandListener {
 					rotatePacket.setRotationX(getFacingRotationX(entity));
 					rotatePacket.setRotationY(getFacingRotationY(entity));
 					rotatePacket.setOnGround(player.isOnGround());
-					Packet19EntityAction actionPacket = (Packet19EntityAction) ReflectionUtil
+					Packet18Animation actionPacket = (Packet18Animation) ReflectionUtil
 							.instantiate(ClassRepository
-									.getClassForInterface(Packet19EntityAction.class));
+									.getClassForInterface(Packet18Animation.class));
 					actionPacket.setEntityID(playerID);
 					actionPacket.setState(1);
 					networkHandler.sendPacket(actionPacket);
@@ -263,6 +263,10 @@ public class AutoAttackMod extends Mod implements CommandListener {
 				attackMode = AttackMode.SHORTCUT;
 				displayText(ChatColor.GRAY + "Attack mode set to "
 						+ ChatColor.GOLD + "shortcut");
+			} else if(parts[1].equalsIgnoreCase("nocheat")) {
+				attackMode = AttackMode.NOCHEAT;
+				displayText(ChatColor.GRAY + "Attack mode set to "
+						+ ChatColor.GOLD + "nocheat");
 			} else if(parts[1].equalsIgnoreCase("off")) {
 				attackMode = AttackMode.OFF;
 				displayText(ChatColor.GRAY + "Attack mode set to "

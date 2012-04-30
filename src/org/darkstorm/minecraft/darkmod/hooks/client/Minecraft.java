@@ -55,4 +55,12 @@ public interface Minecraft extends Runnable {
 	public Font getFont();
 
 	public Font getStandardGalacticFont();
+
+	public WorldType[] getWorldTypes();
+
+	public WorldType getDefaultWorldType();
+
+	public WorldType getFlatWorldType();
+
+	public WorldType getDefault_1_1WorldType();
 }

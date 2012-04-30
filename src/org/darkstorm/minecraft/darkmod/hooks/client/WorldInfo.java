@@ -5,6 +5,10 @@ public interface WorldInfo {
 
 	public void setRandomSeed(long randomSeed);
 
+	public WorldType getWorldType();
+
+	public void setWorldType(WorldType worldType);
+
 	public int getSpawnX();
 
 	public void setSpawnX(int spawnX);

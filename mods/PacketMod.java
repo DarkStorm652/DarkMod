@@ -132,7 +132,7 @@ public class PacketMod extends Mod implements EventListener, CommandListener {
 						+ (allowReceived ? "now" : "no longer")
 						+ " be displayed.");
 			} else if(parts[1].equalsIgnoreCase("clear")) {
-				synchronized(filterList) {
+				synchronized(lock) {
 					filterList.clear();
 					allowSent = true;
 					allowReceived = true;

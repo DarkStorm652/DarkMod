@@ -82,6 +82,10 @@
     <method class="nl" method="b" signature="(Ljava/lang/String;III)V" new_method="drawString" new_signature="(Ljava/lang/String;III)V" />
     <method class="nl" method="a" signature="(Ljava/lang/String;)I" new_method="getStringWidth" new_signature="(Ljava/lang/String;)I" />
   </interface>
+  <interface class="vx" interface="org.darkstorm.minecraft.darkmod.hooks.client.WorldType">
+    <getter class="vx" field="e" signature="Ljava/lang/String;" static="false" return="java.lang.String" getter="getName" />
+    <getter class="vx" field="f" signature="I" static="false" return="int" getter="getGeneratorVersion" />
+  </interface>
   <interface class="je" interface="org.darkstorm.minecraft.darkmod.hooks.client.MultiplayerWorld">
     <getter class="je" field="H" signature="Ladl;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.NetworkHandler" getter="getNetworkHandler" />
     <setter class="je" field="H" signature="Ladl;" static="false" argument="org.darkstorm.minecraft.darkmod.hooks.client.NetworkHandler" setter="setNetworkHandler" />
@@ -318,6 +322,8 @@
     <method class="abs" method="a" signature="(Ljava/io/DataOutputStream;)V" new_method="send" new_signature="(Ljava/io/DataOutputStream;)V" />
   </interface>
   <interface class="wq" interface="org.darkstorm.minecraft.darkmod.hooks.client.WorldInfo">
+    <getter class="wq" field="b" signature="Lvx;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.WorldType" getter="getWorldType" />
+    <setter class="wq" field="b" signature="Lvx;" static="false" argument="org.darkstorm.minecraft.darkmod.hooks.client.WorldType" setter="setWorldType" />
     <getter class="wq" field="a" signature="J" static="false" return="long" getter="getRandomSeed" />
     <setter class="wq" field="a" signature="J" static="false" argument="long" setter="setRandomSeed" />
     <getter class="wq" field="c" signature="I" static="false" return="int" getter="getSpawnX" />
@@ -377,7 +383,12 @@
     <getter class="gg" field="i" signature="Z" static="false" return="boolean" getter="isRotating" />
     <setter class="gg" field="i" signature="Z" static="false" argument="boolean" setter="setRotating" />
   </interface>
-  <interface class="kc" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet18Animation" />
+  <interface class="kc" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet18Animation">
+    <getter class="kc" field="a" signature="I" static="false" return="int" getter="getEntityID" />
+    <setter class="kc" field="a" signature="I" static="false" argument="int" setter="setEntityID" />
+    <getter class="kc" field="b" signature="I" static="false" return="int" getter="getState" />
+    <setter class="kc" field="b" signature="I" static="false" argument="int" setter="setState" />
+  </interface>
   <interface class="agf" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet102WindowClick">
     <getter class="agf" field="a" signature="I" static="false" return="int" getter="getWindowID" />
     <setter class="agf" field="a" signature="I" static="false" argument="int" setter="setWindowID" />
@@ -561,6 +572,10 @@
     <getter class="net.minecraft.client.Minecraft" field="s" signature="Lvp;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.GuiScreen" getter="getCurrentScreen" />
     <method class="net.minecraft.client.Minecraft" method="a" signature="(Lvp;)V" new_method="displayScreen" new_signature="(Lorg/darkstorm/minecraft/darkmod/hooks/client/GuiScreen;)V" />
     <getter class="pb" field="m" signature="[Lpb;" static="true" return="org.darkstorm.minecraft.darkmod.hooks.client.Block[]" getter="getBlocks" />
+    <getter class="vx" field="a" signature="[Lvx;" static="true" return="org.darkstorm.minecraft.darkmod.hooks.client.WorldType[]" getter="getWorldTypes" />
+    <getter class="vx" field="b" signature="Lvx;" static="true" return="org.darkstorm.minecraft.darkmod.hooks.client.WorldType" getter="getDefaultWorldType" />
+    <getter class="vx" field="c" signature="Lvx;" static="true" return="org.darkstorm.minecraft.darkmod.hooks.client.WorldType" getter="getFlatWorldType" />
+    <getter class="vx" field="d" signature="Lvx;" static="true" return="org.darkstorm.minecraft.darkmod.hooks.client.WorldType" getter="getDefault_1_1WorldType" />
   </interface>
   <interface class="xd" interface="org.darkstorm.minecraft.darkmod.hooks.client.World">
     <getter class="xd" field="d" signature="Ljava/util/List;" static="false" return="java.util.List" getter="getPlayers" />
@@ -576,7 +591,18 @@
   <interface class="aec" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet1Login" />
   <interface class="ag" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet11PlayerMove" />
   <interface class="lb" interface="org.darkstorm.minecraft.darkmod.hooks.client.GuiIngameMenu" />
-  <interface class="kx" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet9Respawn" />
+  <interface class="kx" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet9Respawn">
+    <getter class="kx" field="a" signature="I" static="false" return="int" getter="getRespawnDimension" />
+    <setter class="kx" field="a" signature="I" static="false" argument="int" setter="setRespawnDimension" />
+    <getter class="kx" field="b" signature="I" static="false" return="int" getter="getDifficulty" />
+    <setter class="kx" field="b" signature="I" static="false" argument="int" setter="setDifficulty" />
+    <getter class="kx" field="c" signature="I" static="false" return="int" getter="getWorldHeight" />
+    <setter class="kx" field="c" signature="I" static="false" argument="int" setter="setWorldHeight" />
+    <getter class="kx" field="d" signature="I" static="false" return="int" getter="getCreativeMode" />
+    <setter class="kx" field="d" signature="I" static="false" argument="int" setter="setCreativeMode" />
+    <getter class="kx" field="e" signature="Lvx;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.WorldType" getter="getWorldType" />
+    <setter class="kx" field="e" signature="Lvx;" static="false" argument="org.darkstorm.minecraft.darkmod.hooks.client.WorldType" setter="setWorldType" />
+  </interface>
   <interface class="yf" interface="org.darkstorm.minecraft.darkmod.hooks.client.GuiChat" />
   <interface class="np" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet23VehicleSpawn" />
   <interface class="nm" interface="org.darkstorm.minecraft.darkmod.hooks.client.Arrow">
