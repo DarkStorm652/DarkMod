@@ -1,7 +1,6 @@
-import java.lang.reflect.Field;
-
 import org.darkstorm.minecraft.darkmod.events.PacketEvent;
 import org.darkstorm.minecraft.darkmod.hooks.client.*;
+import org.darkstorm.minecraft.darkmod.hooks.client.packets.*;
 import org.darkstorm.minecraft.darkmod.mod.Mod;
 import org.darkstorm.minecraft.darkmod.mod.commands.*;
 import org.darkstorm.minecraft.darkmod.mod.methods.constants.ChatColor;
@@ -10,10 +9,6 @@ import org.darkstorm.tools.events.Event;
 import org.darkstorm.tools.strings.StringTools;
 
 public class AutoEatMod extends Mod implements CommandListener {
-	private Class<?> blockPlaceClass;
-	private Class<?> inventoryItemClass;
-	private Class<?> interfaceActionClass;
-	private Class<?> inventoryItemSelectClass;
 
 	private int health = 8, foodID = 320;
 
@@ -22,13 +17,6 @@ public class AutoEatMod extends Mod implements CommandListener {
 	private boolean lastActionSlotInvalid = false;
 
 	public AutoEatMod() {
-		blockPlaceClass = ClassRepository
-				.getClassForInterface(BlockPlacePacket.class);
-		inventoryItemClass = ClassRepository
-				.getClassForInterface(InventoryItem.class);
-		inventoryItemSelectClass = ClassRepository
-				.getClassForInterface(InventoryItemSelectPacket.class);
-		interfaceActionClass = ClassRepository.getClassByName("qs");
 	}
 
 	@Override
@@ -88,8 +76,8 @@ public class AutoEatMod extends Mod implements CommandListener {
 							if(switchSpaces)
 								slotIndex = 8;
 							moveInventory(i, slotIndex, switchSpaces);
-							eatFood(networkHandler, slotIndex, inventory
-									.getItemAt(slotIndex));
+							eatFood(networkHandler, slotIndex,
+									inventory.getItemAt(slotIndex));
 							return 10;
 						}
 						eatFood(networkHandler, i, item);
@@ -108,30 +96,42 @@ public class AutoEatMod extends Mod implements CommandListener {
 		NetworkHandler networkHandler = world.getNetworkHandler();
 		lastInventoryAction += 1;
 		InventoryItem slot1Item = inventory.getItemAt(slot1);
-		Packet inventoryPacket = (Packet) ReflectionUtil.instantiate(
-				interfaceActionClass, new Class[] { Integer.TYPE, Integer.TYPE,
-						Integer.TYPE, Boolean.TYPE, inventoryItemClass,
-						Short.TYPE }, 0, calculateSendIndex(slot1), 0, false,
-				slot1Item, lastInventoryAction);
+		Packet102WindowClick inventoryPacket = (Packet102WindowClick) ReflectionUtil
+				.instantiate(ClassRepository
+						.getClassForInterface(Packet102WindowClick.class));
+		inventoryPacket.setAction(lastInventoryAction);
+		inventoryPacket.setButton(0);
+		inventoryPacket.setHoldingShift(false);
+		inventoryPacket.setSlot(calculateSendIndex(slot1));
+		inventoryPacket.setWindowID(0);
+		inventoryPacket.setItem(slot1Item);
 		networkHandler.sendPacket(inventoryPacket);
 		inventory.setItemAt(slot1, null);
 		lastInventoryAction += 1;
 		InventoryItem slot2Item = inventory.getItemAt(slot2);
-		inventoryPacket = (Packet) ReflectionUtil.instantiate(
-				interfaceActionClass, new Class[] { Integer.TYPE, Integer.TYPE,
-						Integer.TYPE, Boolean.TYPE, inventoryItemClass,
-						Short.TYPE }, 0, calculateSendIndex(slot2), 0, false,
-				slot2Item, lastInventoryAction);
+		inventoryPacket = (Packet102WindowClick) ReflectionUtil
+				.instantiate(ClassRepository
+						.getClassForInterface(Packet102WindowClick.class));
+		inventoryPacket.setAction(lastInventoryAction);
+		inventoryPacket.setButton(0);
+		inventoryPacket.setHoldingShift(false);
+		inventoryPacket.setSlot(calculateSendIndex(slot2));
+		inventoryPacket.setWindowID(0);
+		inventoryPacket.setItem(slot2Item);
 		networkHandler.sendPacket(inventoryPacket);
 		inventory.setItemAt(slot2, slot1Item);
 		if(!switchItems)
 			return;
 		lastInventoryAction += 1;
-		inventoryPacket = (Packet) ReflectionUtil.instantiate(
-				interfaceActionClass, new Class[] { Integer.TYPE, Integer.TYPE,
-						Integer.TYPE, Boolean.TYPE, inventoryItemClass,
-						Short.TYPE }, 0, calculateSendIndex(slot1), 0, false,
-				null, lastInventoryAction);
+		inventoryPacket = (Packet102WindowClick) ReflectionUtil
+				.instantiate(ClassRepository
+						.getClassForInterface(Packet102WindowClick.class));
+		inventoryPacket.setAction(lastInventoryAction);
+		inventoryPacket.setButton(0);
+		inventoryPacket.setHoldingShift(false);
+		inventoryPacket.setSlot(calculateSendIndex(slot1));
+		inventoryPacket.setWindowID(0);
+		inventoryPacket.setItem(null);
 		networkHandler.sendPacket(inventoryPacket);
 		inventory.setItemAt(slot1, slot2Item);
 	}
@@ -147,18 +147,24 @@ public class AutoEatMod extends Mod implements CommandListener {
 		Player player = minecraft.getPlayer();
 		Inventory inventory = player.getInventory();
 		int currentIndex = inventory.getSelectedIndex();
-		InventoryItemSelectPacket selectPacket = (InventoryItemSelectPacket) ReflectionUtil
-				.instantiate(inventoryItemSelectClass,
-						new Class<?>[] { Integer.TYPE }, index);
+		Packet16BlockItemSwitch selectPacket = (Packet16BlockItemSwitch) ReflectionUtil
+				.instantiate(ClassRepository
+						.getClassForInterface(Packet16BlockItemSwitch.class));
+		selectPacket.setID(index);
 		networkHandler.sendPacket(selectPacket);
-		BlockPlacePacket placePacket = (BlockPlacePacket) ReflectionUtil
-				.instantiate(blockPlaceClass, new Class<?>[] { Integer.TYPE,
-						Integer.TYPE, Integer.TYPE, Integer.TYPE,
-						inventoryItemClass }, -1, -1, -1, -1, item);
+		Packet15BlockPlace placePacket = (Packet15BlockPlace) ReflectionUtil
+				.instantiate(ClassRepository
+						.getClassForInterface(Packet15BlockPlace.class));
+		placePacket.setX(-1);
+		placePacket.setY(-1);
+		placePacket.setZ(-1);
+		placePacket.setDirection(-1);
+		placePacket.setItem(item);
 		networkHandler.sendPacket(placePacket);
-		selectPacket = (InventoryItemSelectPacket) ReflectionUtil.instantiate(
-				inventoryItemSelectClass, new Class<?>[] { Integer.TYPE },
-				currentIndex);
+		selectPacket = (Packet16BlockItemSwitch) ReflectionUtil
+				.instantiate(ClassRepository
+						.getClassForInterface(Packet16BlockItemSwitch.class));
+		selectPacket.setID(currentIndex);
 		networkHandler.sendPacket(selectPacket);
 		player.setHealth(player.getHealth() + health);
 	}
@@ -187,33 +193,27 @@ public class AutoEatMod extends Mod implements CommandListener {
 	@Override
 	public void onEvent(Event event) {
 		PacketEvent packetEvent = (PacketEvent) event;
-		Packet packet = packetEvent.getPacket();
-		if(!(interfaceActionClass.isInstance(packet)))
+		if(!(packetEvent.getPacket() instanceof Packet102WindowClick))
 			return;
-		try {
-			Field lastActionField = interfaceActionClass.getDeclaredField("d");
-			Field lastActionSlotField = interfaceActionClass
-					.getDeclaredField("b");
-			int lastActionSlot = lastActionSlotField.getInt(packet);
-			if(lastActionSlotInvalid) {
-				lastActionSlotField.setInt(packet, 5);
-				lastInventoryAction += 1;
-				lastActionField.setShort(packet, lastInventoryAction);
-				lastActionSlotInvalid = false;
-				return;
-			}
-			if(lastActionSlot > 50 && invalidCount < 4) {
-				lastActionSlotField.setInt(packet, 5);
-				lastInventoryAction += 1;
-				lastActionField.setShort(packet, lastInventoryAction);
-				lastActionSlotInvalid = true;
-				invalidCount++;
-				return;
-			}
-			lastInventoryAction = lastActionField.getShort(packet);
-		} catch(Exception exception) {
-			exception.printStackTrace();
+		Packet102WindowClick packet = (Packet102WindowClick) packetEvent
+				.getPacket();
+		int lastActionSlot = packet.getSlot();
+		if(lastActionSlotInvalid) {
+			packet.setSlot(5);
+			lastInventoryAction += 1;
+			packet.setAction(lastInventoryAction);
+			lastActionSlotInvalid = false;
+			return;
 		}
+		if(lastActionSlot > 50 && invalidCount < 4) {
+			packet.setSlot(5);
+			lastInventoryAction += 1;
+			packet.setAction(lastInventoryAction);
+			lastActionSlotInvalid = true;
+			invalidCount++;
+			return;
+		}
+		lastInventoryAction = packet.getAction();
 	}
 
 }

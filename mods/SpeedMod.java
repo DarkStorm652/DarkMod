@@ -155,7 +155,7 @@ public class SpeedMod extends Mod implements EventListener, CommandListener {
 				else if(mode == ABRUPT)
 					modeMessage = ChatColor.GOLD + "abrupt";
 				else
-					modeMessage = ChatColor.RED + "invalid";
+					modeMessage = ChatColor.DARK_RED + "invalid";
 				displayText(ChatColor.GRAY + "Current speed mode is "
 						+ modeMessage);
 			} else if(parts[1].equalsIgnoreCase("regular")) {
@@ -167,7 +167,7 @@ public class SpeedMod extends Mod implements EventListener, CommandListener {
 				displayText(ChatColor.GRAY + "Set speed mode to "
 						+ ChatColor.GOLD + "abrupt");
 			} else
-				displayText(ChatColor.RED + "Invalid speed mode");
+				displayText(ChatColor.DARK_RED + "Invalid speed mode");
 		}
 	};
 }

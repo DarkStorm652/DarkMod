@@ -4,7 +4,7 @@ import javax.swing.JOptionPane;
 
 import org.darkstorm.minecraft.darkmod.DarkMod;
 import org.darkstorm.minecraft.darkmod.access.AccessHandler;
-import org.darkstorm.minecraft.darkmod.hooks.client.Minecraft;
+import org.darkstorm.minecraft.darkmod.hooks.client.*;
 import org.darkstorm.minecraft.darkmod.mod.commands.CommandManager;
 import org.darkstorm.minecraft.darkmod.mod.methods.Location;
 import org.darkstorm.tools.events.*;
@@ -12,7 +12,9 @@ import org.darkstorm.tools.loopsystem.*;
 
 public abstract class Mod implements Loopable, EventListener {
 	public static enum ModControl {
-		NONE, ACTION, TOGGLE
+		NONE,
+		ACTION,
+		TOGGLE
 	}
 
 	protected ModHandler handler;
@@ -139,6 +141,17 @@ public abstract class Mod implements Loopable, EventListener {
 	}
 
 	// Temporary utility methods (I'm not sure why I put them here...)
+
+	protected double getDistanceBetween(Entity e1, Entity e2) {
+		return getDistanceBetween(
+				new Location(e1.getX(), e1.getY(), e1.getZ()),
+				new Location(e2.getX(), e2.getY(), e2.getZ()));
+	}
+
+	protected double getDistanceTo(Player player, double x, double y, double z) {
+		return getDistanceBetween(new Location(player.getX(), player.getY(),
+				player.getZ()), new Location(x, y, z));
+	}
 
 	protected double getDistanceBetween(Location location1, Location location2) {
 		double xResult = Math.pow(Math.max(location1.getX(), location2.getX())

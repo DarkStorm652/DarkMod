@@ -75,8 +75,8 @@ public class Injector {
 			for(JarEntry entry : listedEntries) {
 				entryNames.add(entry.getName());
 				if(entry.getName().endsWith(".class")) {
-					ClassParser entryClassParser = new ClassParser(minecraftJar
-							.getInputStream(entry), entry.getName());
+					ClassParser entryClassParser = new ClassParser(
+							minecraftJar.getInputStream(entry), entry.getName());
 					JavaClass parsedClass = entryClassParser.parse();
 					ClassGen classGen = new ClassGen(parsedClass);
 					classes.add(classGen);
@@ -168,7 +168,6 @@ public class Injector {
 				try {
 					hook.attemptInjection(classGen);
 				} catch(Exception exception) {
-					System.out.println("test");
 					exception.printStackTrace();
 					printFailedHook(hook);
 				}
@@ -264,8 +263,7 @@ public class Injector {
 			JarOutputStream out = new JarOutputStream(stream);
 			for(ClassGen classGen : classes) {
 				JarEntry jarEntry = new JarEntry(classGen.getClassName()
-						.replace('.', '/')
-						+ ".class");
+						.replace('.', '/') + ".class");
 				out.putNextEntry(jarEntry);
 				out.write(classGen.getJavaClass().getBytes());
 				progress++;
@@ -302,7 +300,7 @@ public class Injector {
 			classLoader = new CustomClassLoader(minecraftJarName,
 					outputClasses, entryNames, extraJars);
 			initClassRepository();
-		} catch(Exception e) {
+		} catch(Throwable e) {
 			e.printStackTrace();
 			SysTools.exit("Unable to dump jar", -1);
 		}

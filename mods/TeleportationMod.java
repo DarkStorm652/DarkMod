@@ -66,33 +66,33 @@ public class TeleportationMod extends Mod implements CommandListener {
 				double amount = Double.parseDouble(parts[2]);
 				String direction;
 				if(parts[1].startsWith("n")) {
-					player.setPositionAndAngles(player.getX() - amount, player
-							.getY(), player.getZ(), player.getRotationX(),
-							player.getRotationY());
+					player.setPositionAndAngles(player.getX() - amount,
+							player.getY() - 1, player.getZ(),
+							player.getRotationX(), player.getRotationY());
 					direction = "north";
 				} else if(parts[1].startsWith("s")) {
-					player.setPositionAndAngles(player.getX() + amount, player
-							.getY(), player.getZ(), player.getRotationX(),
-							player.getRotationY());
+					player.setPositionAndAngles(player.getX() + amount,
+							player.getY() - 1, player.getZ(),
+							player.getRotationX(), player.getRotationY());
 					direction = "south";
 				} else if(parts[1].startsWith("e")) {
-					player.setPositionAndAngles(player.getX(), player.getY(),
-							player.getZ() - amount, player.getRotationX(),
-							player.getRotationY());
+					player.setPositionAndAngles(player.getX(),
+							player.getY() - 1, player.getZ() - amount,
+							player.getRotationX(), player.getRotationY());
 					direction = "east";
 				} else if(parts[1].startsWith("w")) {
-					player.setPositionAndAngles(player.getX(), player.getY(),
-							player.getZ() + amount, player.getRotationX(),
-							player.getRotationY());
+					player.setPositionAndAngles(player.getX(),
+							player.getY() - 1, player.getZ() + amount,
+							player.getRotationX(), player.getRotationY());
 					direction = "west";
 				} else if(parts[1].startsWith("u")) {
 					player.setPositionAndAngles(player.getX(), player.getY()
-							+ amount, player.getZ(), player.getRotationX(),
+							+ amount - 1, player.getZ(), player.getRotationX(),
 							player.getRotationY());
 					direction = "up";
 				} else if(parts[1].startsWith("d")) {
 					player.setPositionAndAngles(player.getX(), player.getY()
-							- amount, player.getZ(), player.getRotationX(),
+							- amount - 1, player.getZ(), player.getRotationX(),
 							player.getRotationY());
 					direction = "down";
 				} else {

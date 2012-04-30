@@ -60,7 +60,7 @@ public class GiveMacroMod extends Mod implements CommandListener {
 				if(StringTools.isInteger(parts[2]))
 					amount = Integer.parseInt(parts[2]);
 				else
-					displayText(ChatColor.RED + "Invalid amount");
+					displayText(ChatColor.DARK_RED + "Invalid amount");
 			int stackCount = amount / 64;
 			int remainder = amount % 64;
 			for(int i = 0; i < stackCount; i++)

@@ -1,14 +1,12 @@
-import java.lang.reflect.Field;
-
 import org.darkstorm.minecraft.darkmod.events.PacketEvent;
 import org.darkstorm.minecraft.darkmod.hooks.client.*;
+import org.darkstorm.minecraft.darkmod.hooks.client.packets.*;
 import org.darkstorm.minecraft.darkmod.mod.Mod;
 import org.darkstorm.minecraft.darkmod.mod.methods.Location;
 import org.darkstorm.minecraft.darkmod.tools.*;
 import org.darkstorm.tools.events.*;
 
 public class SuperAttackMod extends Mod implements EventListener {
-	private Class<?> attackPacketClass;
 	private int targetID = -1;
 
 	@Override
@@ -33,8 +31,6 @@ public class SuperAttackMod extends Mod implements EventListener {
 
 	@Override
 	public void onStart() {
-		if(attackPacketClass == null)
-			attackPacketClass = ClassRepository.getClassByName("a");
 		eventManager.addListener(PacketEvent.class, this);
 	}
 
@@ -62,13 +58,20 @@ public class SuperAttackMod extends Mod implements EventListener {
 						|| id != targetID)
 					continue;
 				found = true;
-				Location entityLocation = new Location(entity.getX(), entity
-						.getY(), entity.getZ());
-				if(getDistanceBetween(playerLocation, entityLocation) > 2)
+				Location entityLocation = new Location(entity.getX(),
+						entity.getY(), entity.getZ());
+				if(getDistanceBetween(playerLocation, entityLocation) > 3)
 					break;
-				Packet attackPacket = (Packet) ReflectionUtil.instantiate(
-						attackPacketClass, new Class[] { Integer.TYPE,
-								Integer.TYPE, Integer.TYPE }, playerID, id, 1);
+				Packet18Animation armSwing = (Packet18Animation) ReflectionUtil
+						.instantiate(ClassRepository
+								.getClassForInterface(Packet18Animation.class));
+				Packet7UseEntity attackPacket = (Packet7UseEntity) ReflectionUtil
+						.instantiate(ClassRepository
+								.getClassForInterface(Packet7UseEntity.class));
+				attackPacket.setPlayerEntityID(playerID);
+				attackPacket.setEntityID(id);
+				attackPacket.setButton(1);
+				networkHandler.sendPacket(armSwing);
 				networkHandler.sendPacket(attackPacket);
 				break;
 			}
@@ -77,20 +80,22 @@ public class SuperAttackMod extends Mod implements EventListener {
 		} catch(Exception exception) {
 			exception.printStackTrace();
 		}
-		return 500;
+		return 400;
 	}
 
 	@Override
 	public void onEvent(Event event) {
 		PacketEvent packetEvent = (PacketEvent) event;
-		Packet packet = packetEvent.getPacket();
-		if(!attackPacketClass.isInstance(packet))
+		if(packetEvent.getStatus() != PacketEvent.SENT)
 			return;
-		try {
-			Field entityIDField = attackPacketClass.getDeclaredField("b");
-			targetID = entityIDField.getInt(packet);
-		} catch(Exception exception) {
-			exception.printStackTrace();
-		}
+		Player player = minecraft.getPlayer();
+		Packet packet = packetEvent.getPacket();
+		if(!(packet instanceof Packet7UseEntity) || player == null)
+			return;
+		Packet7UseEntity packetInteract = (Packet7UseEntity) packet;
+		if(packetInteract.getButton() == 1
+				&& packetInteract.getPlayerEntityID() == player.getID()
+				&& packetInteract.getEntityID() != player.getID())
+			targetID = packetInteract.getEntityID();
 	}
 }

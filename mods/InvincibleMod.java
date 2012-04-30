@@ -52,8 +52,6 @@ public class InvincibleMod extends Mod implements EventListener {
 	public int loop() {
 		Player player = minecraft.getPlayer();
 		if(player != null) {
-			if(player.getBreathTimer() < 300)
-				player.setBreathTimer(300);
 			if(player.getOnFireTimer() != -20)
 				player.setOnFireTimer(-20);
 			if(player.getHealth() < 32767)
@@ -73,8 +71,6 @@ public class InvincibleMod extends Mod implements EventListener {
 		if(event instanceof PlayerProcessEvent) {
 			PlayerProcessEvent playerProcessEvent = (PlayerProcessEvent) event;
 			Player player = playerProcessEvent.getPlayer();
-			if(player.getBreathTimer() < 300)
-				player.setBreathTimer(300);
 			if(player.getOnFireTimer() != -20)
 				player.setOnFireTimer(-20);
 			if(player.getHealth() < 32767)

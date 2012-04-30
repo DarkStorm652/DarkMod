@@ -28,11 +28,12 @@ public class JarCreator {
 					String entryName = entry.getName();
 					if(entryName.startsWith("org/lwjgl")
 							|| entryName.startsWith("net/java")
-							|| !entryName.contains("/")
+							|| (!entryName.contains("/") && !entryName
+									.equals("minecraft.key"))
 							|| entryName.startsWith("META-INF/"))
 						continue;
-					entryBytes.put(entryName, IOTools.readAll(jarFile
-							.getInputStream(entry)));
+					entryBytes.put(entryName,
+							IOTools.readAll(jarFile.getInputStream(entry)));
 					System.out.println("	" + entryName);
 				}
 

@@ -136,8 +136,11 @@ public class IOTools {
 	public static String readPage(String s) {
 		try {
 			URL url = new URL(s);
-			BufferedReader br = new BufferedReader(new InputStreamReader(url
-					.openStream()));
+			URLConnection connection = url.openConnection();
+			connection.setConnectTimeout(5000);
+			connection.setReadTimeout(5000);
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
 			String html = "";
 			String line;
 			while((line = br.readLine()) != null) {
@@ -290,8 +293,8 @@ public class IOTools {
 				URLConnection urlc = url.openConnection();
 
 				bis = new BufferedInputStream(urlc.getInputStream());
-				bos = new BufferedOutputStream(new FileOutputStream(destination
-						.getName()));
+				bos = new BufferedOutputStream(new FileOutputStream(
+						destination.getName()));
 
 				int i;
 				while((i = bis.read()) != -1) {

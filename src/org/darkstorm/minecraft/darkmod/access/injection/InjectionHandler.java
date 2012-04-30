@@ -59,7 +59,6 @@ public class InjectionHandler extends AccessHandler {
 	private Minecraft createInstance(DarkModUI darkModUI) {
 		try {
 			Class<?> minecraftExtensionClass = getClassByInterface(MinecraftExtension.class);
-			System.out.println(minecraftExtensionClass != null);
 			Constructor<?> constructor = minecraftExtensionClass
 					.getConstructor(Component.class, Canvas.class, classLoader
 							.loadClass("net.minecraft.client.MinecraftApplet"),

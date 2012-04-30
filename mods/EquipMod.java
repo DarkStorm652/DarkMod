@@ -2,6 +2,7 @@ import java.lang.reflect.Field;
 
 import org.darkstorm.minecraft.darkmod.events.PacketEvent;
 import org.darkstorm.minecraft.darkmod.hooks.client.*;
+import org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet102WindowClick;
 import org.darkstorm.minecraft.darkmod.mod.Mod;
 import org.darkstorm.minecraft.darkmod.tools.*;
 import org.darkstorm.tools.events.*;
@@ -38,7 +39,8 @@ public class EquipMod extends Mod implements EventListener {
 	@Override
 	public void onStart() {
 		if(inventoryPacketClass == null)
-			inventoryPacketClass = ClassRepository.getClassByName("qs");
+			inventoryPacketClass = ClassRepository
+					.getClassForInterface(Packet102WindowClick.class);
 		if(inventoryItemClass == null)
 			inventoryItemClass = ClassRepository
 					.getClassForInterface("InventoryItem");
@@ -136,18 +138,27 @@ public class EquipMod extends Mod implements EventListener {
 		MultiplayerWorld world = (MultiplayerWorld) minecraft.getWorld();
 		NetworkHandler networkHandler = world.getNetworkHandler();
 		lastInventoryAction += 1;
-		Packet inventoryPacket = (Packet) ReflectionUtil
-				.instantiate(inventoryPacketClass, new Class[] { Integer.TYPE,
-						Integer.TYPE, Integer.TYPE, inventoryItemClass,
-						Short.TYPE }, 0, calculateSendIndex(inventorySlot), 0,
-						item, lastInventoryAction);
+		Packet102WindowClick inventoryPacket = (Packet102WindowClick) ReflectionUtil
+				.instantiate(inventoryPacketClass);
+		inventoryPacket.setWindowID(0);
+		inventoryPacket.setSlot(calculateSendIndex(inventorySlot));
+		inventoryPacket.setButton(0);
+		inventoryPacket.setItem(item);
+		inventoryPacket.setAction(lastInventoryAction);
+		inventoryPacket.setHoldingShift(false);
 		networkHandler.sendPacket(inventoryPacket);
 		inventory.setItemAt(inventorySlot, null);
 		lastInventoryAction += 1;
-		inventoryPacket = (Packet) ReflectionUtil.instantiate(
-				inventoryPacketClass, new Class[] { Integer.TYPE, Integer.TYPE,
-						Integer.TYPE, inventoryItemClass, Short.TYPE }, 0,
-				5 + (3 - armorSlot), 0, null, lastInventoryAction);
+		
+		inventoryPacket = (Packet102WindowClick) ReflectionUtil
+				.instantiate(inventoryPacketClass);
+		inventoryPacket.setWindowID(0);
+		inventoryPacket.setSlot(5 + (3 - armorSlot));
+		inventoryPacket.setButton(0);
+		inventoryPacket.setItem(item);
+		inventoryPacket.setAction(lastInventoryAction);
+		inventoryPacket.setHoldingShift(false);
+		
 		networkHandler.sendPacket(inventoryPacket);
 		inventory.setItemAt(armorSlot + 36, item);
 	}
@@ -158,18 +169,29 @@ public class EquipMod extends Mod implements EventListener {
 		MultiplayerWorld world = (MultiplayerWorld) minecraft.getWorld();
 		NetworkHandler networkHandler = world.getNetworkHandler();
 		lastInventoryAction += 1;
-		Packet inventoryPacket = (Packet) ReflectionUtil.instantiate(
-				inventoryPacketClass, new Class[] { Integer.TYPE, Integer.TYPE,
-						Integer.TYPE, inventoryItemClass, Short.TYPE }, 0,
-				5 + (3 - armorSlot), 0, item, lastInventoryAction);
+		
+		Packet102WindowClick inventoryPacket = (Packet102WindowClick) ReflectionUtil
+				.instantiate(inventoryPacketClass);
+		inventoryPacket.setWindowID(0);
+		inventoryPacket.setSlot(5 + (3 - armorSlot));
+		inventoryPacket.setButton(0);
+		inventoryPacket.setItem(item);
+		inventoryPacket.setAction(lastInventoryAction);
+		inventoryPacket.setHoldingShift(false);
+		
 		networkHandler.sendPacket(inventoryPacket);
 		inventory.setItemAt(armorSlot + 36, null);
 		lastInventoryAction += 1;
-		inventoryPacket = (Packet) ReflectionUtil
-				.instantiate(inventoryPacketClass, new Class[] { Integer.TYPE,
-						Integer.TYPE, Integer.TYPE, inventoryItemClass,
-						Short.TYPE }, 0, calculateSendIndex(inventorySlot), 0,
-						null, lastInventoryAction);
+		
+		inventoryPacket = (Packet102WindowClick) ReflectionUtil
+				.instantiate(inventoryPacketClass);
+		inventoryPacket.setWindowID(0);
+		inventoryPacket.setSlot(calculateSendIndex(inventorySlot));
+		inventoryPacket.setButton(0);
+		inventoryPacket.setItem(item);
+		inventoryPacket.setAction(lastInventoryAction);
+		inventoryPacket.setHoldingShift(false);
+		
 		networkHandler.sendPacket(inventoryPacket);
 		inventory.setItemAt(inventorySlot, item);
 	}

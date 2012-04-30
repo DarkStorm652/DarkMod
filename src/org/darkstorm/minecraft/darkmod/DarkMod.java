@@ -1,5 +1,7 @@
 package org.darkstorm.minecraft.darkmod;
 
+import java.lang.Thread.UncaughtExceptionHandler;
+
 import org.darkstorm.minecraft.darkmod.access.AccessHandler;
 import org.darkstorm.minecraft.darkmod.access.injection.InjectionHandler;
 import org.darkstorm.minecraft.darkmod.hooks.client.*;
@@ -30,6 +32,9 @@ public class DarkMod {
 		settingsHandler = new SettingsHandler(FileTools.DEFAULT_DIR
 				+ "/.darkmod", "Settings.xml");
 		eventManager = new EventManager();
+		ExceptionHandler exceptionHandler = new ExceptionHandler();
+		Thread.setDefaultUncaughtExceptionHandler(exceptionHandler);
+		Thread.currentThread().setUncaughtExceptionHandler(exceptionHandler);
 		ui = new DarkModUI();
 		StartupUtil handler = new StartupUtil();
 		LoginUI loginUI = handler.handleLoginWithUI();
@@ -41,6 +46,10 @@ public class DarkMod {
 		handler.handleUI();
 		accessHandler.start();
 		modHandler = new ModHandler(accessHandler);
+		Session session = accessHandler.getMinecraft().getSession();
+		System.out.println(session.getUsername());
+		System.out.println(session.getSessionID());
+		System.out.println(session.getMultiplayerPassword());
 	}
 
 	public DarkMod(String username) {
@@ -161,5 +170,16 @@ public class DarkMod {
 
 	public static double getVersion() {
 		return 1.55;
+	}
+
+	private final class ExceptionHandler implements UncaughtExceptionHandler {
+		@Override
+		public void uncaughtException(Thread t, Throwable e) {
+			MinecraftExtension mc = (MinecraftExtension) accessHandler
+					.getMinecraft();
+			System.out.println(mc.getClass().getName());
+			// Method displayException = mc.getClass().getDeclaredMethod(",
+			// parameterTypes)
+		}
 	}
 }

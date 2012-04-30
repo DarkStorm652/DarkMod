@@ -1,7 +1,8 @@
-import java.util.Vector;
+import java.util.*;
 
 import org.darkstorm.minecraft.darkmod.DarkMod;
 import org.darkstorm.minecraft.darkmod.hooks.client.*;
+import org.darkstorm.minecraft.darkmod.hooks.client.packets.*;
 import org.darkstorm.minecraft.darkmod.mod.Mod;
 import org.darkstorm.minecraft.darkmod.mod.commands.*;
 import org.darkstorm.minecraft.darkmod.mod.methods.Location;
@@ -12,32 +13,86 @@ import org.lwjgl.input.*;
 
 public class AutoAttackMod extends Mod implements CommandListener {
 	private enum AttackMode {
-		AUTO, SHORTCUT, OFF
+		AUTO,
+		NOCHEAT,
+		SHORTCUT,
+		OFF
+	}
+
+	public enum Team {
+		RED(ChatColor.RED, "Red"),
+		BLUE(ChatColor.INDIGO, "Blue"),
+		ALL(null, "?") {
+			@Override
+			public boolean isOnTeam(String player) {
+				return true;
+			}
+		},
+		NONE(null, "X") {
+			@Override
+			public boolean isOnTeam(String player) {
+				return false;
+			}
+		};
+
+		private final ChatColor color;
+		private final String name;
+
+		private Team(ChatColor color, String name) {
+			this.color = color;
+			this.name = name;
+		}
+
+		public ChatColor getColor() {
+			return color;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public boolean isOnTeam(Humanoid player) {
+			return player != null && isOnTeam(player.getName());
+		}
+
+		public boolean isOnTeam(String player) {
+			return player.startsWith(color.toString());
+		}
+
+		public static Team getTeam(String player) {
+			if(!player.startsWith("\247"))
+				return NONE;
+			for(Team team : values())
+				if(team.isOnTeam(player))
+					return team;
+			return NONE;
+		}
 	}
 
 	private AttackMode attackMode = AttackMode.OFF;
-	private Class<?> attackPacketClass;
 	private Vector<String> friends;
+	private Queue<Entity> attackQueue = new ArrayDeque<Entity>();
+	private Team team = Team.NONE;
+	private boolean hurtSelf = false;
 
 	@Override
 	public void onStart() {
-		if(attackPacketClass == null)
-			attackPacketClass = ClassRepository.getClassByName("a");
 		friends = new Vector<String>();
 		loadSettings();
 		commandManager.registerListener(
 				new Command("friend", "friend <add|remove|list>",
 						"Modify friends for AutoAttackMod"), this);
-		commandManager.registerListener(
-				new Command("attackmode", "attackmode <auto|shortcut|off>",
-						"Controls for AutoAttackMod"), this);
+		commandManager.registerListener(new Command("attackmode",
+				"attackmode <auto|knohax|shortcut|off|self>",
+				"Controls for AutoAttackMod"), this);
+		commandManager.registerListener(new Command("team",
+				"team [blue|b|red|r|all|a]", "Sets attack mode team"), this);
 	}
 
 	@Override
 	public void onStop() {
 		saveSettings();
-		commandManager.unregisterListener("friend");
-		commandManager.unregisterListener("attackmode");
+		commandManager.unregisterListeners(this);
 	}
 
 	@Override
@@ -69,40 +124,97 @@ public class AutoAttackMod extends Mod implements CommandListener {
 			if(attackMode == AttackMode.OFF
 					|| (attackMode == AttackMode.SHORTCUT
 							&& !Mouse.isButtonDown(2) && !Keyboard
-							.isKeyDown(Keyboard.KEY_TAB)))
-				return 100;
+								.isKeyDown(Keyboard.KEY_TAB)))
+				return 200;
 			Player player = minecraft.getPlayer();
 			int playerID = player.getID();
 			Location playerLocation = new Location(player.getX(),
 					player.getY(), player.getZ());
 			MultiplayerWorld world = (MultiplayerWorld) minecraft.getWorld();
 			NetworkHandler networkHandler = world.getNetworkHandler();
-			label1: for(Entity entity : world.getEntities()) {
-				if(entity.equals(player) || !(entity instanceof Animable))
-					continue;
-				Location entityLocation = new Location(entity.getX(), entity
-						.getY(), entity.getZ());
-				if(getDistanceBetween(playerLocation, entityLocation) > 5)
-					continue;
-				if(entity instanceof Humanoid) {
-					Humanoid playerTarget = (Humanoid) entity;
-					String playerName = playerTarget.getName();
-					synchronized(friends) {
-						for(String friend : friends)
-							if(playerName.equalsIgnoreCase(friend))
-								continue label1;
+			if(attackQueue.isEmpty()) {
+				attackQueue.addAll(world.getEntities());
+			}
+			while(attackQueue.size() > 0) {
+				Entity entity = null;
+				label: while(team != Team.ALL && attackQueue.peek() != null) {
+					entity = attackQueue.poll();
+					Location entityLocation = new Location(entity.getX(),
+							entity.getY(), entity.getZ());
+					if(entity.equals(player)
+							|| !(entity instanceof Animable)
+							|| getDistanceBetween(playerLocation,
+									entityLocation) > 5) {
+						entity = null;
+						continue;
 					}
+					if(entity instanceof Humanoid) {
+						Humanoid playerTarget = (Humanoid) entity;
+						String playerName = playerTarget.getName();
+						synchronized(friends) {
+							for(String friend : friends) {
+								if(playerName.equalsIgnoreCase(friend)) {
+									entity = null;
+									continue label;
+								}
+							}
+						}
+						if(team != Team.NONE
+								&& playerName.startsWith(team.getColor()
+										.toString())) {
+							entity = null;
+							continue;
+						}
+					}
+					break;
 				}
+				if(hurtSelf) {
+					Packet19EntityAction actionPacket = (Packet19EntityAction) ReflectionUtil
+							.instantiate(ClassRepository
+									.getClassForInterface(Packet19EntityAction.class));
+					actionPacket.setEntityID(playerID);
+					actionPacket.setState(1);
+					networkHandler.sendPacket(actionPacket);
+					Packet7UseEntity attackPacket = (Packet7UseEntity) ReflectionUtil
+							.instantiate(ClassRepository
+									.getClassForInterface(Packet7UseEntity.class));
+					attackPacket.setPlayerEntityID(playerID);
+					attackPacket.setEntityID(playerID);
+					attackPacket.setButton(1);
+					networkHandler.sendPacket(attackPacket);
+				}
+				if(entity == null)
+					return attackMode == AttackMode.NOCHEAT ? 100 : 50;
+
 				int id = entity.getID();
-				Packet attackPacket = (Packet) ReflectionUtil.instantiate(
-						attackPacketClass, new Class[] { Integer.TYPE,
-								Integer.TYPE, Integer.TYPE }, playerID, id, 1);
+				if(attackMode == AttackMode.NOCHEAT) {
+					Packet12PlayerRotate rotatePacket = (Packet12PlayerRotate) ReflectionUtil
+							.instantiate(ClassRepository
+									.getClassForInterface(Packet12PlayerRotate.class));
+					rotatePacket.setRotationX(getFacingRotationX(entity));
+					rotatePacket.setRotationY(getFacingRotationY(entity));
+					rotatePacket.setOnGround(player.isOnGround());
+					Packet19EntityAction actionPacket = (Packet19EntityAction) ReflectionUtil
+							.instantiate(ClassRepository
+									.getClassForInterface(Packet19EntityAction.class));
+					actionPacket.setEntityID(playerID);
+					actionPacket.setState(1);
+					networkHandler.sendPacket(actionPacket);
+				}
+				Packet7UseEntity attackPacket = (Packet7UseEntity) ReflectionUtil
+						.instantiate(ClassRepository
+								.getClassForInterface(Packet7UseEntity.class));
+				attackPacket.setPlayerEntityID(playerID);
+				attackPacket.setEntityID(id);
+				attackPacket.setButton(1);
 				networkHandler.sendPacket(attackPacket);
+				if(attackMode == AttackMode.NOCHEAT)
+					break;
 			}
 		} catch(Exception exception) {
 			exception.printStackTrace();
 		}
-		return 100;
+		return attackMode == AttackMode.NOCHEAT ? 200 : 50;
 	}
 
 	@Override
@@ -155,9 +267,50 @@ public class AutoAttackMod extends Mod implements CommandListener {
 				attackMode = AttackMode.OFF;
 				displayText(ChatColor.GRAY + "Attack mode set to "
 						+ ChatColor.GOLD + "off");
+			} else if(parts[1].equalsIgnoreCase("self")) {
+				hurtSelf = !hurtSelf;
+				displayText(ChatColor.GRAY + "Attacking self is now "
+						+ ChatColor.GOLD + (hurtSelf ? "on" : "off"));
 			} else
 				displayText(ChatColor.GRAY + "Attack mode not recognized");
+		} else if(parts[0].equalsIgnoreCase("team")) {
+			if(parts.length == 2) {
+				if(parts[1].toLowerCase().startsWith("b")) {
+					team = Team.BLUE;
+				} else if(parts[1].toLowerCase().startsWith("r")) {
+					team = Team.RED;
+				} else if(parts[1].toLowerCase().startsWith("a")) {
+					team = Team.ALL;
+				} else {
+					displayText(ChatColor.GRAY + "Unknown team!");
+					return;
+				}
+				displayText(ChatColor.GRAY + "Team set to " + team.getColor()
+						+ team.toString().toLowerCase() + ChatColor.GRAY + ".");
+			} else {
+				team = Team.NONE;
+				displayText(ChatColor.GRAY + "Team cleared.");
+			}
 		}
+	}
+
+	public float getFacingRotationX(Entity entity) {
+		Player player = minecraft.getPlayer();
+		double d = entity.getX() - player.getX();
+		double d1 = entity.getZ() - player.getZ();
+		return (float) ((Math.atan2(d1, d) * 180D) / 3.1415927410125732D) - 90F;
+	}
+
+	public float getFacingRotationY(Entity entity) {
+		Player player = minecraft.getPlayer();
+		double dis1 = entity.getY() + 1 - player.getY() + 1;
+		double dis2 = Math.sqrt(Math.pow(entity.getX() - player.getX(), 2)
+				+ Math.pow(entity.getZ() - player.getZ(), 2));
+		return (float) ((Math.atan2(dis2, dis1) * 180D) / 3.1415927410125732D)
+				- 80F
+				- ((float) Math.pow(
+						getDistanceTo(player, entity.getX(), entity.getY(),
+								entity.getZ()) / 4, 2));
 	}
 
 	private void loadSettings() {
@@ -201,5 +354,15 @@ public class AutoAttackMod extends Mod implements CommandListener {
 			}
 			settingsHandler.saveSettings();
 		}
+	}
+
+	public boolean isFriend(String name) {
+		synchronized(friends) {
+			return friends.contains(ChatColor.removeColors(name).toLowerCase());
+		}
+	}
+
+	public Team getTeam() {
+		return team;
 	}
 }

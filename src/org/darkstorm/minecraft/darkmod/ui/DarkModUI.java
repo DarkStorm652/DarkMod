@@ -4,8 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
-import org.darkstorm.minecraft.darkmod.*;
+import org.darkstorm.minecraft.darkmod.DarkMod;
 import org.darkstorm.minecraft.darkmod.access.AccessHandler;
 import org.darkstorm.minecraft.darkmod.hooks.client.Minecraft;
 import org.darkstorm.minecraft.darkmod.mod.ModHandler;
@@ -100,19 +101,116 @@ public class DarkModUI extends JFrame {
 		if(darkMod.getUsername() == null || darkMod.isPlayingOffline()
 				|| canvas == null)
 			return;
-		new Thread() {
+		final JDialog frame = new JDialog(this, "Login Info");
+		frame.setLocationRelativeTo(this);
+		frame.setLayout(new BorderLayout());
+		JPanel panel = new JPanel(new GridBagLayout());
+		panel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		final JTextField usernameField = new JTextField(darkMod.getUsername());
+		final JTextField passwordField = new JTextField(darkMod.getPassword());
+		final JTextField sessionField = new JTextField(darkMod.getSessionID());
+		final JRadioButton passwordButton = new JRadioButton("Password: ");
+		final JRadioButton sessionButton = new JRadioButton("Session: ");
+		passwordButton.setSelected(true);
+		sessionField.setEnabled(false);
+		passwordButton.addActionListener(new ActionListener() {
 			@Override
-			public void run() {
-				LoginUtil loginUtil = new LoginUtil();
-				loginUtil.login(darkMod.getUsername(), darkMod.getPassword());
-				if(loginUtil.isLoggedIn()) {
-					darkMod.setSessionID(loginUtil.getSessionID());
+			public void actionPerformed(ActionEvent e) {
+				passwordField.setEnabled(true);
+				sessionField.setEnabled(false);
+				passwordButton.setSelected(true);
+				sessionButton.setSelected(false);
+			}
+		});
+		sessionButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				passwordField.setEnabled(false);
+				sessionField.setEnabled(true);
+				sessionButton.setSelected(true);
+				passwordButton.setSelected(false);
+			}
+		});
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 1;
+		c.gridy = 0;
+		c.weightx = 0.5;
+		c.insets = new Insets(0, 0, 0, 5);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		panel.add(new JLabel("Username: "), c);
+		c.gridx = 2;
+		c.gridy = 0;
+		c.weightx = 0.5;
+		c.insets = new Insets(0, 0, 0, 0);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		panel.add(usernameField, c);
+		c.gridx = 1;
+		c.gridy = 1;
+		c.weightx = 0.5;
+		c.insets = new Insets(5, 0, 0, 5);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		panel.add(passwordButton, c);
+		c.gridx = 2;
+		c.gridy = 1;
+		c.weightx = 1.0;
+		c.insets = new Insets(5, 0, 0, 0);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		panel.add(passwordField, c);
+		c.gridx = 2;
+		c.gridy = 0;
+		c.weightx = 1.0;
+		c.insets = new Insets(0, 0, 0, 0);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		panel.add(usernameField, c);
+		c.gridx = 1;
+		c.gridy = 2;
+		c.weightx = 0.5;
+		c.insets = new Insets(5, 0, 0, 5);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		panel.add(sessionButton, c);
+		c.gridx = 2;
+		c.gridy = 2;
+		c.weightx = 1.0;
+		c.insets = new Insets(0, 0, 0, 0);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		panel.add(sessionField, c);
+		JPanel buttonPanel = new JPanel(new BorderLayout());
+		JButton button = new JButton("Login");
+		buttonPanel.add(button, BorderLayout.EAST);
+		c.gridx = 2;
+		c.gridy = 2;
+		c.weightx = 0.5;
+		c.insets = new Insets(5, 0, 0, 0);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		panel.add(buttonPanel, c);
+		button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				frame.setVisible(false);
+				if(passwordButton.isSelected()) {
+					LoginUtil loginUtil = new LoginUtil();
+					loginUtil.login(usernameField.getText(),
+							passwordField.getText());
+					if(loginUtil.isLoggedIn()) {
+						darkMod.setUsername(loginUtil.getUsername());
+						darkMod.setPassword(loginUtil.getPassword());
+						darkMod.setSessionID(loginUtil.getSessionID());
+						JOptionPane.showMessageDialog(DarkModUI.this,
+								"Successfully retrieved new session ID!",
+								"Success", JOptionPane.INFORMATION_MESSAGE);
+					}
+				} else {
+					darkMod.setUsername(sessionField.getText());
+					darkMod.setSessionID(sessionField.getText());
 					JOptionPane.showMessageDialog(DarkModUI.this,
-							"Successfully retrieved new session ID!",
-							"Success", JOptionPane.INFORMATION_MESSAGE);
+							"Now using new session ID!", "Success",
+							JOptionPane.INFORMATION_MESSAGE);
 				}
-			};
-		}.start();
+			}
+		});
+		frame.add(panel);
+		frame.pack();
+		frame.setVisible(true);
 	}
 
 	private void initComponents() {

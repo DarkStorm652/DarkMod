@@ -64,13 +64,15 @@ public class ItemMod extends Mod implements CommandListener {
 				if(StringTools.isInteger(parts[2]))
 					amount = Integer.parseInt(parts[2]);
 				else
-					displayText(ChatColor.RED + "Invalid amount");
+					displayText(ChatColor.DARK_RED + "Invalid amount");
 			if(parts.length > 3)
 				if(StringTools.isInteger(parts[3]))
 					damage = Integer.parseInt(parts[3]);
 				else
-					displayText(ChatColor.RED + "Invalid damage");
+					displayText(ChatColor.DARK_RED + "Invalid damage");
 			Player player = minecraft.getPlayer();
+			if(player == null)
+				return;
 			Inventory inventory = player.getInventory();
 			if(amount == -1)
 				inventory.setItemAt(inventory.getIndexOfEmptySlot(),
@@ -80,8 +82,6 @@ public class ItemMod extends Mod implements CommandListener {
 										Integer.TYPE }, id, -1, 0));
 			int stackCount = amount / 64;
 			int remainder = amount % 64;
-			if(player == null)
-				return;
 			int index;
 			for(index = 0; index < inventory.getItems().length; index++) {
 				InventoryItem item = inventory.getItemAt(index);
@@ -92,18 +92,13 @@ public class ItemMod extends Mod implements CommandListener {
 						inventory
 								.setItemAt(
 										index,
-										(InventoryItem) ReflectionUtil
-												.instantiate(
-														inventoryItemClass,
-														new Class<?>[] {
-																Integer.TYPE,
-																Integer.TYPE,
-																Integer.TYPE },
-														id,
-														amount
-																+ item
-																		.getStackCount(),
-														damage));
+										(InventoryItem) ReflectionUtil.instantiate(
+												inventoryItemClass,
+												new Class<?>[] { Integer.TYPE,
+														Integer.TYPE,
+														Integer.TYPE }, id,
+												amount + item.getStackCount(),
+												damage));
 						return;
 					} else {
 						if(remainder == amountRemaining) {

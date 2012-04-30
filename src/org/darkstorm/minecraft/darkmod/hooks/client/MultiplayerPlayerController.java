@@ -19,6 +19,10 @@ public interface MultiplayerPlayerController {
 
 	public void setRemoving(boolean removing);
 
+	public boolean isCreative();
+
+	public void setCreative(boolean creative);
+
 	public int getCurrentRemoveX();
 
 	public void setCurrentRemoveX(int x);

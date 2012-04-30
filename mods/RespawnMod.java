@@ -1,6 +1,8 @@
 import org.darkstorm.minecraft.darkmod.hooks.client.*;
+import org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet9Respawn;
 import org.darkstorm.minecraft.darkmod.mod.Mod;
 import org.darkstorm.minecraft.darkmod.mod.commands.*;
+import org.darkstorm.minecraft.darkmod.tools.*;
 
 public class RespawnMod extends Mod implements CommandListener {
 
@@ -44,16 +46,11 @@ public class RespawnMod extends Mod implements CommandListener {
 	public void onCommand(String command) {
 		if(command.equalsIgnoreCase("respawn")
 				&& minecraft.getWorld() instanceof MultiplayerWorld) {
-			ClassLoader classLoader = accessHandler.getClassLoader();
-			try {
-				Class<?> respawnPacketClass = classLoader.loadClass("ln");
-				Packet respawnPacket = (Packet) respawnPacketClass
-						.newInstance();
-				((MultiplayerWorld) minecraft.getWorld()).getNetworkHandler()
-						.sendPacket(respawnPacket);
-			} catch(Exception exception) {
-				exception.printStackTrace();
-			}
+			Packet respawnPacket = (Packet) ReflectionUtil
+					.instantiate(ClassRepository
+							.getClassForInterface(Packet9Respawn.class));
+			((MultiplayerWorld) minecraft.getWorld()).getNetworkHandler()
+					.sendPacket(respawnPacket);
 		}
 	}
 

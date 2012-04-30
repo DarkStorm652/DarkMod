@@ -9,6 +9,8 @@ public interface World {
 
 	public int getBlockIDAt(int x, int y, int z);
 
+	public int getBlockMetadataAt(int x, int y, int z);
+
 	public boolean setBlockIDAt(int x, int y, int z, int id);
 
 	public WorldInfo getWorldInfo();

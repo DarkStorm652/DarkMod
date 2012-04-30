@@ -4,6 +4,7 @@ import org.darkstorm.minecraft.darkmod.DarkMod;
 import org.darkstorm.minecraft.darkmod.access.AccessHandler;
 import org.darkstorm.minecraft.darkmod.events.*;
 import org.darkstorm.minecraft.darkmod.hooks.client.*;
+import org.darkstorm.minecraft.darkmod.hooks.client.packets.*;
 import org.darkstorm.minecraft.darkmod.mod.Mod;
 import org.darkstorm.minecraft.darkmod.mod.commands.*;
 import org.darkstorm.minecraft.darkmod.mod.methods.Location;
@@ -12,6 +13,7 @@ import org.darkstorm.minecraft.darkmod.tools.*;
 import org.darkstorm.tools.events.*;
 import org.darkstorm.tools.strings.StringTools;
 import org.lwjgl.input.*;
+import org.lwjgl.opengl.GL11;
 
 public class BlockMod extends Mod implements EventListener, CommandListener {
 	public Vector<Location> queuedLocations = new Vector<Location>();
@@ -56,11 +58,11 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 
 	public BlockMod() {
 		blockDigClass = ClassRepository
-				.getClassForInterface(BlockDigPacket.class);
+				.getClassForInterface(Packet14BlockDig.class);
 		blockPlaceClass = ClassRepository
-				.getClassForInterface(BlockPlacePacket.class);
+				.getClassForInterface(Packet15BlockPlace.class);
 		inventoryItemSelectClass = ClassRepository
-				.getClassForInterface(InventoryItemSelectPacket.class);
+				.getClassForInterface(Packet16BlockItemSwitch.class);
 		inventoryItemClass = ClassRepository
 				.getClassForInterface(InventoryItem.class);
 	}
@@ -181,18 +183,18 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 					if(!StringTools.isInteger(parts[1]) || world == null)
 						return;
 					int id = Integer.parseInt(parts[1]);
-					int lowestX = min((int) location1.getX(), (int) location2
-							.getX());
-					int highestX = max((int) location1.getX(), (int) location2
-							.getX());
-					int lowestY = min((int) location1.getY(), (int) location2
-							.getY());
-					int highestY = max((int) location1.getY(), (int) location2
-							.getY());
-					int lowestZ = min((int) location1.getZ(), (int) location2
-							.getZ());
-					int highestZ = max((int) location1.getZ(), (int) location2
-							.getZ());
+					int lowestX = min((int) location1.getX(),
+							(int) location2.getX());
+					int highestX = max((int) location1.getX(),
+							(int) location2.getX());
+					int lowestY = min((int) location1.getY(),
+							(int) location2.getY());
+					int highestY = max((int) location1.getY(),
+							(int) location2.getY());
+					int lowestZ = min((int) location1.getZ(),
+							(int) location2.getZ());
+					int highestZ = max((int) location1.getZ(),
+							(int) location2.getZ());
 					for(int xOffset = 0; xOffset < highestX - lowestX + 1; xOffset++) {
 						for(int yOffset = 0; yOffset < highestY - lowestY + 1; yOffset++) {
 							for(int zOffset = 0; zOffset < highestZ - lowestZ
@@ -705,21 +707,21 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 				} else if(parts[0].equalsIgnoreCase("superbreaker")
 						&& areLocationsValid()) {
 					if(!(minecraft.getWorld() instanceof MultiplayerWorld)) {
-						displayText(ChatColor.RED + "Multiplayer only!");
+						displayText(ChatColor.DARK_RED + "Multiplayer only!");
 						return;
 					}
-					int lowestX = min((int) location1.getX(), (int) location2
-							.getX());
-					int highestX = max((int) location1.getX(), (int) location2
-							.getX());
-					int lowestY = min((int) location1.getY(), (int) location2
-							.getY());
-					int highestY = max((int) location1.getY(), (int) location2
-							.getY());
-					int lowestZ = min((int) location1.getZ(), (int) location2
-							.getZ());
-					int highestZ = max((int) location1.getZ(), (int) location2
-							.getZ());
+					int lowestX = min((int) location1.getX(),
+							(int) location2.getX());
+					int highestX = max((int) location1.getX(),
+							(int) location2.getX());
+					int lowestY = min((int) location1.getY(),
+							(int) location2.getY());
+					int highestY = max((int) location1.getY(),
+							(int) location2.getY());
+					int lowestZ = min((int) location1.getZ(),
+							(int) location2.getZ());
+					int highestZ = max((int) location1.getZ(),
+							(int) location2.getZ());
 
 					synchronized(lock) {
 						for(int xOffset = 0; xOffset < highestX - lowestX + 1; xOffset++) {
@@ -866,10 +868,10 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 								if(target != null)
 									if(wandType == WAND_SELECT
 											&& buttonReleased) {
-										location1 = new Location(target
-												.getTargetX(), target
-												.getTargetY(), target
-												.getTargetZ());
+										location1 = new Location(
+												target.getTargetX(),
+												target.getTargetY(),
+												target.getTargetZ());
 										displayText(ChatColor.GRAY
 												+ "Location 1 set to "
 												+ ChatColor.GOLD + location1);
@@ -881,24 +883,24 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 												MultiplayerPlayerController controller = (MultiplayerPlayerController) minecraft
 														.getPlayerController();
 												controller.setRemoving(false);
-												controller.digBlockAt(target
-														.getTargetX(), target
-														.getTargetY(), target
-														.getTargetZ(), target
-														.getTargetFace());
+												controller.digBlockAt(
+														target.getTargetX(),
+														target.getTargetY(),
+														target.getTargetZ(),
+														target.getTargetFace());
 												controller
 														.setPercentComplete(1.0F);
 												controller.setRemoving(true);
-												controller.digBlockAt(target
-														.getTargetX(), target
-														.getTargetY(), target
-														.getTargetZ(), target
-														.getTargetFace());
+												controller.digBlockAt(
+														target.getTargetX(),
+														target.getTargetY(),
+														target.getTargetZ(),
+														target.getTargetFace());
 											} else
-												world.setBlockIDAt(target
-														.getTargetX(), target
-														.getTargetY(), target
-														.getTargetZ(), 0);
+												world.setBlockIDAt(
+														target.getTargetX(),
+														target.getTargetY(),
+														target.getTargetZ(), 0);
 										}
 							}
 						}
@@ -916,8 +918,9 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 										.getPlayerTarget();
 								if(wandType == WAND_SELECT && buttonReleased
 										&& target != null) {
-									location2 = new Location(target
-											.getTargetX(), target.getTargetY(),
+									location2 = new Location(
+											target.getTargetX(),
+											target.getTargetY(),
 											target.getTargetZ());
 									displayText(ChatColor.GRAY
 											+ "Location 2 set to "
@@ -1126,6 +1129,84 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 			} catch(Exception exception) {
 				exception.printStackTrace();
 			}
+
+			if(((RenderEvent) event).getStatus() != RenderEvent.RENDER_ENTITIES)
+				return;
+			if(!areLocationsValid())
+				return;
+			Player player = minecraft.getPlayer();
+			World world = minecraft.getWorld();
+			if(player == null || world == null)
+				return;
+			double mX = player.getX();
+			double mY = player.getY();
+			double mZ = player.getZ();
+			double x = getMinX();
+			double y = getMaxY();
+			double z = getMinZ();
+			double length = getMaxX() - x;
+			double width = getMaxZ() - z + 1;
+			double height = -(y - getMinY());
+			double dX = (mX - x);
+			double dY = (mY - y);
+			double dZ = (mZ - z);
+
+			GL11.glPushMatrix();
+			GL11.glColor4f(1f, 0f, 0f, 1f);
+			GL11.glLineWidth(2f);
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glDisable(GL11.GL_LIGHTING);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glEnable(GL11.GL_LINE_SMOOTH);
+
+			GL11.glBegin(GL11.GL_LINE_LOOP);
+			GL11.glVertex3d(-dX, -dY, -dZ);
+			GL11.glVertex3d(-dX, -dY + height, -dZ);
+			GL11.glVertex3d(-dX + length, -dY + height, -dZ);
+			GL11.glVertex3d(-dX + length, -dY + height, -dZ + width);
+			GL11.glVertex3d(-dX, -dY + height, -dZ + width);
+			GL11.glVertex3d(-dX, -dY + height, -dZ);
+			GL11.glVertex3d(-dX, -dY, -dZ);
+
+			GL11.glVertex3d(-dX + length, -dY, -dZ);
+			GL11.glVertex3d(-dX + length, -dY + height, -dZ);
+			GL11.glVertex3d(-dX + length, -dY, -dZ);
+
+			GL11.glVertex3d(-dX + length, -dY, -dZ + width);
+			GL11.glVertex3d(-dX + length, -dY + height, -dZ + width);
+			GL11.glVertex3d(-dX + length, -dY, -dZ + width);
+
+			GL11.glVertex3d(-dX, -dY, -dZ + width);
+			GL11.glVertex3d(-dX, -dY + height, -dZ + width);
+			GL11.glVertex3d(-dX, -dY, -dZ + width);
+			GL11.glEnd();
+
+			double x1 = -(mX - location1.getX()), y1 = -(mY - location1.getY()), z1 = -(mZ - location1
+					.getZ());
+			GL11.glColor4f(0f, 1f, 0f, 0.1f);
+			GL11.glBegin(GL11.GL_QUADS);
+
+			GL11.glVertex3d(x1, y1, z1);
+			GL11.glVertex3d(x1 + 1, y1, z1);
+			GL11.glVertex3d(x1 + 1, y1, z1 + 1);
+			GL11.glVertex3d(x1, y1, z1 + 1);
+
+			GL11.glVertex3d(x1, y1, z1);
+			GL11.glVertex3d(x1 + 1, y1, z1);
+			GL11.glVertex3d(x1 + 1, y1 + 1, z1);
+			GL11.glVertex3d(x1, y1 + 1, z1);
+
+			GL11.glVertex3d(x1, y1, z1);
+			GL11.glVertex3d(x1, y1 + 1, z1);
+			GL11.glVertex3d(x1, y1 + 1, z1 + 1);
+			GL11.glVertex3d(x1, y1, z1 + 1);
+
+			GL11.glEnd();
+
+			GL11.glDisable(GL11.GL_LINE_SMOOTH);
+			GL11.glEnable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GL11.glPopMatrix();
 		} else if(event instanceof BlockDigEvent) {
 			BlockDigEvent blockDigEvent = (BlockDigEvent) event;
 			if(blockDigEvent.getStatus() == BlockDigEvent.BLOCK_REMOVED)
@@ -1247,9 +1328,9 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 		if(minecraft.getWorld() instanceof MultiplayerWorld) {
 			MultiplayerWorld world = (MultiplayerWorld) minecraft.getWorld();
 			NetworkHandler networkHandler = world.getNetworkHandler();
-			InventoryItemSelectPacket selectPacket = (InventoryItemSelectPacket) ReflectionUtil
-					.instantiate(inventoryItemSelectClass,
-							new Class<?>[] { Integer.TYPE }, currentIndex);
+			Packet16BlockItemSwitch selectPacket = (Packet16BlockItemSwitch) ReflectionUtil
+					.instantiate(inventoryItemSelectClass);
+			selectPacket.setID(currentIndex);
 			networkHandler.sendPacket(selectPacket);
 		}
 	}
@@ -1263,20 +1344,20 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 			int index = inventory.getIndexOf(id);
 			if(!canPlaceAt(x, y, z) || index == -1)
 				return;
-			InventoryItemSelectPacket selectPacket = (InventoryItemSelectPacket) ReflectionUtil
-					.instantiate(inventoryItemSelectClass,
-							new Class<?>[] { Integer.TYPE }, index);
+			Packet16BlockItemSwitch selectPacket = (Packet16BlockItemSwitch) ReflectionUtil
+					.instantiate(inventoryItemSelectClass);
+			selectPacket.setID(index);
 			networkHandler.sendPacket(selectPacket);
 			InventoryItem item = inventory.getItemAt(index);
-			Location adjactentBlock = getAdjactentBlock(x, y, z);
-			int adjactentBlockFace = getAdjactentBlockFace(x, y, z);
-			BlockPlacePacket placePacket = (BlockPlacePacket) ReflectionUtil
-					.instantiate(blockPlaceClass, new Class<?>[] {
-							Integer.TYPE, Integer.TYPE, Integer.TYPE,
-							Integer.TYPE, inventoryItemClass },
-							(int) adjactentBlock.getX(), (int) adjactentBlock
-									.getY(), (int) adjactentBlock.getZ(),
-							adjactentBlockFace, item);
+			Location adjacentBlock = getAdjacentBlock(x, y, z);
+			int adjacentBlockFace = getAdjacentBlockFace(x, y, z);
+			Packet15BlockPlace placePacket = (Packet15BlockPlace) ReflectionUtil
+					.instantiate(blockPlaceClass);
+			placePacket.setX((int) adjacentBlock.getX());
+			placePacket.setY((int) adjacentBlock.getY());
+			placePacket.setZ((int) adjacentBlock.getZ());
+			placePacket.setDirection(adjacentBlockFace);
+			placePacket.setItem(item);
 			networkHandler.sendPacket(placePacket);
 			world.setBlockIDAt(x, y, z, id);
 			if(item.getStackCount() < 2)
@@ -1289,7 +1370,7 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 		}
 	}
 
-	public int getAdjactentBlockFace(int x, int y, int z) {
+	public int getAdjacentBlockFace(int x, int y, int z) {
 		DarkMod darkMod = DarkMod.getInstance();
 		AccessHandler accessHandler = darkMod.getAccessHandler();
 		Minecraft minecraft = accessHandler.getMinecraft();
@@ -1312,7 +1393,7 @@ public class BlockMod extends Mod implements EventListener, CommandListener {
 			return -1;
 	}
 
-	public Location getAdjactentBlock(int x, int y, int z) {
+	public Location getAdjacentBlock(int x, int y, int z) {
 		DarkMod darkMod = DarkMod.getInstance();
 		AccessHandler accessHandler = darkMod.getAccessHandler();
 		Minecraft minecraft = accessHandler.getMinecraft();

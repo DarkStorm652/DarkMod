@@ -2,9 +2,12 @@ package org.darkstorm.minecraft.darkmod.tools;
 
 import java.awt.Image;
 import java.io.*;
-import java.net.*;
+import java.net.URL;
+import java.security.PublicKey;
+import java.security.cert.Certificate;
 
 import javax.imageio.ImageIO;
+import javax.net.ssl.HttpsURLConnection;
 
 public class Tools {
 	public static enum OperatingSystem {
@@ -127,10 +130,10 @@ public class Tools {
 	}
 
 	public static String post(String targetURL, String urlParameters) {
-		HttpURLConnection connection = null;
+		HttpsURLConnection connection = null;
 		try {
 			URL url = new URL(targetURL);
-			connection = (HttpURLConnection) url.openConnection();
+			connection = (HttpsURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");
 			connection.setRequestProperty("Content-Type",
 					"application/x-www-form-urlencoded");
@@ -142,6 +145,25 @@ public class Tools {
 			connection.setUseCaches(false);
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
+
+			connection.connect();
+			Certificate[] certs = connection.getServerCertificates();
+
+			byte[] bytes = new byte[294];
+			DataInputStream dis = new DataInputStream(Tools.class
+					.getResourceAsStream("/minecraft.key"));
+			dis.readFully(bytes);
+			dis.close();
+
+			Certificate c = certs[0];
+			PublicKey pk = c.getPublicKey();
+			byte[] data = pk.getEncoded();
+
+			for(int i = 0; i < data.length; i++) {
+				if(data[i] == bytes[i])
+					continue;
+				throw new RuntimeException("Public key mismatch");
+			}
 
 			DataOutputStream wr = new DataOutputStream(connection
 					.getOutputStream());
@@ -159,6 +181,7 @@ public class Tools {
 				response.append('\r');
 			}
 			rd.close();
+
 			String str1 = response.toString();
 			return str1;
 		} catch(Exception e) {

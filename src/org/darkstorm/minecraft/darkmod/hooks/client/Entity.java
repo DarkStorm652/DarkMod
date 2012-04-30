@@ -53,8 +53,6 @@ public interface Entity {
 
 	public int getBreathTimer();
 
-	public void setBreathTimer(int breathTimer);
-
 	public boolean isOnGround();
 
 	public void setOnGround(boolean onGround);

@@ -1,32 +1,20 @@
 package org.darkstorm.minecraft.darkmod.mod.methods.constants;
 
 public enum ChatColor {
-	/**
-	 * Represents black
-	 */
 	BLACK('0'),
-	/**
-	 * Represents dark blue
-	 */
 	DARK_BLUE('1'),
-	/**
-	 * Represents dark green
-	 */
 	DARK_GREEN('2'),
-	/**
-	 * Represents dark blue (aqua)
-	 */
 	DARK_AQUA('3'),
-	RED('4'),
+	DARK_RED('4'),
 	PURPLE('5'),
 	GOLD('6'),
 	GRAY('7'),
 	DARK_GRAY('8'),
-	CYAN('9'),
+	INDIGO('9'),
 	LIME('a'),
 	AQUA('b'),
-	PINK('c'),
-	TURQUOISE('d'),
+	RED('c'),
+	PINK('d'),
 	YELLOW('e'),
 	WHITE('f');
 

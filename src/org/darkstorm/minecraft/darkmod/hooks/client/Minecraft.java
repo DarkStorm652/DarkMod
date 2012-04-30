@@ -51,4 +51,8 @@ public interface Minecraft extends Runnable {
 	public EntityTarget getPlayerTarget();
 
 	public GuiIngame getGuiIngame();
+
+	public Font getFont();
+
+	public Font getStandardGalacticFont();
 }

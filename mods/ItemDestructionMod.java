@@ -58,6 +58,8 @@ public class ItemDestructionMod extends Mod {
 									Integer.TYPE, Integer.TYPE }, playerID, id,
 							1);
 					networkHandler.sendPacket(attackPacket);
+					if(entity.getClass().getSimpleName().equals("fn"))
+						continue;
 				}
 			} catch(Throwable exception) {
 				exception.printStackTrace();

@@ -25,8 +25,8 @@ public class LoginUtil {
 			String parameters = "user=" + URLEncoder.encode(username, "UTF-8")
 					+ "&password=" + URLEncoder.encode(password, "UTF-8")
 					+ "&version=" + 12;
-			String result = Tools.post(
-					"http://www.minecraft.net/game/getversion.jsp", parameters);
+			String result = Tools.post("https://login.minecraft.net/",
+					parameters);
 			if(loggedIn)
 				return null;
 			if(result == null) {
@@ -45,7 +45,7 @@ public class LoginUtil {
 			downloadTicket = values[1];
 			this.username = values[2];
 			this.password = password;
-			sessionID = values[3];
+			sessionID = values[3].replaceAll("[\n\r]", "");
 			loggedIn = true;
 		} catch(Exception exception) {
 			exception.printStackTrace();
@@ -62,7 +62,8 @@ public class LoginUtil {
 	public boolean loadLogin() {
 		DataInputStream inputStream = null;
 		try {
-			File lastLogin = new File(Tools.getMinecraftDirectory(), "lastlogin");
+			File lastLogin = new File(Tools.getMinecraftDirectory(),
+					"lastlogin");
 			if(!lastLogin.exists())
 				return false;
 			Cipher cipher = getCipher(2, "passwordfile");
@@ -92,7 +93,8 @@ public class LoginUtil {
 
 	public void saveLogin() {
 		try {
-			File lastLogin = new File(Tools.getMinecraftDirectory(), "lastlogin");
+			File lastLogin = new File(Tools.getMinecraftDirectory(),
+					"lastlogin");
 
 			Cipher cipher = getCipher(1, "passwordfile");
 			DataOutputStream dos;

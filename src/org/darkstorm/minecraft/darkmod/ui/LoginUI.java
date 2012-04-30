@@ -8,8 +8,10 @@ import java.util.Random;
 import javax.swing.*;
 import javax.swing.border.*;
 
+import org.darkstorm.minecraft.darkmod.DarkMod;
 import org.darkstorm.minecraft.darkmod.tools.*;
 import org.darkstorm.tools.loopsystem.*;
+import org.darkstorm.tools.settings.*;
 
 @SuppressWarnings("serial")
 public class LoginUI extends JPanel {
@@ -20,6 +22,7 @@ public class LoginUI extends JPanel {
 	private JPanel loginFormPanel;
 	private JTextField usernameField;
 	private JPasswordField passwordField;
+	private JTextField proxyField;
 	private JCheckBox rememberLoginCheckBox;
 	private JCheckBox checkForUpdatesCheckBox;
 	private JPanel panel2;
@@ -56,8 +59,8 @@ public class LoginUI extends JPanel {
 		initComponents();
 		setPreferredSize(new Dimension(854, 480));
 		Image loaded = Tools.getIcon("terrain");
-		BufferedImage image = new BufferedImage(loaded.getWidth(this), loaded
-				.getHeight(this), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage image = new BufferedImage(loaded.getWidth(this),
+				loaded.getHeight(this), BufferedImage.TYPE_INT_ARGB);
 		Graphics graphics = image.getGraphics();
 		Random random = new Random();
 		int i = random.nextInt(POSSIBLE_TERRAIN_SPOTS.length);
@@ -70,6 +73,11 @@ public class LoginUI extends JPanel {
 		if(loginUtil.loadLogin()) {
 			usernameField.setText(loginUtil.getUsername());
 			passwordField.setText(loginUtil.getPassword());
+			SettingsHandler settings = DarkMod.getInstance()
+					.getSettingsHandler();
+			String proxy = settings.getSettings().getSettingValue("proxy");
+			if(proxy != null)
+				proxyField.setText(proxy);
 			rememberLoginCheckBox.setSelected(loginUtil.shouldRememberLogin());
 			checkForUpdatesCheckBox.setSelected(loginUtil
 					.shouldCheckForUpdates());
@@ -158,8 +166,8 @@ public class LoginUI extends JPanel {
 		String msg = "DarkMod Launcher";
 		g.setFont(new Font(null, 1, 20));
 		FontMetrics fm = g.getFontMetrics();
-		g.drawString(msg, w / 2 - fm.stringWidth(msg) / 2, h / 2
-				- fm.getHeight() * 2);
+		g.drawString(msg, w / 2 - fm.stringWidth(msg) / 2,
+				h / 2 - fm.getHeight() * 2);
 
 		g.dispose();
 		g2.drawImage(image, 0, 0, w * 2, h * 2, null);
@@ -169,16 +177,42 @@ public class LoginUI extends JPanel {
 	public void authenticate() {
 		if(loginLoop.isAlive()) {
 			while(loginLoop.isAlive())
-				Tools.sleep(250);
+				Tools.sleep(50);
 			return;
 		}
 		while(!loginPerformed && !playOfflinePerformed)
-			Tools.sleep(250);
+			Tools.sleep(50);
 		loginUtil.setUsername(usernameField.getText());
 		loginUtil.setPassword(new String(passwordField.getPassword()));
+		String proxy = proxyField.getText();
 		loginUtil.setCheckForUpdates(checkForUpdatesCheckBox.isSelected());
-		if(rememberLoginCheckBox.isSelected())
+		if(rememberLoginCheckBox.isSelected()) {
 			loginUtil.saveLogin();
+			SettingsHandler settings = DarkMod.getInstance()
+					.getSettingsHandler();
+			if(settings.getSettings().getSetting("proxy") != null)
+				settings.getSettings().setSettingValue("proxy", proxy);
+			else
+				settings.getSettings().add(new Setting("proxy", proxy));
+		}
+		if(proxy.trim().length() > 0) {
+			String port = "80";
+			if(proxy.contains(":")) {
+				String[] parts = proxy.split(":");
+				proxy = parts[0];
+				port = parts[1];
+			}
+			// System.setProperty("http.proxyHost", proxy);
+			// System.setProperty("http.proxyPort", port);
+			System.setProperty("socksProxyHost", proxy);
+			System.setProperty("socksProxyPort", port);
+		} else {
+			System.setProperty("http.proxyHost", "");
+			System.setProperty("http.proxyPort", "");
+			System.setProperty("socksProxyHost", "");
+			System.setProperty("socksProxyPort", "");
+		}
+		// System.out.println(IOTools.readPage("http://whatismyip.org"));
 		if(loginPerformed) {
 			if(loginLoop.isAlive())
 				loginLoop.stop();
@@ -313,6 +347,8 @@ public class LoginUI extends JPanel {
 		usernameField = new JTextField();
 		JLabel passwordLabel = new JLabel();
 		passwordField = new JPasswordField();
+		JLabel proxyLabel = new JLabel();
+		proxyField = new JTextField();
 		JLabel spacerLabel = new JLabel();
 		rememberLoginCheckBox = new JCheckBox();
 		checkForUpdatesCheckBox = new JCheckBox();
@@ -374,18 +410,28 @@ public class LoginUI extends JPanel {
 							1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 							GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0,
 							0));
+					// ---- proxyField ----
+					proxyLabel.setText("Proxy: ");
+					loginFormPanel.add(proxyLabel, new GridBagConstraints(0, 2,
+							1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+							GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0,
+							0));
+					loginFormPanel.add(proxyField, new GridBagConstraints(1, 2,
+							1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+							GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0,
+							0));
 
 					// ---- spacerLabel ----
 					spacerLabel.setText("      ");
 					loginFormPanel.add(spacerLabel, new GridBagConstraints(0,
-							2, 2, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+							3, 2, 1, 0.0, 0.0, GridBagConstraints.CENTER,
 							GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0,
 							0));
 
 					// ---- rememberLoginCheckBox ----
 					rememberLoginCheckBox.setText("Remember login info");
 					loginFormPanel.add(rememberLoginCheckBox,
-							new GridBagConstraints(0, 3, 2, 1, 0.0, 0.0,
+							new GridBagConstraints(0, 4, 2, 1, 0.0, 0.0,
 									GridBagConstraints.CENTER,
 									GridBagConstraints.BOTH, new Insets(0, 0,
 											0, 0), 0, 0));
@@ -394,7 +440,7 @@ public class LoginUI extends JPanel {
 					checkForUpdatesCheckBox
 							.setText("Check for MC & DM updates");
 					loginFormPanel.add(checkForUpdatesCheckBox,
-							new GridBagConstraints(0, 4, 2, 1, 0.0, 0.0,
+							new GridBagConstraints(0, 5, 2, 1, 0.0, 0.0,
 									GridBagConstraints.CENTER,
 									GridBagConstraints.BOTH, new Insets(0, 0,
 											0, 0), 0, 0));
@@ -422,7 +468,7 @@ public class LoginUI extends JPanel {
 						});
 						panel2.add(loginButton);
 					}
-					loginFormPanel.add(panel2, new GridBagConstraints(0, 5, 2,
+					loginFormPanel.add(panel2, new GridBagConstraints(0, 6, 2,
 							1, 0.0, 0.0, GridBagConstraints.CENTER,
 							GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0,
 							0));

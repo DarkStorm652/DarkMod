@@ -15,5 +15,5 @@ public interface Font {
 
 	public void drawString(String string, int x, int y, int color);
 
-	public void drawStringWithShadow(String string, int x, int y, int color);
+	public int drawStringWithShadow(String string, int x, int y, int color);
 }
