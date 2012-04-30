@@ -1,0 +1,679 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hooks type="client" build="1332432053000" version="1.2.4">
+  <bytecode class="vq" method="y_" signature="()V" position="0">
+    <instruction type="ALOAD" arguments="0" />
+    <instruction type="ICONST" arguments="0" />
+    <instruction type="addconst" const="Methodref" arguments="org.darkstorm.minecraft.darkmod.hooks.client.Callback:onPlayerProcess:(Lorg/darkstorm/minecraft/darkmod/hooks/client/Player;I)V" />
+    <instruction type="INVOKESTATIC" arguments="const" />
+  </bytecode>
+  <bytecode class="vq" method="y_" signature="()V" position="4">
+    <instruction type="ICONST" arguments="1" />
+    <instruction type="addconst" const="Methodref" arguments="org.darkstorm.minecraft.darkmod.hooks.client.Callback:onPlayerProcess:(Lorg/darkstorm/minecraft/darkmod/hooks/client/Player;I)V" />
+    <instruction type="INVOKESTATIC" arguments="const" />
+    <instruction type="ALOAD" arguments="0" />
+  </bytecode>
+  <bytecode class="vq" method="y_" signature="()V" position="8">
+    <instruction type="ALOAD" arguments="0" />
+    <instruction type="ICONST" arguments="2" />
+    <instruction type="addconst" const="Methodref" arguments="org.darkstorm.minecraft.darkmod.hooks.client.Callback:onPlayerProcess:(Lorg/darkstorm/minecraft/darkmod/hooks/client/Player;I)V" />
+    <instruction type="INVOKESTATIC" arguments="const" />
+  </bytecode>
+  <bytecode class="vq" method="a" signature="(Ljava/lang/String;)V" position="0">
+    <instruction type="ALOAD" arguments="1" />
+    <instruction type="addconst" const="Methodref" arguments="org.darkstorm.minecraft.darkmod.hooks.client.Callback:handleText:(Ljava/lang/String;)Ljava/lang/String;" />
+    <instruction type="INVOKESTATIC" arguments="const" />
+    <instruction type="ASTORE" arguments="1" />
+    <instruction type="ALOAD" arguments="1" />
+    <instruction type="IFNULL" arguments="pos0" />
+  </bytecode>
+  <callback class="l" interface="org.darkstorm.minecraft.darkmod.hooks.client.Callback" method="a" signature="(Lbo;Lamd;F)V" position="0" callback="onRenderEntitiesBegin" />
+  <callback class="l" interface="org.darkstorm.minecraft.darkmod.hooks.client.Callback" method="a" signature="(Lbo;Lamd;F)V" position="591" callback="onRenderEntitiesEnd" />
+  <callback class="net.minecraft.client.Minecraft" interface="org.darkstorm.minecraft.darkmod.hooks.client.Callback" method="run" signature="()V" position="39" callback="onTick" />
+  <callback class="net.minecraft.client.Minecraft" interface="org.darkstorm.minecraft.darkmod.hooks.client.Callback" method="x" signature="()V" position="673" callback="onRender" />
+  <bytecode class="abs" method="a" signature="(Ljava/io/DataInputStream;Z)Labs;" position="90">
+    <instruction type="ALOAD" arguments="3" />
+    <instruction type="addconst" const="Methodref" arguments="org.darkstorm.minecraft.darkmod.hooks.client.Callback:onPacketReceived:(Lorg/darkstorm/minecraft/darkmod/hooks/client/Packet;)V" />
+    <instruction type="INVOKESTATIC" arguments="const" />
+  </bytecode>
+  <bytecode class="abs" method="a" signature="(Labs;Ljava/io/DataOutputStream;)V" position="0">
+    <instruction type="ALOAD" arguments="0" />
+    <instruction type="addconst" const="Methodref" arguments="org.darkstorm.minecraft.darkmod.hooks.client.Callback:onPacketSent:(Lorg/darkstorm/minecraft/darkmod/hooks/client/Packet;)V" />
+    <instruction type="INVOKESTATIC" arguments="const" />
+  </bytecode>
+  <bytecode class="ahv" method="a" signature="(Ljava/lang/String;)V" position="0">
+    <instruction type="ALOAD" arguments="1" />
+    <instruction type="addconst" const="Methodref" arguments="org.darkstorm.minecraft.darkmod.hooks.client.Callback:handleText:(Ljava/lang/String;)Ljava/lang/String;" />
+    <instruction type="INVOKESTATIC" arguments="const" />
+    <instruction type="ASTORE" arguments="1" />
+    <instruction type="ALOAD" arguments="1" />
+    <instruction type="IFNULL" arguments="pos36" />
+  </bytecode>
+  <bytecode class="rk" method="c" signature="(IIII)V" position="0">
+    <instruction type="ICONST" arguments="0" />
+    <instruction type="addconst" const="Methodref" arguments="org.darkstorm.minecraft.darkmod.hooks.client.Callback:onBlockDig:(I)V" />
+    <instruction type="INVOKESTATIC" arguments="const" />
+  </bytecode>
+  <bytecode class="rk" method="c" signature="(IIII)V" position="151">
+    <instruction type="ICONST" arguments="1" />
+    <instruction type="addconst" const="Methodref" arguments="org.darkstorm.minecraft.darkmod.hooks.client.Callback:onBlockDig:(I)V" />
+    <instruction type="INVOKESTATIC" arguments="const" />
+  </bytecode>
+  <bytecode class="rk" method="c" signature="(IIII)V" position="173">
+    <instruction type="ICONST" arguments="2" />
+    <instruction type="addconst" const="Methodref" arguments="org.darkstorm.minecraft.darkmod.hooks.client.Callback:onBlockDig:(I)V" />
+    <instruction type="INVOKESTATIC" arguments="const" />
+  </bytecode>
+  <bytecode class="aiy" method="a" signature="(Ljava/lang/String;)V" position="0">
+    <instruction type="ALOAD" arguments="1" />
+    <instruction type="addconst" const="Methodref" arguments="org.darkstorm.minecraft.darkmod.hooks.client.Callback:onTextDisplayed:(Ljava/lang/String;)Ljava/lang/String;" />
+    <instruction type="INVOKESTATIC" arguments="const" />
+    <instruction type="ASTORE" arguments="1" />
+    <instruction type="ALOAD" arguments="1" />
+    <instruction type="IFNULL" arguments="pos68" />
+  </bytecode>
+  <interface class="nl" interface="org.darkstorm.minecraft.darkmod.hooks.client.Font">
+    <getter class="nl" field="d" signature="[I" static="false" return="int[]" getter="getCharWidths" />
+    <getter class="nl" field="a" signature="I" static="false" return="int" getter="getTextureID" />
+    <getter class="nl" field="b" signature="I" static="false" return="int" getter="getFontHeight" />
+    <getter class="nl" field="f" signature="[I" static="false" return="int[]" getter="getGlyphTextureNames" />
+    <getter class="nl" field="g" signature="[I" static="false" return="int[]" getter="getColorCodes" />
+    <getter class="nl" field="h" signature="I" static="false" return="int" getter="getListBase" />
+    <method class="nl" method="a" signature="(Ljava/lang/String;III)I" new_method="drawStringWithShadow" new_signature="(Ljava/lang/String;III)I" />
+    <method class="nl" method="b" signature="(Ljava/lang/String;III)V" new_method="drawString" new_signature="(Ljava/lang/String;III)V" />
+    <method class="nl" method="a" signature="(Ljava/lang/String;)I" new_method="getStringWidth" new_signature="(Ljava/lang/String;)I" />
+  </interface>
+  <interface class="je" interface="org.darkstorm.minecraft.darkmod.hooks.client.MultiplayerWorld">
+    <getter class="je" field="H" signature="Ladl;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.NetworkHandler" getter="getNetworkHandler" />
+    <setter class="je" field="H" signature="Ladl;" static="false" argument="org.darkstorm.minecraft.darkmod.hooks.client.NetworkHandler" setter="setNetworkHandler" />
+  </interface>
+  <interface class="hc" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet14BlockDig">
+    <getter class="hc" field="a" signature="I" static="false" return="int" getter="getX" />
+    <setter class="hc" field="a" signature="I" static="false" argument="int" setter="setX" />
+    <getter class="hc" field="b" signature="I" static="false" return="int" getter="getY" />
+    <setter class="hc" field="b" signature="I" static="false" argument="int" setter="setY" />
+    <getter class="hc" field="c" signature="I" static="false" return="int" getter="getZ" />
+    <setter class="hc" field="c" signature="I" static="false" argument="int" setter="setZ" />
+    <getter class="hc" field="d" signature="I" static="false" return="int" getter="getFace" />
+    <setter class="hc" field="d" signature="I" static="false" argument="int" setter="setFace" />
+    <getter class="hc" field="e" signature="I" static="false" return="int" getter="getStatus" />
+    <setter class="hc" field="e" signature="I" static="false" argument="int" setter="setStatus" />
+  </interface>
+  <interface class="nn" interface="org.darkstorm.minecraft.darkmod.hooks.client.Entity">
+    <method class="nn" method="b" signature="(DDDFF)V" new_method="setPositionAndRotation" new_signature="(DDDFF)V" />
+    <method class="nn" method="c" signature="(DDDFF)V" new_method="setPositionAndAngles" new_signature="(DDDFF)V" />
+    <getter class="nn" field="o" signature="D" static="false" return="double" getter="getX" />
+    <setter class="nn" field="o" signature="D" static="false" argument="double" setter="setX" />
+    <getter class="nn" field="p" signature="D" static="false" return="double" getter="getY" />
+    <setter class="nn" field="p" signature="D" static="false" argument="double" setter="setY" />
+    <getter class="nn" field="Q" signature="F" static="false" return="float" getter="getUnknown0" />
+    <setter class="nn" field="Q" signature="F" static="false" argument="float" setter="setUnknown0" />
+    <getter class="nn" field="q" signature="D" static="false" return="double" getter="getZ" />
+    <setter class="nn" field="q" signature="D" static="false" argument="double" setter="setZ" />
+    <getter class="nn" field="r" signature="D" static="false" return="double" getter="getSpeedX" />
+    <setter class="nn" field="r" signature="D" static="false" argument="double" setter="setSpeedX" />
+    <getter class="nn" field="s" signature="D" static="false" return="double" getter="getSpeedY" />
+    <setter class="nn" field="s" signature="D" static="false" argument="double" setter="setSpeedY" />
+    <getter class="nn" field="t" signature="D" static="false" return="double" getter="getSpeedZ" />
+    <setter class="nn" field="t" signature="D" static="false" argument="double" setter="setSpeedZ" />
+    <getter class="nn" field="u" signature="F" static="false" return="float" getter="getRotationX" />
+    <setter class="nn" field="u" signature="F" static="false" argument="float" setter="setRotationX" />
+    <getter class="nn" field="v" signature="F" static="false" return="float" getter="getRotationY" />
+    <setter class="nn" field="v" signature="F" static="false" argument="float" setter="setRotationY" />
+    <getter class="nn" field="M" signature="F" static="false" return="float" getter="getFallDistance" />
+    <setter class="nn" field="M" signature="F" static="false" argument="float" setter="setFallDistance" />
+    <getter class="nn" field="c" signature="I" static="false" return="int" getter="getOnFireTimer" />
+    <setter class="nn" field="c" signature="I" static="false" argument="int" setter="setOnFireTimer" />
+    <method class="nn" method="Y" signature="()I" new_method="getBreathTimer" new_signature="()I" />
+    <getter class="nn" field="z" signature="Z" static="false" return="boolean" getter="isOnGround" />
+    <setter class="nn" field="z" signature="Z" static="false" argument="boolean" setter="setOnGround" />
+    <method class="nn" method="d" signature="(DDD)V" new_method="setPosition" new_signature="(DDD)V" />
+    <getter class="nn" field="f" signature="I" static="false" return="int" getter="getID" />
+    <setter class="nn" field="f" signature="I" static="false" argument="int" setter="setID" />
+  </interface>
+  <interface class="wj" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet201PlayerInfo" />
+  <interface class="ajz" interface="org.darkstorm.minecraft.darkmod.hooks.client.GuiSlider">
+    <getter class="ajz" field="j" signature="F" static="false" return="float" getter="getValue" />
+    <setter class="ajz" field="j" signature="F" static="false" argument="float" setter="setValue" />
+    <getter class="ajz" field="k" signature="Z" static="false" return="boolean" getter="isDragging" />
+    <setter class="ajz" field="k" signature="Z" static="false" argument="boolean" setter="setDragging" />
+  </interface>
+  <interface class="kh" interface="org.darkstorm.minecraft.darkmod.hooks.client.Giant" />
+  <interface class="zm" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet16BlockItemSwitch">
+    <getter class="zm" field="a" signature="I" static="false" return="int" getter="getID" />
+    <setter class="zm" field="a" signature="I" static="false" argument="int" setter="setID" />
+  </interface>
+  <interface class="xr" interface="org.darkstorm.minecraft.darkmod.hooks.client.Skeleton" />
+  <interface class="yn" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet28EntityVelocity">
+    <getter class="yn" field="a" signature="I" static="false" return="int" getter="getEntityID" />
+    <setter class="yn" field="a" signature="I" static="false" argument="int" setter="setEntityID" />
+    <getter class="yn" field="b" signature="I" static="false" return="int" getter="getSpeedX" />
+    <setter class="yn" field="b" signature="I" static="false" argument="int" setter="setSpeedX" />
+    <getter class="yn" field="c" signature="I" static="false" return="int" getter="getSpeedY" />
+    <setter class="yn" field="c" signature="I" static="false" argument="int" setter="setSpeedY" />
+    <getter class="yn" field="d" signature="I" static="false" return="int" getter="getSpeedZ" />
+    <setter class="yn" field="d" signature="I" static="false" argument="int" setter="setSpeedZ" />
+  </interface>
+  <interface class="agx" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet29DestroyEntity" />
+  <interface class="agl" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet6SpawnPosition" />
+  <interface class="yd" interface="org.darkstorm.minecraft.darkmod.hooks.client.Creeper" />
+  <interface class="us" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet70Bed" />
+  <interface class="ahc" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet50PreChunk" />
+  <interface class="aan" interface="org.darkstorm.minecraft.darkmod.hooks.client.InventoryItem">
+    <getter class="aan" field="c" signature="I" static="false" return="int" getter="getID" />
+    <setter class="aan" field="c" signature="I" static="false" argument="int" setter="setID" />
+    <getter class="aan" field="a" signature="I" static="false" return="int" getter="getStackCount" />
+    <setter class="aan" field="a" signature="I" static="false" argument="int" setter="setStackCount" />
+    <getter class="aan" field="e" signature="I" static="false" return="int" getter="getDamage" />
+    <setter class="aan" field="e" signature="I" static="false" argument="int" setter="setDamage" />
+  </interface>
+  <interface class="hl" interface="org.darkstorm.minecraft.darkmod.hooks.client.WindowAdapterOverride" />
+  <interface class="cu" interface="org.darkstorm.minecraft.darkmod.hooks.client.Sheep" />
+  <interface class="wz" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet71Weather" />
+  <interface class="ady" interface="org.darkstorm.minecraft.darkmod.hooks.client.SerializableMap" />
+  <interface class="a" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet7UseEntity">
+    <getter class="a" field="a" signature="I" static="false" return="int" getter="getPlayerEntityID" />
+    <setter class="a" field="a" signature="I" static="false" argument="int" setter="setPlayerEntityID" />
+    <getter class="a" field="b" signature="I" static="false" return="int" getter="getEntityID" />
+    <setter class="a" field="b" signature="I" static="false" argument="int" setter="setEntityID" />
+    <getter class="a" field="c" signature="I" static="false" return="int" getter="getButton" />
+    <setter class="a" field="c" signature="I" static="false" argument="int" setter="setButton" />
+  </interface>
+  <interface class="gh" interface="org.darkstorm.minecraft.darkmod.hooks.client.Serializable">
+    <method class="gh" method="a" signature="(Ljava/io/DataOutput;)V" new_method="serialize" new_signature="(Ljava/io/DataOutput;)V" />
+    <method class="gh" method="a" signature="(Ljava/io/DataInput;)V" new_method="deserialize" new_signature="(Ljava/io/DataInput;)V" />
+    <method class="gh" method="a" signature="()B" new_method="getID" new_signature="()B" />
+  </interface>
+  <interface class="du" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet13PlayerMoveRotate" />
+  <interface class="qc" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet25EntityPainting" />
+  <interface class="vv" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet22Collect" />
+  <interface class="ajg" interface="org.darkstorm.minecraft.darkmod.hooks.client.Zombie" />
+  <interface class="cb" interface="org.darkstorm.minecraft.darkmod.hooks.client.Spider" />
+  <interface class="qr" interface="org.darkstorm.minecraft.darkmod.hooks.client.Pig">
+    <method class="qr" method="aa" signature="()Z" new_method="isSaddled" new_signature="()Z" />
+    <method class="qr" method="a" signature="(Z)V" new_method="setSaddled" new_signature="(Z)V" />
+  </interface>
+  <interface class="ej" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet61DoorChange" />
+  <interface class="ds" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet8UpdateHealth" />
+  <interface class="kw" interface="org.darkstorm.minecraft.darkmod.hooks.client.TileEntity">
+    <getter class="kw" field="j" signature="I" static="false" return="int" getter="getX" />
+    <setter class="kw" field="j" signature="I" static="false" argument="int" setter="setX" />
+    <getter class="kw" field="k" signature="I" static="false" return="int" getter="getY" />
+    <setter class="kw" field="k" signature="I" static="false" argument="int" setter="setY" />
+    <getter class="kw" field="l" signature="I" static="false" return="int" getter="getZ" />
+    <setter class="kw" field="l" signature="I" static="false" argument="int" setter="setZ" />
+  </interface>
+  <interface class="bo" interface="org.darkstorm.minecraft.darkmod.hooks.client.Vector3D">
+    <getter class="bo" field="a" signature="D" static="false" return="double" getter="getX" />
+    <setter class="bo" field="a" signature="D" static="false" argument="double" setter="setX" />
+    <getter class="bo" field="b" signature="D" static="false" return="double" getter="getY" />
+    <setter class="bo" field="b" signature="D" static="false" argument="double" setter="setY" />
+    <getter class="bo" field="c" signature="D" static="false" return="double" getter="getZ" />
+    <setter class="bo" field="c" signature="D" static="false" argument="double" setter="setZ" />
+  </interface>
+  <interface class="aiu" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet130UpdateSign">
+    <getter class="aiu" field="a" signature="I" static="false" return="int" getter="getX" />
+    <setter class="aiu" field="a" signature="I" static="false" argument="int" setter="setX" />
+    <getter class="aiu" field="b" signature="I" static="false" return="int" getter="getY" />
+    <setter class="aiu" field="b" signature="I" static="false" argument="int" setter="setY" />
+    <getter class="aiu" field="c" signature="I" static="false" return="int" getter="getZ" />
+    <setter class="aiu" field="c" signature="I" static="false" argument="int" setter="setZ" />
+    <getter class="aiu" field="d" signature="[Ljava/lang/String;" static="false" return="java.lang.String[]" getter="getLines" />
+    <setter class="aiu" field="d" signature="[Ljava/lang/String;" static="false" argument="java.lang.String[]" setter="setLines" />
+  </interface>
+  <interface class="iy" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet20NamedEntitySpawn">
+    <getter class="iy" field="a" signature="I" static="false" return="int" getter="getEntityID" />
+    <setter class="iy" field="a" signature="I" static="false" argument="int" setter="setEntityID" />
+    <getter class="iy" field="b" signature="Ljava/lang/String;" static="false" return="java.lang.String" getter="getName" />
+    <setter class="iy" field="b" signature="Ljava/lang/String;" static="false" argument="java.lang.String" setter="setName" />
+    <getter class="iy" field="f" signature="B" static="false" return="byte" getter="getRotationX" />
+    <setter class="iy" field="f" signature="B" static="false" argument="byte" setter="setRotationX" />
+    <getter class="iy" field="g" signature="B" static="false" return="byte" getter="getRotationY" />
+    <setter class="iy" field="g" signature="B" static="false" argument="byte" setter="setRotationY" />
+    <getter class="iy" field="c" signature="I" static="false" return="int" getter="getHeldItemID" />
+    <setter class="iy" field="c" signature="I" static="false" argument="int" setter="setHeldItemID" />
+  </interface>
+  <interface class="abj" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet17Sleep" />
+  <interface class="sz" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet51MapChunk" />
+  <interface class="ki" interface="org.darkstorm.minecraft.darkmod.hooks.client.PlayerController" />
+  <interface class="yw" interface="org.darkstorm.minecraft.darkmod.hooks.client.Humanoid">
+    <getter class="yw" field="aA" signature="Ljava/lang/String;" static="false" return="java.lang.String" getter="getName" />
+    <getter class="yw" field="ap" signature="Laak;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.Inventory" getter="getInventory" />
+  </interface>
+  <interface class="jp" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet21PickupSpawn" />
+  <interface class="qi" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet54PlayNoteBlock" />
+  <interface class="gr" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet100OpenWindow">
+    <getter class="gr" field="a" signature="I" static="false" return="int" getter="getWindowID" />
+    <setter class="gr" field="a" signature="I" static="false" argument="int" setter="setWindowID" />
+    <getter class="gr" field="b" signature="I" static="false" return="int" getter="getInventoryType" />
+    <setter class="gr" field="b" signature="I" static="false" argument="int" setter="setInventoryType" />
+    <getter class="gr" field="c" signature="Ljava/lang/String;" static="false" return="java.lang.String" getter="getWindowTitle" />
+    <setter class="gr" field="c" signature="Ljava/lang/String;" static="false" argument="java.lang.String" setter="setWindowTitle" />
+    <getter class="gr" field="d" signature="I" static="false" return="int" getter="getSlotCount" />
+    <setter class="gr" field="d" signature="I" static="false" argument="int" setter="setSlotCount" />
+  </interface>
+  <interface class="lg" interface="org.darkstorm.minecraft.darkmod.hooks.client.ConnectionHandler">
+    <getter class="lg" field="h" signature="Ljava/net/Socket;" static="false" return="java.net.Socket" getter="getSocket" />
+    <setter class="lg" field="h" signature="Ljava/net/Socket;" static="false" argument="java.net.Socket" setter="setSocket" />
+  </interface>
+  <interface class="ee" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet250CustomPayload" />
+  <interface class="aay" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet24MobSpawn" />
+  <interface class="rk" interface="org.darkstorm.minecraft.darkmod.hooks.client.MultiplayerPlayerController">
+    <getter class="rk" field="c" signature="I" static="false" return="int" getter="getCurrentRemoveX" />
+    <setter class="rk" field="c" signature="I" static="false" argument="int" setter="setCurrentRemoveX" />
+    <getter class="rk" field="d" signature="I" static="false" return="int" getter="getCurrentRemoveY" />
+    <setter class="rk" field="d" signature="I" static="false" argument="int" setter="setCurrentRemoveY" />
+    <getter class="rk" field="e" signature="I" static="false" return="int" getter="getCurrentRemoveZ" />
+    <setter class="rk" field="e" signature="I" static="false" argument="int" setter="setCurrentRemoveZ" />
+    <getter class="rk" field="g" signature="F" static="false" return="float" getter="getFloat1" />
+    <setter class="rk" field="g" signature="F" static="false" argument="float" setter="setFloat1" />
+    <getter class="rk" field="h" signature="F" static="false" return="float" getter="getFloat2" />
+    <setter class="rk" field="h" signature="F" static="false" argument="float" setter="setFloat2" />
+    <getter class="rk" field="i" signature="I" static="false" return="int" getter="getSelectedItemIndex" />
+    <setter class="rk" field="i" signature="I" static="false" argument="int" setter="setSelectedItemIndex" />
+    <getter class="rk" field="j" signature="Z" static="false" return="boolean" getter="isRemoving" />
+    <setter class="rk" field="j" signature="Z" static="false" argument="boolean" setter="setRemoving" />
+    <getter class="rk" field="k" signature="Z" static="false" return="boolean" getter="isCreative" />
+    <setter class="rk" field="k" signature="Z" static="false" argument="boolean" setter="setCreative" />
+    <getter class="rk" field="f" signature="F" static="false" return="float" getter="getPercentComplete" />
+    <setter class="rk" field="f" signature="F" static="false" argument="float" setter="setPercentComplete" />
+    <method class="rk" method="c" signature="(IIII)V" new_method="digBlockAt" new_signature="(IIII)V" />
+  </interface>
+  <interface class="pq" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet12PlayerRotate" />
+  <interface class="vq" interface="org.darkstorm.minecraft.darkmod.hooks.client.Player">
+    <getter class="yw" field="aT" signature="Lqu;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.PlayerAbilities" getter="getAbilities" />
+    <method class="vq" method="a" signature="(Ljava/lang/String;)V" new_method="sendText" new_signature="(Ljava/lang/String;)V" />
+  </interface>
+  <interface class="wa" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet254ServerPing" />
+  <interface class="cd" interface="org.darkstorm.minecraft.darkmod.hooks.client.GuiOptionsMenu" />
+  <interface class="jl" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet105UpdateProgressBar">
+    <getter class="jl" field="a" signature="I" static="false" return="int" getter="getWindowID" />
+    <setter class="jl" field="a" signature="I" static="false" argument="int" setter="setWindowID" />
+    <getter class="jl" field="b" signature="I" static="false" return="int" getter="getProgressBar" />
+    <setter class="jl" field="b" signature="I" static="false" argument="int" setter="setProgressBar" />
+    <getter class="jl" field="c" signature="I" static="false" return="int" getter="getValue" />
+    <setter class="jl" field="c" signature="I" static="false" argument="int" setter="setValue" />
+  </interface>
+  <interface class="pl" interface="org.darkstorm.minecraft.darkmod.hooks.client.EntityTarget">
+    <getter class="pl" field="b" signature="I" static="false" return="int" getter="getTargetX" />
+    <setter class="pl" field="b" signature="I" static="false" argument="int" setter="setTargetX" />
+    <getter class="pl" field="c" signature="I" static="false" return="int" getter="getTargetY" />
+    <setter class="pl" field="c" signature="I" static="false" argument="int" setter="setTargetY" />
+    <getter class="pl" field="d" signature="I" static="false" return="int" getter="getTargetZ" />
+    <setter class="pl" field="d" signature="I" static="false" argument="int" setter="setTargetZ" />
+    <getter class="pl" field="e" signature="I" static="false" return="int" getter="getTargetFace" />
+    <setter class="pl" field="e" signature="I" static="false" argument="int" setter="setTargetFace" />
+    <getter class="pl" field="f" signature="Lbo;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.Vector3D" getter="getVector" />
+    <setter class="pl" field="f" signature="Lbo;" static="false" argument="org.darkstorm.minecraft.darkmod.hooks.client.Vector3D" setter="setVector" />
+    <getter class="pl" field="g" signature="Lnn;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.Entity" getter="getEntity" />
+    <setter class="pl" field="g" signature="Lnn;" static="false" argument="org.darkstorm.minecraft.darkmod.hooks.client.Entity" setter="setEntity" />
+  </interface>
+  <interface class="adl" interface="org.darkstorm.minecraft.darkmod.hooks.client.NetworkHandler">
+    <getter class="adl" field="g" signature="Llg;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.ConnectionHandler" getter="getConnectionHandler" />
+    <setter class="adl" field="g" signature="Llg;" static="false" argument="org.darkstorm.minecraft.darkmod.hooks.client.ConnectionHandler" setter="setConnectionHandler" />
+    <method class="adl" method="b" signature="(Labs;)V" new_method="sendPacket0" new_signature="(Lorg/darkstorm/minecraft/darkmod/hooks/client/Packet;)V" />
+    <method class="adl" method="c" signature="(Labs;)V" new_method="sendPacket" new_signature="(Lorg/darkstorm/minecraft/darkmod/hooks/client/Packet;)V" />
+  </interface>
+  <interface class="abs" interface="org.darkstorm.minecraft.darkmod.hooks.client.Packet">
+    <method class="abs" method="a" signature="(Ljava/io/DataInputStream;)V" new_method="receive" new_signature="(Ljava/io/DataInputStream;)V" />
+    <method class="abs" method="a" signature="(Ljava/io/DataOutputStream;)V" new_method="send" new_signature="(Ljava/io/DataOutputStream;)V" />
+  </interface>
+  <interface class="wq" interface="org.darkstorm.minecraft.darkmod.hooks.client.WorldInfo">
+    <getter class="wq" field="a" signature="J" static="false" return="long" getter="getRandomSeed" />
+    <setter class="wq" field="a" signature="J" static="false" argument="long" setter="setRandomSeed" />
+    <getter class="wq" field="c" signature="I" static="false" return="int" getter="getSpawnX" />
+    <setter class="wq" field="c" signature="I" static="false" argument="int" setter="setSpawnX" />
+    <getter class="wq" field="d" signature="I" static="false" return="int" getter="getSpawnY" />
+    <setter class="wq" field="d" signature="I" static="false" argument="int" setter="setSpawnY" />
+    <getter class="wq" field="e" signature="I" static="false" return="int" getter="getSpawnZ" />
+    <setter class="wq" field="e" signature="I" static="false" argument="int" setter="setSpawnZ" />
+    <getter class="wq" field="f" signature="J" static="false" return="long" getter="getTime" />
+    <setter class="wq" field="f" signature="J" static="false" argument="long" setter="setTime" />
+    <getter class="wq" field="g" signature="J" static="false" return="long" getter="getLastPlayed" />
+    <setter class="wq" field="g" signature="J" static="false" argument="long" setter="setLastPlayed" />
+    <getter class="wq" field="h" signature="J" static="false" return="long" getter="getSizeOnDisk" />
+    <setter class="wq" field="h" signature="J" static="false" argument="long" setter="setSizeOnDisk" />
+    <getter class="wq" field="k" signature="Ljava/lang/String;" static="false" return="java.lang.String" getter="getLevelName" />
+    <setter class="wq" field="k" signature="Ljava/lang/String;" static="false" argument="java.lang.String" setter="setLevelName" />
+    <getter class="wq" field="l" signature="I" static="false" return="int" getter="getVersion" />
+    <setter class="wq" field="l" signature="I" static="false" argument="int" setter="setVersion" />
+    <getter class="wq" field="n" signature="I" static="false" return="int" getter="getRainTime" />
+    <setter class="wq" field="n" signature="I" static="false" argument="int" setter="setRainTime" />
+    <getter class="wq" field="m" signature="Z" static="false" return="boolean" getter="isRaining" />
+    <setter class="wq" field="m" signature="Z" static="false" argument="boolean" setter="setRaining" />
+    <getter class="wq" field="p" signature="I" static="false" return="int" getter="getThunderTime" />
+    <setter class="wq" field="p" signature="I" static="false" argument="int" setter="setThunderTime" />
+    <getter class="wq" field="o" signature="Z" static="false" return="boolean" getter="isThundering" />
+    <setter class="wq" field="o" signature="Z" static="false" argument="boolean" setter="setThundering" />
+    <getter class="wq" field="i" signature="Lady;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.SerializableMap" getter="getPlayer" />
+    <setter class="wq" field="i" signature="Lady;" static="false" argument="org.darkstorm.minecraft.darkmod.hooks.client.SerializableMap" setter="setPlayer" />
+    <getter class="wq" field="j" signature="I" static="false" return="int" getter="getDimension" />
+    <setter class="wq" field="j" signature="I" static="false" argument="int" setter="setDimension" />
+  </interface>
+  <interface class="yy" interface="org.darkstorm.minecraft.darkmod.hooks.client.HostileMob" />
+  <interface class="lt" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet33EntityMoveRotate" />
+  <interface class="sc" interface="org.darkstorm.minecraft.darkmod.hooks.client.Sign">
+    <getter class="sc" field="a" signature="[Ljava/lang/String;" static="false" return="java.lang.String[]" getter="getSignText" />
+    <setter class="sc" field="a" signature="[Ljava/lang/String;" static="false" argument="java.lang.String[]" setter="setSignText" />
+    <getter class="sc" field="b" signature="I" static="false" return="int" getter="getLineBeingEdited" />
+    <setter class="sc" field="b" signature="I" static="false" argument="int" setter="setLineBeingEdited" />
+  </interface>
+  <interface class="gg" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet10PlayerPosition">
+    <getter class="gg" field="a" signature="D" static="false" return="double" getter="getX" />
+    <setter class="gg" field="a" signature="D" static="false" argument="double" setter="setX" />
+    <getter class="gg" field="b" signature="D" static="false" return="double" getter="getY" />
+    <setter class="gg" field="b" signature="D" static="false" argument="double" setter="setY" />
+    <getter class="gg" field="c" signature="D" static="false" return="double" getter="getZ" />
+    <setter class="gg" field="c" signature="D" static="false" argument="double" setter="setZ" />
+    <getter class="gg" field="d" signature="D" static="false" return="double" getter="getStance" />
+    <setter class="gg" field="d" signature="D" static="false" argument="double" setter="setStance" />
+    <getter class="gg" field="e" signature="F" static="false" return="float" getter="getRotationX" />
+    <setter class="gg" field="e" signature="F" static="false" argument="float" setter="setRotationX" />
+    <getter class="gg" field="f" signature="F" static="false" return="float" getter="getRotationY" />
+    <setter class="gg" field="f" signature="F" static="false" argument="float" setter="setRotationY" />
+    <getter class="gg" field="g" signature="Z" static="false" return="boolean" getter="isOnGround" />
+    <setter class="gg" field="g" signature="Z" static="false" argument="boolean" setter="setOnGround" />
+    <getter class="gg" field="h" signature="Z" static="false" return="boolean" getter="isMoving" />
+    <setter class="gg" field="h" signature="Z" static="false" argument="boolean" setter="setMoving" />
+    <getter class="gg" field="i" signature="Z" static="false" return="boolean" getter="isRotating" />
+    <setter class="gg" field="i" signature="Z" static="false" argument="boolean" setter="setRotating" />
+  </interface>
+  <interface class="kc" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet18Animation" />
+  <interface class="agf" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet102WindowClick">
+    <getter class="agf" field="a" signature="I" static="false" return="int" getter="getWindowID" />
+    <setter class="agf" field="a" signature="I" static="false" argument="int" setter="setWindowID" />
+    <getter class="agf" field="b" signature="I" static="false" return="int" getter="getSlot" />
+    <setter class="agf" field="b" signature="I" static="false" argument="int" setter="setSlot" />
+    <getter class="agf" field="c" signature="I" static="false" return="int" getter="getButton" />
+    <setter class="agf" field="c" signature="I" static="false" argument="int" setter="setButton" />
+    <getter class="agf" field="d" signature="S" static="false" return="short" getter="getAction" />
+    <setter class="agf" field="d" signature="S" static="false" argument="short" setter="setAction" />
+    <getter class="agf" field="e" signature="Laan;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.InventoryItem" getter="getItem" />
+    <setter class="agf" field="e" signature="Laan;" static="false" argument="org.darkstorm.minecraft.darkmod.hooks.client.InventoryItem" setter="setItem" />
+    <getter class="agf" field="f" signature="Z" static="false" return="boolean" getter="isHoldingShift" />
+    <setter class="agf" field="f" signature="Z" static="false" argument="boolean" setter="setHoldingShift" />
+  </interface>
+  <interface class="wb" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet41EntityEffect" />
+  <interface class="nd" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet32EntityRotate" />
+  <interface class="aji" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet35EntityHeadRotate">
+    <getter class="aji" field="a" signature="I" static="false" return="int" getter="getEntityID" />
+    <setter class="aji" field="a" signature="I" static="false" argument="int" setter="setEntityID" />
+    <getter class="aji" field="b" signature="B" static="false" return="byte" getter="getRotation" />
+    <setter class="aji" field="b" signature="B" static="false" argument="byte" setter="setRotation" />
+  </interface>
+  <interface class="afd" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet3Chat">
+    <getter class="afd" field="a" signature="Ljava/lang/String;" static="false" return="java.lang.String" getter="getMessage" />
+    <setter class="afd" field="a" signature="Ljava/lang/String;" static="false" argument="java.lang.String" setter="setMessage" />
+  </interface>
+  <interface class="rd" interface="org.darkstorm.minecraft.darkmod.hooks.client.Chicken">
+    <getter class="rd" field="an" signature="I" static="false" return="int" getter="getEggDropTimer" />
+    <setter class="rd" field="an" signature="I" static="false" argument="int" setter="setEggDropTimer" />
+  </interface>
+  <interface class="ih" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet43Experience" />
+  <interface class="zf" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet4UpdateTime">
+    <getter class="zf" field="a" signature="J" static="false" return="long" getter="getTime" />
+    <setter class="zf" field="a" signature="J" static="false" argument="long" setter="setTime" />
+  </interface>
+  <interface class="aig" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet19EntityAction">
+    <getter class="aig" field="a" signature="I" static="false" return="int" getter="getEntityID" />
+    <setter class="aig" field="a" signature="I" static="false" argument="int" setter="setEntityID" />
+    <getter class="aig" field="b" signature="I" static="false" return="int" getter="getState" />
+    <setter class="aig" field="b" signature="I" static="false" argument="int" setter="setState" />
+  </interface>
+  <interface class="mr" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet34EntityTeleport">
+    <getter class="mr" field="a" signature="I" static="false" return="int" getter="getX" />
+    <setter class="mr" field="a" signature="I" static="false" argument="int" setter="setX" />
+    <getter class="mr" field="b" signature="I" static="false" return="int" getter="getY" />
+    <setter class="mr" field="b" signature="I" static="false" argument="int" setter="setY" />
+    <getter class="mr" field="c" signature="I" static="false" return="int" getter="getZ" />
+    <setter class="mr" field="c" signature="I" static="false" argument="int" setter="setZ" />
+    <getter class="mr" field="e" signature="B" static="false" return="byte" getter="getRotationX" />
+    <setter class="mr" field="e" signature="B" static="false" argument="byte" setter="setRotationX" />
+    <getter class="mr" field="f" signature="B" static="false" return="byte" getter="getRotationY" />
+    <setter class="mr" field="f" signature="B" static="false" argument="byte" setter="setRotationY" />
+  </interface>
+  <interface class="abp" interface="org.darkstorm.minecraft.darkmod.hooks.client.GuiButton">
+    <getter class="abp" field="a" signature="I" static="false" return="int" getter="getWidth" />
+    <setter class="abp" field="a" signature="I" static="false" argument="int" setter="setWidth" />
+    <getter class="abp" field="b" signature="I" static="false" return="int" getter="getHeight" />
+    <setter class="abp" field="b" signature="I" static="false" argument="int" setter="setHeight" />
+    <getter class="abp" field="c" signature="I" static="false" return="int" getter="getX" />
+    <setter class="abp" field="c" signature="I" static="false" argument="int" setter="setX" />
+    <getter class="abp" field="d" signature="I" static="false" return="int" getter="getY" />
+    <setter class="abp" field="d" signature="I" static="false" argument="int" setter="setY" />
+    <getter class="abp" field="e" signature="Ljava/lang/String;" static="false" return="java.lang.String" getter="getText" />
+    <setter class="abp" field="e" signature="Ljava/lang/String;" static="false" argument="java.lang.String" setter="setText" />
+    <getter class="abp" field="f" signature="I" static="false" return="int" getter="getID" />
+    <setter class="abp" field="f" signature="I" static="false" argument="int" setter="setID" />
+    <getter class="abp" field="h" signature="Z" static="false" return="boolean" getter="isEnabled" />
+    <setter class="abp" field="h" signature="Z" static="false" argument="boolean" setter="setEnabled" />
+  </interface>
+  <interface class="gk" interface="org.darkstorm.minecraft.darkmod.hooks.client.MathUtil" />
+  <interface class="aip" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet30EntityPosition">
+    <getter class="aip" field="a" signature="I" static="false" return="int" getter="getEntityID" />
+    <setter class="aip" field="a" signature="I" static="false" argument="int" setter="setEntityID" />
+    <getter class="aip" field="b" signature="B" static="false" return="byte" getter="getX" />
+    <setter class="aip" field="b" signature="B" static="false" argument="byte" setter="setX" />
+    <getter class="aip" field="c" signature="B" static="false" return="byte" getter="getY" />
+    <setter class="aip" field="c" signature="B" static="false" argument="byte" setter="setY" />
+    <getter class="aip" field="d" signature="B" static="false" return="byte" getter="getZ" />
+    <setter class="aip" field="d" signature="B" static="false" argument="byte" setter="setZ" />
+    <getter class="aip" field="e" signature="B" static="false" return="byte" getter="getRotationX" />
+    <setter class="aip" field="e" signature="B" static="false" argument="byte" setter="setRotationX" />
+    <getter class="aip" field="f" signature="B" static="false" return="byte" getter="getRotationY" />
+    <setter class="aip" field="f" signature="B" static="false" argument="byte" setter="setRotationY" />
+    <getter class="aip" field="g" signature="Z" static="false" return="boolean" getter="isRotating" />
+    <setter class="aip" field="g" signature="Z" static="false" argument="boolean" setter="setRotating" />
+  </interface>
+  <interface class="adv" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet39AttachEntity" />
+  <interface class="gt" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet38EntityStatus">
+    <getter class="gt" field="a" signature="I" static="false" return="int" getter="getEntityID" />
+    <setter class="gt" field="a" signature="I" static="false" argument="int" setter="setEntityID" />
+    <getter class="gt" field="b" signature="B" static="false" return="byte" getter="getStatus" />
+    <setter class="gt" field="b" signature="B" static="false" argument="byte" setter="setStatus" />
+  </interface>
+  <interface class="aiy" interface="org.darkstorm.minecraft.darkmod.hooks.client.GuiIngame">
+    <getter class="aiy" field="k" signature="Ljava/lang/String;" static="false" return="java.lang.String" getter="getNotification" />
+    <setter class="aiy" field="k" signature="Ljava/lang/String;" static="false" argument="java.lang.String" setter="setNotification" />
+    <getter class="aiy" field="l" signature="I" static="false" return="int" getter="getNotificationTimeout" />
+    <setter class="aiy" field="l" signature="I" static="false" argument="int" setter="setNotificationTimeout" />
+    <method class="aiy" method="a" signature="(Ljava/lang/String;)V" new_method="displayTextInChat" new_signature="(Ljava/lang/String;)V" />
+    <method class="aiy" method="c" signature="(Ljava/lang/String;)V" new_method="translateAndDisplayTextInChat" new_signature="(Ljava/lang/String;)V" />
+  </interface>
+  <interface class="vp" interface="org.darkstorm.minecraft.darkmod.hooks.client.GuiScreen">
+    <getter class="vp" field="s" signature="Ljava/util/List;" static="false" return="java.util.List" getter="getButtons" />
+    <getter class="vp" field="a" signature="Labp;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.GuiButton" getter="getSelectedButton" />
+    <setter class="vp" field="a" signature="Labp;" static="false" argument="org.darkstorm.minecraft.darkmod.hooks.client.GuiButton" setter="setSelectedButton" />
+    <getter class="vp" field="q" signature="I" static="false" return="int" getter="getWidth" />
+    <setter class="vp" field="q" signature="I" static="false" argument="int" setter="setWidth" />
+    <getter class="vp" field="r" signature="I" static="false" return="int" getter="getHeight" />
+    <setter class="vp" field="r" signature="I" static="false" argument="int" setter="setHeight" />
+  </interface>
+  <interface class="alu" interface="org.darkstorm.minecraft.darkmod.hooks.client.GuiEditSign" />
+  <interface class="ajr" interface="org.darkstorm.minecraft.darkmod.hooks.client.Mob" />
+  <interface class="fu" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet103SetSlot">
+    <getter class="fu" field="a" signature="I" static="false" return="int" getter="getWindowID" />
+    <setter class="fu" field="a" signature="I" static="false" argument="int" setter="setWindowID" />
+    <getter class="fu" field="b" signature="I" static="false" return="int" getter="getSlot" />
+    <setter class="fu" field="b" signature="I" static="false" argument="int" setter="setSlot" />
+    <getter class="fu" field="c" signature="Laan;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.InventoryItem" getter="getItem" />
+    <setter class="fu" field="c" signature="Laan;" static="false" argument="org.darkstorm.minecraft.darkmod.hooks.client.InventoryItem" setter="setItem" />
+  </interface>
+  <interface class="amg" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet255KickDisconnect">
+    <getter class="amg" field="a" signature="Ljava/lang/String;" static="false" return="java.lang.String" getter="getReason" />
+    <setter class="amg" field="a" signature="Ljava/lang/String;" static="false" argument="java.lang.String" setter="setReason" />
+  </interface>
+  <interface class="jf" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet2Handshake">
+    <getter class="jf" field="a" signature="Ljava/lang/String;" static="false" return="java.lang.String" getter="getUsername" />
+    <setter class="jf" field="a" signature="Ljava/lang/String;" static="false" argument="java.lang.String" setter="setUsername" />
+  </interface>
+  <interface class="ado" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet42RemoveEntityEffect" />
+  <interface class="lj" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet26EntityExpOrb" />
+  <interface class="acq" interface="org.darkstorm.minecraft.darkmod.hooks.client.Animable">
+    <getter class="acq" field="bx" signature="I" static="false" return="int" getter="getHealth" />
+    <setter class="acq" field="bx" signature="I" static="false" argument="int" setter="setHealth" />
+    <getter class="acq" field="bA" signature="I" static="false" return="int" getter="getHurtTimer" />
+    <setter class="acq" field="bA" signature="I" static="false" argument="int" setter="setHurtTimer" />
+    <getter class="acq" field="bD" signature="I" static="false" return="int" getter="getDeathTimer" />
+    <setter class="acq" field="bD" signature="I" static="false" argument="int" setter="setDeathTimer" />
+    <getter class="acq" field="bE" signature="I" static="false" return="int" getter="getAttackTimer" />
+    <setter class="acq" field="bE" signature="I" static="false" argument="int" setter="setAttackTimer" />
+  </interface>
+  <interface class="ol" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet53BlockChange" />
+  <interface class="un" interface="org.darkstorm.minecraft.darkmod.hooks.client.Cow" />
+  <interface class="oe" interface="org.darkstorm.minecraft.darkmod.hooks.client.PacketHandler" />
+  <interface class="acw" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet0KeepAlive">
+    <getter class="acw" field="a" signature="I" static="false" return="int" getter="getRandomID" />
+    <setter class="acw" field="a" signature="I" static="false" argument="int" setter="setRandomID" />
+  </interface>
+  <interface class="kn" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet106Transaction">
+    <getter class="kn" field="a" signature="I" static="false" return="int" getter="getWindowID" />
+    <setter class="kn" field="a" signature="I" static="false" argument="int" setter="setWindowID" />
+    <getter class="kn" field="b" signature="S" static="false" return="short" getter="getShortWindowID" />
+    <setter class="kn" field="b" signature="S" static="false" argument="short" setter="setShortWindowID" />
+    <getter class="kn" field="c" signature="Z" static="false" return="boolean" getter="isAccepted" />
+    <setter class="kn" field="c" signature="Z" static="false" argument="boolean" setter="setAccepted" />
+  </interface>
+  <interface class="nu" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet31EntityMove" />
+  <interface class="ahv" interface="org.darkstorm.minecraft.darkmod.hooks.client.MultiplayerPlayer">
+    <method class="ahv" method="a" signature="(Ljava/lang/String;)V" new_method="sendText" new_signature="(Ljava/lang/String;)V" />
+  </interface>
+  <interface class="pf" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet40EntityMetadata" />
+  <interface class="net.minecraft.client.Minecraft" interface="org.darkstorm.minecraft.darkmod.hooks.client.Minecraft">
+    <getter class="net.minecraft.client.Minecraft" field="k" signature="Lfc;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.Session" getter="getSession" />
+    <setter class="net.minecraft.client.Minecraft" field="k" signature="Lfc;" static="false" argument="org.darkstorm.minecraft.darkmod.hooks.client.Session" setter="setSession" />
+    <getter class="net.minecraft.client.Minecraft" field="l" signature="Ljava/lang/String;" static="false" return="java.lang.String" getter="getHomeURL" />
+    <setter class="net.minecraft.client.Minecraft" field="l" signature="Ljava/lang/String;" static="false" argument="java.lang.String" setter="setHomeURL" />
+    <getter class="net.minecraft.client.Minecraft" field="m" signature="Ljava/awt/Canvas;" static="false" return="java.awt.Canvas" getter="getCanvas" />
+    <getter class="net.minecraft.client.Minecraft" field="B" signature="Lnet/minecraft/client/MinecraftApplet;" static="false" return="net.minecraft.client.MinecraftApplet" getter="getApplet" />
+    <getter class="yr" field="e" signature="[Lyr;" static="true" return="org.darkstorm.minecraft.darkmod.hooks.client.Item[]" getter="getItems" />
+    <getter class="net.minecraft.client.Minecraft" field="h" signature="Lvq;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.Player" getter="getPlayer" />
+    <method class="gk" method="a" signature="(F)F" new_method="cos" new_signature="(F)F" />
+    <method class="gk" method="b" signature="(F)F" new_method="sin" new_signature="(F)F" />
+    <getter class="net.minecraft.client.Minecraft" field="f" signature="Lxd;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.World" getter="getWorld" />
+    <setter class="net.minecraft.client.Minecraft" field="f" signature="Lxd;" static="false" argument="org.darkstorm.minecraft.darkmod.hooks.client.World" setter="setWorld" />
+    <getter class="net.minecraft.client.Minecraft" field="q" signature="Lnl;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.Font" getter="getFont" />
+    <getter class="net.minecraft.client.Minecraft" field="r" signature="Lnl;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.Font" getter="getStandardGalacticFont" />
+    <method class="zh" method="a" signature="(Ljava/io/File;Ljava/lang/String;II)Ljava/lang/String;" new_method="takeScreenshot" new_signature="(Ljava/io/File;Ljava/lang/String;II)Ljava/lang/String;" />
+    <getter class="net.minecraft.client.Minecraft" field="c" signature="Lki;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.PlayerController" getter="getPlayerController" />
+    <setter class="net.minecraft.client.Minecraft" field="c" signature="Lki;" static="false" argument="org.darkstorm.minecraft.darkmod.hooks.client.PlayerController" setter="setPlayerController" />
+    <getter class="net.minecraft.client.Minecraft" field="z" signature="Lpl;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.EntityTarget" getter="getPlayerTarget" />
+    <getter class="net.minecraft.client.Minecraft" field="w" signature="Laiy;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.GuiIngame" getter="getGuiIngame" />
+    <getter class="net.minecraft.client.Minecraft" field="s" signature="Lvp;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.GuiScreen" getter="getCurrentScreen" />
+    <method class="net.minecraft.client.Minecraft" method="a" signature="(Lvp;)V" new_method="displayScreen" new_signature="(Lorg/darkstorm/minecraft/darkmod/hooks/client/GuiScreen;)V" />
+    <getter class="pb" field="m" signature="[Lpb;" static="true" return="org.darkstorm.minecraft.darkmod.hooks.client.Block[]" getter="getBlocks" />
+  </interface>
+  <interface class="xd" interface="org.darkstorm.minecraft.darkmod.hooks.client.World">
+    <getter class="xd" field="d" signature="Ljava/util/List;" static="false" return="java.util.List" getter="getPlayers" />
+    <getter class="xd" field="b" signature="Ljava/util/List;" static="false" return="java.util.List" getter="getEntities" />
+    <method class="xd" method="a" signature="(III)I" new_method="getBlockIDAt" new_signature="(III)I" />
+    <method class="xd" method="e" signature="(III)I" new_method="getBlockMetadataAt" new_signature="(III)I" />
+    <method class="xd" method="b" signature="(III)Lkw;" new_method="getTileEntityAt" new_signature="(III)Lorg/darkstorm/minecraft/darkmod/hooks/client/TileEntity;" />
+    <method class="xd" method="a" signature="(IIILkw;)V" new_method="setTileEntityAt" new_signature="(IIILorg/darkstorm/minecraft/darkmod/hooks/client/TileEntity;)V" />
+    <method class="xd" method="g" signature="(IIII)Z" new_method="setBlockIDAt" new_signature="(IIII)Z" />
+    <getter class="xd" field="x" signature="Lwq;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.WorldInfo" getter="getWorldInfo" />
+    <setter class="xd" field="x" signature="Lwq;" static="false" argument="org.darkstorm.minecraft.darkmod.hooks.client.WorldInfo" setter="setWorldInfo" />
+  </interface>
+  <interface class="aec" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet1Login" />
+  <interface class="ag" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet11PlayerMove" />
+  <interface class="lb" interface="org.darkstorm.minecraft.darkmod.hooks.client.GuiIngameMenu" />
+  <interface class="kx" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet9Respawn" />
+  <interface class="yf" interface="org.darkstorm.minecraft.darkmod.hooks.client.GuiChat" />
+  <interface class="np" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet23VehicleSpawn" />
+  <interface class="nm" interface="org.darkstorm.minecraft.darkmod.hooks.client.Arrow">
+    <getter class="nm" field="e" signature="I" static="false" return="int" getter="getXTile" />
+    <setter class="nm" field="e" signature="I" static="false" argument="int" setter="setXTile" />
+    <getter class="nm" field="am" signature="I" static="false" return="int" getter="getYTile" />
+    <setter class="nm" field="am" signature="I" static="false" argument="int" setter="setYTile" />
+    <getter class="nm" field="an" signature="I" static="false" return="int" getter="getZTile" />
+    <setter class="nm" field="an" signature="I" static="false" argument="int" setter="setZTile" />
+    <getter class="nm" field="ao" signature="I" static="false" return="int" getter="getInTile" />
+    <setter class="nm" field="ao" signature="I" static="false" argument="int" setter="setInTile" />
+    <getter class="nm" field="ap" signature="I" static="false" return="int" getter="getInData" />
+    <setter class="nm" field="ap" signature="I" static="false" argument="int" setter="setInData" />
+    <getter class="nm" field="aq" signature="Z" static="false" return="boolean" getter="isInGround" />
+    <setter class="nm" field="aq" signature="Z" static="false" argument="boolean" setter="setInGround" />
+    <getter class="nm" field="a" signature="Z" static="false" return="boolean" getter="isFiredByPlayer" />
+    <setter class="nm" field="a" signature="Z" static="false" argument="boolean" setter="setFiredByPlayer" />
+    <getter class="nm" field="b" signature="I" static="false" return="int" getter="getShake" />
+    <setter class="nm" field="b" signature="I" static="false" argument="int" setter="setShake" />
+    <getter class="nm" field="as" signature="I" static="false" return="int" getter="getDamage" />
+    <setter class="nm" field="as" signature="I" static="false" argument="int" setter="setDamage" />
+  </interface>
+  <interface class="ait" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet132TileEntityData" />
+  <interface class="pb" interface="org.darkstorm.minecraft.darkmod.hooks.client.Block" />
+  <interface class="add" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet101CloseWindow">
+    <getter class="add" field="a" signature="I" static="false" return="int" getter="getWindowID" />
+    <setter class="add" field="a" signature="I" static="false" argument="int" setter="setWindowID" />
+  </interface>
+  <interface class="kk" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet200Statistic" />
+  <interface class="ta" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet5PlayerInventory" />
+  <interface class="ai" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet131MapData" />
+  <interface class="fc" interface="org.darkstorm.minecraft.darkmod.hooks.client.Session">
+    <getter class="fc" field="b" signature="Ljava/lang/String;" static="false" return="java.lang.String" getter="getUsername" />
+    <setter class="fc" field="b" signature="Ljava/lang/String;" static="false" argument="java.lang.String" setter="setUsername" />
+    <getter class="fc" field="c" signature="Ljava/lang/String;" static="false" return="java.lang.String" getter="getSessionID" />
+    <setter class="fc" field="c" signature="Ljava/lang/String;" static="false" argument="java.lang.String" setter="setSessionID" />
+    <getter class="fc" field="d" signature="Ljava/lang/String;" static="false" return="java.lang.String" getter="getMultiplayerPassword" />
+    <setter class="fc" field="d" signature="Ljava/lang/String;" static="false" argument="java.lang.String" setter="setMultiplayerPassword" />
+  </interface>
+  <interface class="zh" interface="org.darkstorm.minecraft.darkmod.hooks.client.ScreenshotUtil" />
+  <interface class="aak" interface="org.darkstorm.minecraft.darkmod.hooks.client.Inventory">
+    <getter class="aak" field="c" signature="I" static="false" return="int" getter="getSelectedIndex" />
+    <setter class="aak" field="c" signature="I" static="false" argument="int" setter="setSelectedIndex" />
+    <getter class="aak" field="a" signature="[Laan;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.InventoryItem[]" getter="getItems" />
+    <setter class="aak" field="a" signature="[Laan;" static="false" argument="org.darkstorm.minecraft.darkmod.hooks.client.InventoryItem[]" setter="setItems" />
+    <getter class="aak" field="b" signature="[Laan;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.InventoryItem[]" getter="getArmor" />
+    <setter class="aak" field="b" signature="[Laan;" static="false" argument="org.darkstorm.minecraft.darkmod.hooks.client.InventoryItem[]" setter="setArmor" />
+    <method class="aak" method="b" signature="()Laan;" new_method="getSelectedItem" new_signature="()Lorg/darkstorm/minecraft/darkmod/hooks/client/InventoryItem;" />
+    <method class="aak" method="h" signature="(I)I" new_method="getIndexOf" new_signature="(I)I" />
+    <method class="aak" method="d" signature="(Laan;)I" new_method="getIndexOf" new_signature="(Lorg/darkstorm/minecraft/darkmod/hooks/client/InventoryItem;)I" />
+    <method class="aak" method="l" signature="()I" new_method="getIndexOfEmptySlot" new_signature="()I" />
+    <method class="aak" method="d" signature="(I)Z" new_method="removeOne" new_signature="(I)Z" />
+    <method class="aak" method="b" signature="(I)Laan;" new_method="removeItemAt" new_signature="(I)Lorg/darkstorm/minecraft/darkmod/hooks/client/InventoryItem;" />
+    <method class="aak" method="a" signature="(ILaan;)V" new_method="setItemAt" new_signature="(ILorg/darkstorm/minecraft/darkmod/hooks/client/InventoryItem;)V" />
+    <method class="aak" method="a" signature="()I" new_method="getSize" new_signature="()I" />
+    <method class="aak" method="k_" signature="(I)Laan;" new_method="getItemAt" new_signature="(I)Lorg/darkstorm/minecraft/darkmod/hooks/client/InventoryItem;" />
+    <method class="aak" method="d" signature="()I" new_method="getMaxStackSize" new_signature="()I" />
+    <method class="aak" method="f" signature="(I)Laan;" new_method="getArmorAt" new_signature="(I)Lorg/darkstorm/minecraft/darkmod/hooks/client/InventoryItem;" />
+  </interface>
+  <interface class="ff" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet15BlockPlace">
+    <getter class="ff" field="a" signature="I" static="false" return="int" getter="getX" />
+    <setter class="ff" field="a" signature="I" static="false" argument="int" setter="setX" />
+    <getter class="ff" field="b" signature="I" static="false" return="int" getter="getY" />
+    <setter class="ff" field="b" signature="I" static="false" argument="int" setter="setY" />
+    <getter class="ff" field="c" signature="I" static="false" return="int" getter="getZ" />
+    <setter class="ff" field="c" signature="I" static="false" argument="int" setter="setZ" />
+    <getter class="ff" field="d" signature="I" static="false" return="int" getter="getDirection" />
+    <setter class="ff" field="d" signature="I" static="false" argument="int" setter="setDirection" />
+    <getter class="ff" field="e" signature="Laan;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.InventoryItem" getter="getItem" />
+    <setter class="ff" field="e" signature="Laan;" static="false" argument="org.darkstorm.minecraft.darkmod.hooks.client.InventoryItem" setter="setItem" />
+  </interface>
+  <interface class="abl" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet104WindowItems">
+    <getter class="abl" field="a" signature="I" static="false" return="int" getter="getWindowID" />
+    <setter class="abl" field="a" signature="I" static="false" argument="int" setter="setWindowID" />
+    <getter class="abl" field="b" signature="[Laan;" static="false" return="org.darkstorm.minecraft.darkmod.hooks.client.InventoryItem[]" getter="getItems" />
+    <setter class="abl" field="b" signature="[Laan;" static="false" argument="org.darkstorm.minecraft.darkmod.hooks.client.InventoryItem[]" setter="setItems" />
+  </interface>
+  <interface class="lh" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet108EnchantItem" />
+  <interface class="yr" interface="org.darkstorm.minecraft.darkmod.hooks.client.Item">
+    <getter class="yr" field="bV" signature="Ljava/lang/String;" static="false" return="java.lang.String" getter="getName" />
+    <getter class="yr" field="bQ" signature="I" static="false" return="int" getter="getID" />
+  </interface>
+  <interface class="hq" interface="org.darkstorm.minecraft.darkmod.hooks.client.MinecraftExtension" />
+  <interface class="bc" interface="org.darkstorm.minecraft.darkmod.hooks.client.FriendlyMob" />
+  <interface class="akt" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet52MultiBlockChange" />
+  <interface class="db" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet107CreativeSetSlot" />
+  <interface class="qu" interface="org.darkstorm.minecraft.darkmod.hooks.client.PlayerAbilities">
+    <getter class="qu" field="a" signature="Z" static="false" return="boolean" getter="isInvulnerable" />
+    <setter class="qu" field="a" signature="Z" static="false" argument="boolean" setter="setInvulnerable" />
+    <getter class="qu" field="b" signature="Z" static="false" return="boolean" getter="isFlying" />
+    <setter class="qu" field="b" signature="Z" static="false" argument="boolean" setter="setFlying" />
+    <getter class="qu" field="c" signature="Z" static="false" return="boolean" getter="isAbleToFly" />
+    <setter class="qu" field="c" signature="Z" static="false" argument="boolean" setter="setAbleToFly" />
+    <getter class="qu" field="d" signature="Z" static="false" return="boolean" getter="isInstantBuilding" />
+    <setter class="qu" field="d" signature="Z" static="false" argument="boolean" setter="setInstantBuilding" />
+  </interface>
+  <interface class="alt" interface="org.darkstorm.minecraft.darkmod.hooks.client.PigZombie" />
+  <interface class="ags" interface="org.darkstorm.minecraft.darkmod.hooks.client.packets.Packet60Explosion" />
+</hooks>
+
